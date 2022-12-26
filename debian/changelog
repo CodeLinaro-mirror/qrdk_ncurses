@@ -3,6 +3,8 @@ ncurses (6.3+20221224-1) UNRELEASED; urgency=medium
   * New upstream patchlevel.
   * Refresh Debian patches.
   * Convert lintian overrides to the new format in Lintian 2.115.
+  * Add a new override for source-is-missing in the Ada documentation
+    (see #1019980).
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 26 Dec 2022 19:08:57 +0100
 
