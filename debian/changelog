@@ -1,4 +1,4 @@
-ncurses (6.3+20221224-1) UNRELEASED; urgency=medium
+ncurses (6.3+20221224-1) experimental; urgency=medium
 
   * New upstream patchlevel.
     - Revise kon/kon2/jfbterm to undo "linux2.6" change to
@@ -11,7 +11,7 @@ ncurses (6.3+20221224-1) UNRELEASED; urgency=medium
     (see #1019980).
   * Upgrade Standards-Version to 4.6.2, no changes needed.
 
- -- Sven Joachim <svenjoac@gmx.de>  Mon, 26 Dec 2022 19:08:57 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 26 Dec 2022 20:22:07 +0100
 
 ncurses (6.3+20220423-2) unstable; urgency=medium
 
