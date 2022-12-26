@@ -1,6 +1,8 @@
 ncurses (6.3+20221224-1) UNRELEASED; urgency=medium
 
   * New upstream patchlevel.
+    - Revise kon/kon2/jfbterm to undo "linux2.6" change to
+      smacs/rmacs/enacs (Closes: #1012800).
   * Refresh Debian patches.
   * Convert lintian overrides to the new format in Lintian 2.115.
   * Add a new override for source-is-missing in the Ada documentation
