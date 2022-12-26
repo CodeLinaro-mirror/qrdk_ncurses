@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: dist.mk,v 1.1476 2022/04/23 12:44:18 tom Exp $
+# $Id: dist.mk,v 1.1518 2022/12/24 12:35:34 tom Exp $
 # Makefile for creating ncurses distributions.
 #
 # This only needs to be used directly as a makefile by developers, but
@@ -38,7 +38,7 @@ SHELL = /bin/sh
 # These define the major/minor/patch versions of ncurses.
 NCURSES_MAJOR = 6
 NCURSES_MINOR = 3
-NCURSES_PATCH = 20220423
+NCURSES_PATCH = 20221224
 
 # We don't append the patch to the version, since this only applies to releases
 VERSION = $(NCURSES_MAJOR).$(NCURSES_MINOR)
@@ -129,12 +129,12 @@ manhtml:
 	@rm -f subst.tmp
 	@for f in man/*.[0-9]* ; do \
 	   m=`basename $$f` ;\
-	   T=`egrep '^.TH' $$f|sed -e 's/^.TH //' -e s'/"//g' -e 's/[ 	]\+$$//'` ; \
+	   T=`$${EGREP-grep -E} '^.TH' $$f|sed -e 's/^.TH //' -e s'/"//g' -e 's/[ 	]\+$$//'` ; \
 	   g=$${m}.html ;\
 	   if [ -f doc/html/$$g ]; then chmod +w doc/html/$$g; fi;\
 	   echo "Converting $$m to HTML" ;\
 	   echo '<!--' > doc/html/man/$$g ;\
-	   egrep '^.\\"[^#]' $$f | \
+	   $${EGREP-grep -E} '^.\\"[^#]' $$f | \
 	   	sed	-e 's/\$$/@/g' \
 			-e 's/^.../  */' \
 			-e 's/</\&lt;/g' \

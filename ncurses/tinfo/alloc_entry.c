@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.69 2022/04/16 22:46:53 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.77 2022/10/15 19:37:33 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -60,6 +60,8 @@ NCURSES_EXPORT(void)
 _nc_init_entry(ENTRY * const tp)
 /* initialize a terminal type data block */
 {
+    DEBUG(2, (T_CALLED("_nc_init_entry(tp=%p)"), (void *) tp));
+
     if (tp == NULL) {
 #if NO_LEAKS
 	if (stringbuf != NULL) {
@@ -72,23 +74,30 @@ _nc_init_entry(ENTRY * const tp)
     }
 
     if (stringbuf == NULL)
-	TYPE_MALLOC(char, (size_t) MAX_ENTRY_SIZE, stringbuf);
+	TYPE_CALLOC(char, (size_t) MAX_ENTRY_SIZE, stringbuf);
 
     next_free = 0;
 
     _nc_init_termtype(&(tp->tterm));
+
+    DEBUG(2, (T_RETURN("")));
 }
 
 NCURSES_EXPORT(ENTRY *)
 _nc_copy_entry(ENTRY * oldp)
 {
-    ENTRY *newp = typeCalloc(ENTRY, 1);
+    ENTRY *newp;
 
+    DEBUG(2, (T_CALLED("_nc_copy_entry(oldp=%p)"), (void *) oldp));
+
+    newp = typeCalloc(ENTRY, 1);
     if (newp != NULL) {
 	*newp = *oldp;
 	_nc_copy_termtype2(&(newp->tterm), &(oldp->tterm));
     }
-    return newp;
+
+    DEBUG(2, (T_RETURN("%p"), (void *) newp));
+    return (newp);
 }
 
 /* save a copy of string in the string buffer */
@@ -97,9 +106,10 @@ _nc_save_str(const char *string)
 {
     char *result = 0;
     size_t old_next_free = next_free;
-    size_t len;
 
     if (stringbuf != NULL) {
+	size_t len;
+
 	if (!VALID_STRING(string))
 	    string = "";
 	len = strlen(string) + 1;
@@ -135,6 +145,8 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
     unsigned nuses;
     TERMTYPE2 *tp;
 
+    DEBUG(2, (T_CALLED("_nc_wrap_entry(ep=%p, copy_strings=%d)"), (void *)
+	      ep, copy_strings));
     if (ep == NULL || stringbuf == NULL)
 	_nc_err_abort("_nc_wrap_entry called without initialization");
 
@@ -222,11 +234,13 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 #endif
 
     for (i = 0; i < nuses; i++) {
-	if (useoffsets[i] == ABSENT_OFFSET)
+	if (useoffsets[i] == ABSENT_OFFSET) {
 	    ep->uses[i].name = 0;
-	else
-	    ep->uses[i].name = (tp->str_table + useoffsets[i]);
+	} else {
+	    ep->uses[i].name = strdup(tp->str_table + useoffsets[i]);
+	}
     }
+    DEBUG(2, (T_RETURN("")));
 }
 
 NCURSES_EXPORT(void)
@@ -237,6 +251,8 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
     TERMTYPE2 *from = &(source->tterm);
 #if NCURSES_XNAMES
     TERMTYPE2 copy;
+    size_t str_size;
+    char *str_table;
 #endif
     unsigned i;
 
@@ -247,6 +263,89 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
     _nc_copy_termtype2(&copy, from);
     from = &copy;
     _nc_align_termtype(to, from);
+    /*
+     * compute the maximum size of the string-table.
+     */
+    str_size = strlen(to->term_names) + 1;
+    for_each_string(i, from) {
+	if (VALID_STRING(from->Strings[i]))
+	    str_size += strlen(from->Strings[i]) + 1;
+    }
+    for_each_string(i, to) {
+	if (VALID_STRING(to->Strings[i]))
+	    str_size += strlen(to->Strings[i]) + 1;
+    }
+    /* allocate a string-table large enough for both source/target, and
+     * copy all of the strings into that table.  In the merge, we will
+     * select from the original source/target lists to construct a new
+     * target list.
+     */
+    if (str_size != 0) {
+	char *str_copied;
+	if ((str_table = malloc(str_size)) == NULL)
+	    _nc_err_abort(MSG_NO_MEMORY);
+	str_copied = str_table;
+	strcpy(str_copied, to->term_names);
+	to->term_names = str_copied;
+	str_copied += strlen(str_copied) + 1;
+	for_each_string(i, from) {
+	    if (VALID_STRING(from->Strings[i])) {
+		strcpy(str_copied, from->Strings[i]);
+		from->Strings[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	for_each_string(i, to) {
+	    if (VALID_STRING(to->Strings[i])) {
+		strcpy(str_copied, to->Strings[i]);
+		to->Strings[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	free(to->str_table);
+	to->str_table = str_table;
+	free(from->str_table);
+    }
+    /*
+     * Do the same for the extended-strings (i.e., lists of capabilities).
+     */
+    str_size = 0;
+    for (i = 0; i < NUM_EXT_NAMES(from); ++i) {
+	if (VALID_STRING(from->ext_Names[i]))
+	    str_size += strlen(from->ext_Names[i]) + 1;
+    }
+    for (i = 0; i < NUM_EXT_NAMES(to); ++i) {
+	if (VALID_STRING(to->ext_Names[i]))
+	    str_size += strlen(to->ext_Names[i]) + 1;
+    }
+    /* allocate a string-table large enough for both source/target, and
+     * copy all of the strings into that table.  In the merge, we will
+     * select from the original source/target lists to construct a new
+     * target list.
+     */
+    if (str_size != 0) {
+	char *str_copied;
+	if ((str_table = malloc(str_size)) == NULL)
+	    _nc_err_abort(MSG_NO_MEMORY);
+	str_copied = str_table;
+	for (i = 0; i < NUM_EXT_NAMES(from); ++i) {
+	    if (VALID_STRING(from->ext_Names[i])) {
+		strcpy(str_copied, from->ext_Names[i]);
+		from->ext_Names[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	for (i = 0; i < NUM_EXT_NAMES(to); ++i) {
+	    if (VALID_STRING(to->ext_Names[i])) {
+		strcpy(str_copied, to->ext_Names[i]);
+		to->ext_Names[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	free(to->ext_str_table);
+	to->ext_str_table = str_table;
+	free(from->ext_str_table);
+    }
 #endif
     for_each_boolean(i, from) {
 	if (to->Booleans[i] != (NCURSES_SBOOL) CANCELLED_BOOLEAN) {
@@ -286,10 +385,7 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
 	}
     }
 #if NCURSES_XNAMES
-    /* Discard the data allocated in _nc_copy_termtype2, but do not use
-     * _nc_free_termtype2 because that frees the string-table (which is
-     * not allocated by _nc_copy_termtype2).
-     */
+    /* cleanup */
     free(copy.Booleans);
     free(copy.Numbers);
     free(copy.Strings);

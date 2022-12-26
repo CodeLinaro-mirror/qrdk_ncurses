@@ -1,6 +1,5 @@
 /****************************************************************************
- * Copyright 2020-2021,2022 Thomas E. Dickey                                *
- * Copyright 2013-2014,2017 Free Software Foundation, Inc.                  *
+ * Copyright 2022 Thomas E. Dickey                                          *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,89 +25,48 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-/*
- * $Id: test_vid_puts.c,v 1.17 2022/12/10 22:28:50 tom Exp $
- *
- * Demonstrate the vid_puts and vid_attr functions.
- * Thomas Dickey - 2013/01/12
- */
 
-#define USE_TINFO
+/*
+ * $Id: test_delwin.c,v 1.4 2022/12/10 22:14:07 tom Exp $
+ */
 #include <test.priv.h>
 
-#if USE_WIDEC_SUPPORT && HAVE_SETUPTERM && HAVE_VID_PUTS
+#define STATUS 10
 
-static FILE *my_fp;
-static bool p_opt = FALSE;
+static SCREEN *my_screen;
 
-static
-TPUTS_PROTO(outc, c)
+static void
+show_rc(const char *what, const char *explain, int rc)
 {
-    int rc;
-
-    rc = putc(c, my_fp);
-    TPUTS_RETURN(rc);
-}
-
-static bool
-outs(const char *s)
-{
-    if (VALID_STRING(s)) {
-	tputs(s, 1, outc);
-	return TRUE;
-    }
-    return FALSE;
+    printw("%s : %d (%s)\n", what, rc, explain);
 }
 
 static void
-cleanup(void)
+next_step(WINDOW *win)
 {
-    if (cur_term != 0) {
-	outs(exit_attribute_mode);
-	if (!outs(orig_colors))
-	    outs(orig_pair);
-	outs(cursor_normal);
+    int ch = wgetch(win);
+    if (ch == QUIT || ch == ESCAPE) {
+	endwin();
+	/* use this to verify if delscreen frees all memory */
+	delscreen(my_screen);
+	exit(EXIT_FAILURE);
     }
-}
-
-static void
-change_attr(chtype attr)
-{
-    if (p_opt) {
-	vid_puts(attr, (short) 0, (void *) 0, outc);
-    } else {
-	vid_attr(attr, (short) 0, (void *) 0);
-    }
-}
-
-static void
-test_vid_puts(void)
-{
-    fprintf(my_fp, "Name: ");
-    change_attr(A_BOLD);
-    fputs("Bold", my_fp);
-    change_attr(A_REVERSE);
-    fputs(" Reverse", my_fp);
-    change_attr(A_NORMAL);
-    fputs("\n", my_fp);
 }
 
 static void
 usage(int ok)
 {
-    static const char *tbl[] =
+    static const char *msg[] =
     {
-	"Usage: test_vid_puts [options]"
+	"Usage: test_delwin [options]"
 	,""
 	,USAGE_COMMON
-	,"Options:"
-	," -e       use stderr (default stdout)"
-	," -n       do not initialize terminal"
-	," -p       use vid_puts (default vid_attr)"
     };
-    unsigned n;
-    for (n = 0; n < SIZEOF(tbl); ++n)
-	fprintf(stderr, "%s\n", tbl[n]);
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
     ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 /* *INDENT-OFF* */
@@ -116,24 +74,14 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc, char *argv[])
+main(int argc, char **argv)
 {
+    WINDOW *parent, *child1;
+    int rc;
     int ch;
-    bool no_init = FALSE;
 
-    my_fp = stdout;
-
-    while ((ch = getopt(argc, argv, OPTS_COMMON "enp")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
 	switch (ch) {
-	case 'e':
-	    my_fp = stderr;
-	    break;
-	case 'n':
-	    no_init = TRUE;
-	    break;
-	case 'p':
-	    p_opt = TRUE;
-	    break;
 	case OPTS_VERSION:
 	    show_version(argv);
 	    ExitProgram(EXIT_SUCCESS);
@@ -145,22 +93,59 @@ main(int argc, char *argv[])
     if (optind < argc)
 	usage(FALSE);
 
-    setlocale(LC_ALL, "");
-    if (no_init) {
-	START_TRACE();
-    } else {
-	setupterm((char *) 0, fileno(my_fp), (int *) 0);
+    if ((my_screen = newterm(NULL, stdout, stdin)) == NULL)
+	ExitProgram(EXIT_FAILURE);
+
+    noecho();
+    cbreak();
+
+    refresh();
+    wsetscrreg(stdscr, 0, STATUS - 1);
+    scrollok(stdscr, TRUE);
+
+    parent = newwin(0, 0, STATUS, 0);
+    box(parent, 0, 0);
+    wrefresh(parent);
+    next_step(parent);
+
+    printw("New window %p    %s\n", (void *) parent, "Top window");
+    mvwprintw(parent, 1, 1, "Top window");
+    wrefresh(parent);
+    next_step(stdscr);
+
+    child1 = derwin(parent, LINES - STATUS - 4, COLS - 4, 2, 2);
+    box(child1, 0, 0);
+    mvwprintw(child1, 1, 1, "Sub window");
+    wrefresh(child1);
+
+    printw("Sub window %p    %s\n", (void *) child1, "Hello world!");
+    next_step(stdscr);
+
+    show_rc("Deleted parent",
+	    "should fail, it still has a subwindow",
+	    rc = delwin(parent));
+    next_step(stdscr);
+    show_rc("Deleted child1",
+	    "should succeed",
+	    rc = delwin(child1));
+    next_step(stdscr);
+    if (rc == OK) {
+	wclrtobot(parent);
+	box(parent, 0, 0);
+	next_step(parent);
     }
-    test_vid_puts();
-    cleanup();
+    show_rc("Deleted parent",
+	    "should succeed, it has no subwindow now",
+	    rc = delwin(parent));
+    next_step(stdscr);
+    if (rc == OK) {
+	touchwin(stdscr);
+	next_step(stdscr);
+    }
+    show_rc("Deleted parent",
+	    "should fail, may dump core",
+	    delwin(parent));
+    next_step(stdscr);
+    endwin();
     ExitProgram(EXIT_SUCCESS);
 }
-
-#else
-int
-main(void)
-{
-    printf("This program requires the wide-ncurses terminfo library\n");
-    ExitProgram(EXIT_FAILURE);
-}
-#endif

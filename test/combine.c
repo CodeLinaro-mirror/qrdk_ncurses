@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2021 Thomas E. Dickey                                          *
+ * Copyright 2021,2022 Thomas E. Dickey                                     *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,13 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: combine.c,v 1.17 2021/12/18 21:04:00 tom Exp $
+ * $Id: combine.c,v 1.23 2022/12/10 22:28:50 tom Exp $
  */
 
 #include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT
 
+#include <wctype.h>
 #include <dump_window.h>
 #include <popup_msg.h>
 
@@ -180,52 +181,59 @@ show_help(WINDOW *current)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: combine [options]",
-	"",
-	"Demonstrate combining-characters.",
-	"",
-	"Options:",
-	" -c       use cchar_t data rather than wchar_t string",
-	" -l FILE  log window-dumps to this file",
-	" -r       draw even-numbered rows in reverse-video",
+	"Usage: combine [options]"
+	,""
+	,USAGE_COMMON
+	,"Demonstrate combining-characters."
+	,""
+	,"Options:"
+	," -c       use cchar_t data rather than wchar_t string"
+	," -l FILE  log window-dumps to this file"
+	," -r       draw even-numbered rows in reverse-video"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
-    int n;
+    int ch;
     int left_at = ' ';
     int over_it = 0;
     bool done = FALSE;
     bool log_option = FALSE;
     const char *dump_log = "combine.log";
 
-    while ((n = getopt(argc, argv, "cl:r")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "cl:r")) != -1) {
+	switch (ch) {
 	case 'c':
 	    c_opt = TRUE;
 	    break;
 	case 'l':
 	    log_option = TRUE;
 	    if (!open_dump(optarg))
-		usage();
+		usage(FALSE);
 	    break;
 	case 'r':
 	    r_opt = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
@@ -252,8 +260,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'd':
 	    if (log_option)
 		dump_window(stdscr);
+#if HAVE_SCR_DUMP
 	    else
 		scr_dump(dump_log);
+#endif
 	    break;
 	case 'h':
 	    if (left_at > ' ')
