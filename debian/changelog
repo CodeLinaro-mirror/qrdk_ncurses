@@ -1,6 +1,7 @@
 ncurses (6.3+20221224-1) UNRELEASED; urgency=medium
 
   * New upstream patchlevel.
+  * Refresh Debian patches.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 26 Dec 2022 19:08:57 +0100
 
