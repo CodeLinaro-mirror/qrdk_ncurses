@@ -1,3 +1,9 @@
+ncurses (6.4-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 01 Jan 2023 10:38:54 +0100
+
 ncurses (6.3+20221224-2) unstable; urgency=medium
 
   * Upload to unstable.
