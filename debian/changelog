@@ -1,3 +1,10 @@
+ncurses (6.4-2) UNRELEASED; urgency=medium
+
+  * Add Breaks against vim-common (<< 2:9.0.1000-2) to ncurses-base
+    and ncurses-term (Closes: #1027435).
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 22 Jan 2023 17:59:41 +0100
+
 ncurses (6.4-1) unstable; urgency=medium
 
   * New upstream release.
