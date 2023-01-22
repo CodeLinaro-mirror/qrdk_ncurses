@@ -2,6 +2,9 @@ ncurses (6.4-2) UNRELEASED; urgency=medium
 
   * Add Breaks against vim-common (<< 2:9.0.1000-2) to ncurses-base
     and ncurses-term (Closes: #1027435).
+  * New patch fix_crash_on_very_long_tc-use_clause.diff, cherry-picked
+    from the 20230121 patchlevel: correct limit-check when dumping tc/use
+    clause via tic -I (report by Gabriel Ravier, Closes: #1029399).
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 22 Jan 2023 17:59:41 +0100
 
