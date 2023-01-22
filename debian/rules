@@ -20,10 +20,17 @@ include /usr/share/dpkg/architecture.mk
 ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 HOST_CC ?= $(DEB_HOST_GNU_TYPE)-gcc
 HOST_CXX ?= $(DEB_HOST_GNU_TYPE)-g++
+STRIP = $(DEB_HOST_GNU_TYPE)-strip
 else
 HOST_CC ?= gcc
 HOST_CXX ?= g++
+STRIP = strip
 endif
+
+STRIP_OPTIONS = --strip-debug --remove-section=.comment \
+		--remove-section=.note --enable-deterministic-archives \
+		-R .gnu.lto_* -R .gnu.debuglto_* \
+		-N __gnu_lto_slim -N __gnu_lto_v1
 
 # These are important since this is a library package
 soname=6
@@ -503,6 +510,8 @@ endif
 	# Strip the packages, shipping detached debugging symbols.
 	dh_dwz -a
 	dh_strip -a
+	# Fugly workaround for dh_strip bug #875780
+	$(STRIP) $(STRIP_OPTIONS) debian/libncurses-dev/usr/lib/$(DEB_HOST_MULTIARCH)/libncurses++w.a
 	dh_lintian -a
 	dh_link -a
 	dh_compress -p$(package-examples) usr/libexec/ncurses-examples/README
