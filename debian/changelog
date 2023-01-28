@@ -4,6 +4,9 @@ ncurses (6.2+20201114-2+deb11u1) UNRELEASED; urgency=medium
     corrupt terminfo data (report/testcase by NCNIPC of China,
     CVE-2022-29458), fix backported from the 20220416 upstream patchlevel
     (Closes: #1009870).  Thanks to Thorsten Alteholz for the patch.
+  * New patch fix_crash_on_very_long_tc-use_clause.diff, cherry-picked
+    from the 20230121 patchlevel: correct limit-check when dumping tc/use
+    clause via tic -I (report by Gabriel Ravier, Closes: #1029399).
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 28 Jan 2023 12:11:01 +0100
 
