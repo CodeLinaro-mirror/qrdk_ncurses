@@ -1,3 +1,12 @@
+ncurses (6.2+20201114-2+deb11u1) UNRELEASED; urgency=medium
+
+  * New patch CVE-2022-29458.diff: add a limit-check to guard against
+    corrupt terminfo data (report/testcase by NCNIPC of China,
+    CVE-2022-29458), fix backported from the 20220416 upstream patchlevel
+    (Closes: #1009870).  Thanks to Thorsten Alteholz for the patch.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sat, 28 Jan 2023 12:11:01 +0100
+
 ncurses (6.2+20201114-2) unstable; urgency=medium
 
   * New patch 02-fix-mlterm.diff, cherry-picked from the 20201205 upstream

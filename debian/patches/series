@@ -4,3 +4,4 @@
 02-debian-xterm.diff
 02-fix-mlterm.diff
 03-debian-ncursesconfig-omit-L.diff
+CVE-2022-29458.diff
