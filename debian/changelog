@@ -8,6 +8,8 @@ ncurses (6.2+20201114-2+deb11u1) UNRELEASED; urgency=medium
     from the 20230121 patchlevel: correct limit-check when dumping tc/use
     clause via tic -I (report by Gabriel Ravier, Closes: #1029399).
   * Use bullseye as the release in the Salsa CI pipeline.
+  * Add a lintian override for source-is-missing in the Ada documentation
+    (see #1019980).
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 28 Jan 2023 12:11:01 +0100
 
