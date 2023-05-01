@@ -1,3 +1,12 @@
+ncurses (6.4-3) UNRELEASED; urgency=medium
+
+  * New patch fix-configure-root-args-option.diff cherry-picked from
+    the 20230415 patchlevel, fixing a copy/paste error which caused
+    the "--disable-root-environ" configure option to pick up code
+    meant to be used by the "--disable-root-args" option instead.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 01 May 2023 11:31:28 +0200
+
 ncurses (6.4-2) unstable; urgency=medium
 
   * Add Breaks against vim-common (<< 2:9.0.1000-2) to ncurses-base
