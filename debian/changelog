@@ -1,13 +1,18 @@
 ncurses (6.4-3) UNRELEASED; urgency=medium
 
-  * New patch fix-configure-root-args-option.diff cherry-picked from
-    the 20230415 patchlevel, fixing a copy/paste error which caused
-    the "--disable-root-environ" configure option to pick up code
-    meant to be used by the "--disable-root-args" option instead.
-  * New patch debian-env-access.diff, changing the behavior of the
-    "--disable-root-environ" configure option to not restrict programs
-    run by the superuser, equivalent to the "--disable-setuid-environ"
-    option introduced in the 20230423 patchlevel.
+  * Configure with "--disable-root-environ" to disallow loading of
+    custom terminfo entries in setuid/setgid programs, mitigating the
+    impact of CVE-2023-29491 (see #1034372).
+    - Update the symbols files for the newly exported symbol
+      _nc_env_access.
+    - New patch fix-configure-root-args-option.diff cherry-picked from
+      the 20230415 patchlevel, fixing a copy/paste error which caused
+      the "--disable-root-environ" configure option to pick up code
+      meant to be used by the "--disable-root-args" option instead.
+    - New patch debian-env-access.diff, changing the behavior of the
+      "--disable-root-environ" configure option to not restrict programs
+      run by the superuser, equivalent to the "--disable-setuid-environ"
+      option introduced in the 20230423 patchlevel.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 01 May 2023 11:31:28 +0200
 
