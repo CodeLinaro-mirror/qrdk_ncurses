@@ -211,7 +211,7 @@ endif
 
 config.guess-stamp:
 	dh_update_autotools_config
-	dh_autoreconf autoreconf-dickey -- -f -i
+	dh_autoreconf debian/autoconf.sh
 	touch $@
 
 $(objdir)/config.status: config.guess-stamp

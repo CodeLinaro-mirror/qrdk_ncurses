@@ -1,3 +1,12 @@
+ncurses (6.4-4) UNRELEASED; urgency=medium
+
+  * Run autoconf-dickey in the toplevel and test/ directories rather
+    than autoreconf-dickey, as the latter picks up the backup file of
+    configure.in below the .pc/ directory, which is unwanted and does
+    not work (Closes: #1035621).
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 07 May 2023 13:52:24 +0200
+
 ncurses (6.4-3) unstable; urgency=medium
 
   * Configure with "--disable-root-environ" to disallow loading of
