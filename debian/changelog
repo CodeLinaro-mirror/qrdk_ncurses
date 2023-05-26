@@ -1,9 +1,14 @@
 ncurses (6.2+20201114-2+deb11u2) UNRELEASED; urgency=medium
 
-  * New patch debian-env-access.diff, changing the behavior of the
-    "--disable-root-environ" configure option to not restrict programs
-    run by the superuser, equivalent to the "--disable-setuid-environ"
-    option introduced in the 20230423 patchlevel.
+  * Configure with "--disable-root-environ" to disallow loading of
+    custom terminfo entries in setuid/setgid programs, mitigating the
+    impact of CVE-2023-29491 (see #1034372).
+    - Update the symbols files for the newly exported symbol
+      _nc_env_access.
+    - New patch debian-env-access.diff, changing the behavior of the
+      "--disable-root-environ" configure option to not restrict programs
+      run by the superuser, equivalent to the "--disable-setuid-environ"
+      option introduced in the 20230423 patchlevel.
 
  -- Sven Joachim <svenjoac@gmx.de>  Fri, 26 May 2023 19:45:51 +0200
 
