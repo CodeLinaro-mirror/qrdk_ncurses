@@ -2,6 +2,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
 
   * New upstream patchlevel.
   * Drop cherry-picked patches, applied upstream.
+  * Configure with "--disable-setuid-environ" instead of
+    "--disable-root-environ" and drop patch debian-env-access.diff.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 

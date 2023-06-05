@@ -2,4 +2,3 @@
 02-debian-backspace.diff
 02-debian-xterm.diff
 03-debian-ncursesconfig-omit-L.diff
-debian-env-access.diff
