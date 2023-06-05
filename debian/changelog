@@ -9,6 +9,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
       Upstream sets kbs in screen-base to xterm+kbs now, so this is
       handled via the "--with-xterm-kbs" configure option.
   * Update symbols files for the new symbols tiparm_s and tiscan_s.
+  * Remove the ncurses{w,}5-config compatibility symlinks
+    (Closes: #1029977).
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 

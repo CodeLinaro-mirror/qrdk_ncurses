@@ -99,12 +99,10 @@ Section: libdevel
 Priority: optional
 Multi-Arch: same
 Depends: libtinfo6 (= ${binary:Version}), libncurses6 (= ${binary:Version}),
-         libncursesw6 (= ${binary:Version}), libc6-dev | libc-dev, ${misc:Depends},
-         ncurses-bin (>= 6.0+20151017)
+         libncursesw6 (= ${binary:Version}), libc6-dev | libc-dev, ${misc:Depends}
 Conflicts: ncurses-dev
 Replaces: ncurses-dev, libncurses5-dev (<< 6.1+20180210),
-          libncursesw5-dev (<< 6.1+20180210), libtinfo-dev (<< 6.1+20180210),
-          ncurses-bin (<< 6.0+20151017)
+          libncursesw5-dev (<< 6.1+20180210), libtinfo-dev (<< 6.1+20180210)
 Provides: libncurses5-dev (= ${binary:Version}),
           libncursesw5-dev (= ${binary:Version}),
           libtinfo-dev (= ${binary:Version}), ncurses-dev
