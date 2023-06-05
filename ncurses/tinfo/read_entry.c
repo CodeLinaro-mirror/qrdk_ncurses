@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.164 2022/05/08 00:11:44 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.166 2023/04/22 15:11:52 tom Exp $")
 
 #define MyNumber(n) (short) LOW_MSB(n)
 
@@ -323,6 +323,9 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	|| bool_count < 0
 	|| num_count < 0
 	|| str_count < 0
+	|| bool_count > BOOLCOUNT
+	|| num_count > NUMCOUNT
+	|| str_count > STRCOUNT
 	|| str_size < 0) {
 	returnDB(TGETENT_NO);
     }
@@ -889,9 +892,6 @@ _nc_read_entry2(const char *const name, char *const filename, TERMTYPE2 *const t
 }
 
 #if NCURSES_EXT_NUMBERS
-/*
- * This entrypoint is used by tack 1.07
- */
 NCURSES_EXPORT(int)
 _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 {

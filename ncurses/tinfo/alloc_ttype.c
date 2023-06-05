@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1999-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.46 2022/09/17 21:44:35 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.49 2023/05/27 20:13:10 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -378,8 +378,8 @@ adjust_cancels(TERMTYPE2 *to, TERMTYPE2 *from)
     int j, k;
 
     DEBUG(3, (T_CALLED("adjust_cancels(%s), from(%s)"),
-	      to ? NonNull(to->term_names) : "?",
-	      from ? NonNull(from->term_names) : "?"));
+	      NonNull(to->term_names),
+	      NonNull(from->term_names)));
     for (j = first; j < last;) {
 	char *name = to->ext_Names[j];
 	int j_str = to->num_Strings - first - to->ext_Strings;
@@ -665,9 +665,6 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
     DEBUG(2, (T_RETURN("")));
 }
 
-/*
- * This entrypoint is used by tack 1.07
- */
 NCURSES_EXPORT(void)
 _nc_copy_termtype(TERMTYPE *dst, const TERMTYPE *src)
 {

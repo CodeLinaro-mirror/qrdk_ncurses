@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.101 2022/09/17 14:57:02 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.103 2023/05/28 14:39:10 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -95,11 +95,12 @@ NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 #endif /* TRACE */
 
 #if USE_REENTRANT
-#define Locked(statement) { \
+#define Locked(statement) \
+    do { \
 	_nc_lock_global(tst_tracef); \
 	statement; \
 	_nc_unlock_global(tst_tracef); \
-    }
+    } while (0)
 #else
 #define Locked(statement) statement
 #endif
@@ -267,11 +268,13 @@ _nc_va_tracef(const char *fmt, va_list ap)
 # if USE_WEAK_SYMBOLS
 	if ((pthread_self))
 # endif
+	    fprintf(fp, "%#" PRIxPTR ":",
 #ifdef _NC_WINDOWS
-	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self().p);
+		    CASTxPTR(pthread_self().p)
 #else
-	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self());
+		    CASTxPTR(pthread_self())
 #endif
+		);
 #endif
 	if (before || after) {
 	    int n;

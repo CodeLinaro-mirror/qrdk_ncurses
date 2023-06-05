@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2021,2022 Thomas E. Dickey                                 --
+-- Copyright 2018-2022,2023 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3895 2022/12/31 20:43:21 tom Exp $
+-- $Id: NEWS,v 1.3959 2023/06/03 20:12:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,163 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20230603
+	+ add configure option --with-strip-program, to override program
+	  chosen by the install program for stripping executables (prompted
+	  by discussion with Aapo Rantalainen).
+	+ fix typo in INSTALL (report/patch by Aapo Rantalainen).
+	+ improve error-checks for isEILSEQ()
+	+ increase MB_CUR_MAX to 16, matching glibc's MB_LEN_MAX.
+	+ corrected mouse mask in test/testcurs.c
+	+ improve thread lock in lib_trace.c
+
+20230527
+	+ fixes for compiler warnings/cppcheck.
+
+20230520
+	+ fixes for compiler warnings in MinGW environments.
+
+20230514
+	+ modify test-package "ncurses6-doc" to use manpage-aliases, which in
+	  turn required a change to the configure script to factor in the
+	  extra-suffix option when deriving alias names.
+	+ add mode 1004 to xterm+sm+1006 from xterm #380 -TD
+
+20230506
+	> build-fixes related to configure-options and/or platform:
+	  + fix for --enable-fvisibility
+	  + fix for unusual values of --with-rel-version
+	  + fix for unusual values of --with-abi-version
+	  + fix for --disable-tcap-names
+	  + fix for termcap in nc_access.h (report by Werner Fink).
+
+20230429
+	+ revise recent change to _nc_write_entry to isolate it to a Cygwin bug
+	  (cf: 20230311)
+	+ amend fix for wgetnstr, wgetn_wstr to use cbreak mode unless raw
+	  mode was set (cf: 20210522).
+	+ fix a few warnings from cppcheck, etc.
+	+ correct copy/paste error in nc_access.h (report by Werner Fink).
+
+20230424
+	+ check return value of _nc_save_str(), in special case for tic where
+	  extended capabilities are processed but the terminal description was
+	  not initialized (report by Ziqiao Kong).
+	+ regenerate llib-* files.
+
+20230423
+	+ add tiscan_s() to help applications check formatting capabilities
+	  that would be passed to tiparm_s, etc.
+	+ add tiparm_s() to provide applications a way to tell ncurses what
+	  the expected parameters are for a capability (tmux #3531).
+	+ improve check in lib_tparm.c, ensuring that a char* fits into a
+	  TPARM_ARG.
+	+ add --disable-setuid-environ configure option (request by Sven
+	  Joachim).
+	+ drop compatibility with obsolete versions of tack, e.g., pre-1.08
+	  (Debian #1034549, cf: 20170722).
+
+20230418
+	+ improve checks for limits on privileged execution:
+	  + modify _nc_syserr_abort() to use _nc_env_access(), rather than
+	    only checking root uid.
+	  + use getauxval() when available, to improve setuid/setgid checks.
+	  + modify test packages to disable root access/environ options.
+	+ modify tgoto() to accept no-parameter capabilities, for joe editor
+	  (OpenSUSE #1210485, Gentoo #904263).
+
+20230415
+	+ configure script fixes:
+	  + fix copy/paste error in configure option --disable-root-access
+	    (report/patch by Sven Joachim).
+	  + modify CF_XOPEN_SOURCE macro's amend default case to avoid
+	    undefining _XOPEN_SOURCE if _POSIX_C_SOURCE is defined.
+	+ modify test_tparm to account for extended capabilities.
+	+ add checks in tparm() and tiparm() for misuse of numeric parameters,
+	  overlooked in 20230408.
+	+ fix errata in clear.1 and curs_terminfo.3x
+
+20230408
+	+ document limitations of tparm, and error-returns in curs_terminfo.3x
+	+ document limitations of tgoto, and error-returns in curs_termcap.3x
+	+ add xterm+focus to alacritty+common (patch by Christian Duerr).
+	+ add "-v" option to tput, to show warnings.
+	> improve checks for malformed terminfo data (report/analysis by
+	  Jonathan Bar Or, Michael Pearse, Emanuele Cozzi).
+	  + make the parameter type/count checks in _nc_tiparm() more stringent
+	  + update tgoto() to account for _nc_tiparm() changes
+	  + add checks in tparm() and tiparm() for misuse of string parameters
+	  + add special cases in tput to handle extensions Cs/Ms parameters
+	  + ignore compiled-terminfo where the array sizes exceed the standard
+
+20230401
+	+ modify experimental Windows driver to work with xterm mouse protocol.
+	+ remove DECCOLM+DECSCLM from foot (patch by Daniel Ekloef).
+
+20230311
+	+ improve manpage description for addch versus unctrl format used for
+	  non-printable characters.
+	+ modify version-check for gcc/g++, now works for msys2.
+	+ modify check in _nc_write_entry() for multiply defined aliases to
+	  report problems within the current runtime of tic rather than for
+	  conflicts with pre-existing terminal descriptions.
+	+ allow for MinGW32-/64-bit configurations to use _DEFAULT_SOURCE
+	+ clarify interaction of -R option versus -C, -I and -r in infocmp
+	  manpage.
+	+ build-fix in lib_win32con.c (cf: 20230211).
+
+20230225
+	+ build-fixes for rpm test-packages.
+	+ add/use configure check for clock_gettime(), to supersede
+	  gettimeofday().
+
+20230218
+	+ configure-script improvements:
+	  + recent msys2 headers work with _DEFAULT_SOURCE; amend check
+	  + use $ac_includes_default in most cases where stdlib.h should work
+	  + use #error consistently vs "make an error"
+	  + add configure macro for gettimeofday vs inline check
+
+20230211
+	+ set dwShareMode in calls to CreateConsoleScreenBuffer() (patch by
+	  Hannes Domani).
+	+ use CreateFile with "CONIN$", "CONOUT$" rather than GetStdHandle to
+	  obtain a handle on the actual console, avoiding redirection in the
+	  MinGW/Win32 configurations (adapted from patch by LIU Hao).
+
+20230128
+	+ document XF, kxIN and kxOUT -TD
+	+ add note on sun/wscons/cmdtool/shelltool -TD
+	+ modify configure script check for pkg-config library directory to
+	  take into account an older version 0.15.0 which used PKG_CONFIG_PATH
+	  but not PKG_CONFIG_LIBDIR
+
+20230121
+	+ correct limit-check when dumping tc/use clause via tic -I (report by
+	  Gabriel Ravier).
+	+ correct a check for manpage-alias in edit_man.sh, to work with out of
+	  tree builds (report by Sven Joachim).
+
+20230114
+	+ change RV to XR/xr, to avoid conflict with pre-existing usage in vim,
+	  to use RV/rv to denote DA2 and its response (discussion with Bram
+	  Moolenaar) -TD
+	+ add XF flag to xterm+focus so that termcap applications can be aware
+	  of terminals which may support focus in/out -TD
+	+ use xterm+focus in xterm-p370 and tmux -TD
+	+ improve configure-script macros vs compiler warnings.
+
+20230107
+	+ add --with-abi-altered configure option (prompted by discussion with
+	  Brian Inglis).
+	+ add BSD erase2 to characters handled by tset/reset.
+	+ improve configure-script macros vs compiler warnings.
+	+ regenerate configure scripts with autoconf 2.52.20221202
+	+ add RV report+version (suggested by Bram Moolenaar).
+	+ add comment to bracketed+paste explaining that vim patch 9.0.1117 is
+	  needed for use with the updated xterm descriptions (suggested by Bram
+	  Moolenaar).
 
 20221231 6.4 release for upload to ftp.gnu.org
 	+ update release notes

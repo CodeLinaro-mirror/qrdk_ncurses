@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.131 2022/10/23 13:15:58 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.133 2023/05/27 20:13:10 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -225,7 +225,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
 	  (T_CALLED("_nc_read_entry_source("
 		    "file=%p, buf=%p, literal=%d, silent=%d, hook=%#"
 		    PRIxPTR ")"),
-	   (void *) fp, buf, literal, silent, (intptr_t) hook));
+	   (void *) fp, buf, literal, silent, CASTxPTR(hook)));
 
     if (silent)
 	_nc_suppress_warnings = TRUE;	/* shut the lexer up, too */
@@ -264,8 +264,9 @@ _nc_read_entry_source(FILE *fp, char *buf,
 
     if (_nc_tail) {
 	/* set up the head pointer */
-	for (_nc_head = _nc_tail; _nc_head->last; _nc_head = _nc_head->last)
-	    continue;
+	for (_nc_head = _nc_tail; _nc_head->last; _nc_head = _nc_head->last) {
+	    /* EMPTY */ ;
+	}
 
 	DEBUG(2, ("head = %s", _nc_head->tterm.term_names));
 	DEBUG(2, ("tail = %s", _nc_tail->tterm.term_names));
