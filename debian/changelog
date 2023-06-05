@@ -1,6 +1,9 @@
 ncurses (6.4+20230603-1) UNRELEASED; urgency=low
 
   * New upstream patchlevel.
+    - Improve checks for malformed terminfo data (report/analysis by
+      Jonathan Bar Or, Michael Pearse, Emanuele Cozzi (CVE-2023-29491,
+      Closes: #1034372)).
   * Drop cherry-picked patches, applied upstream.
   * Configure with "--disable-setuid-environ" instead of
     "--disable-root-environ" and drop patch debian-env-access.diff.
