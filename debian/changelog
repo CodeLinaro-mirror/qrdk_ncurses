@@ -17,6 +17,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
     libraries (see #1029404).
   * Stop building the empty transitional packages libtinfo-dev
     and libncurses{,w}5-dev (Closes: #1032708, #1032740, #1032741).
+  * Move the ncurses-base terminfo files to /usr/share/terminfo
+    (Closes: #1028202).
   
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 
