@@ -4,6 +4,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
     - Improve checks for malformed terminfo data (report/analysis by
       Jonathan Bar Or, Michael Pearse, Emanuele Cozzi (CVE-2023-29491,
       Closes: #1034372)).
+    - Drop compatibility with obsolete versions of tack, e.g., pre-1.08
+      (Closes: #1034549).
   * Drop cherry-picked patches, applied upstream.
   * Configure with "--disable-setuid-environ" instead of
     "--disable-root-environ" and drop patch debian-env-access.diff.
