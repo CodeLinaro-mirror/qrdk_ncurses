@@ -14,6 +14,7 @@ export LDFLAGS := $(shell DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow dpkg-buildf
 export BUILD_CFLAGS := $(CFLAGS)
 export BUILD_CPPFLAGS := $(CPPFLAGS)
 export BUILD_LDFLAGS := $(LDFLAGS)
+export ARFLAGS = -crv
 
 include /usr/share/dpkg/architecture.mk
 

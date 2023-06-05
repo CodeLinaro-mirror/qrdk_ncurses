@@ -13,6 +13,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
     (Closes: #1029977).
   * Remove old upstream SHA1 signing key C52048C0C0748FEE from
     debian/upstream/signing-key.asc.
+  * Export ARFLAGS = -crv in debian/rules to ensure deterministic static
+    libraries (see #1029404).
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 
