@@ -15,7 +15,9 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
     debian/upstream/signing-key.asc.
   * Export ARFLAGS = -crv in debian/rules to ensure deterministic static
     libraries (see #1029404).
-
+  * Stop building the empty transitional packages libtinfo-dev
+    and libncurses{,w}5-dev (Closes: #1032708, #1032740, #1032741).
+  
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 
 ncurses (6.4-4) unstable; urgency=medium
