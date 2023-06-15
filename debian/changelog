@@ -31,6 +31,7 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
       (see #1028234).
   * Remove various Breaks/Replaces relationships with package versions
     predating buster.
+  * Update years in debian/copyright.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 
