@@ -147,6 +147,7 @@ CONFARGS =	--prefix=/usr \
 		$(with_mouse) \
 		--enable-symlinks \
 		--disable-setuid-environ \
+		--disable-root-access \
 		--disable-termcap \
 		--with-default-terminfo-dir=/etc/terminfo \
 		--with-terminfo-dirs="/etc/terminfo:/lib/terminfo:/usr/share/terminfo" \
