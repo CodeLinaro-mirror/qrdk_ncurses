@@ -29,6 +29,8 @@ ncurses (6.4+20230603-1) UNRELEASED; urgency=low
     (Closes: #1028202, #622286).
     - Add a Breaks on cryptsetup-initramfs (<< 2:2.6.1) to ncurses-base
       (see #1028234).
+  * Remove various Breaks/Replaces relationships with package versions
+    predating buster.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 05 Jun 2023 18:14:09 +0200
 

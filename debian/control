@@ -22,10 +22,7 @@ Multi-Arch: foreign
 Depends: ${misc:Depends}
 Provides: ncurses-runtime
 Replaces: ncurses-term (<< 6.4+20230603)
-Breaks: libtinfo5 (<< 6.1), libslang2 (<< 2.3.1a-3), libunibilium0 (<< 2),
-        libunibilium4 (<< 2.0.0-3), bash-static (<< 4.4.18-1.1),
-        zsh-static (<< 5.4.2-4), libmono-corlib4.5-cil (<< 4.6.2.7+dfsg-2),
-        neovim (<< 0.6.0), vim-common (<< 2:9.0.1000-2),
+Breaks: neovim (<< 0.6.0), vim-common (<< 2:9.0.1000-2),
         ncurses-term (<< 6.4+20230603), cryptsetup-initramfs (<< 2:2.6.1)
 Description: basic terminal type definitions
  The ncurses library routines are a terminal-independent method of
@@ -41,12 +38,9 @@ Section: misc
 Priority: standard
 Multi-Arch: foreign
 Depends: ncurses-base (>= 6.4+20230603), ${misc:Depends}
-Replaces: dvtm (<< 0.15-3), alacritty (<< 0.3.4~), jfbterm (<< 0.4.7-10),
+Replaces: alacritty (<< 0.3.4~), jfbterm (<< 0.4.7-10),
           kon2 (<< 0.3.9b-21), libiterm1 (<< 0.5-9), tn5250 (<< 0.17.4-3)
-Breaks: libtinfo5 (<< 6.1), libslang2 (<< 2.3.1a-3), libunibilium0 (<< 2),
-        libunibilium4 (<< 2.0.0-3), bash-static (<< 4.4.18-1.1),
-        zsh-static (<< 5.4.2-4), libmono-corlib4.5-cil (<< 4.6.2.7+dfsg-2),
-        dvtm (<< 0.15-3), vim-common (<< 2:9.0.1000-2)
+Breaks: vim-common (<< 2:9.0.1000-2)
 Description: additional terminal type definitions
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.
@@ -103,13 +97,10 @@ Multi-Arch: same
 Depends: libtinfo6 (= ${binary:Version}), libncurses6 (= ${binary:Version}),
          libncursesw6 (= ${binary:Version}), libc6-dev | libc-dev, ${misc:Depends}
 Conflicts: ncurses-dev
-Replaces: ncurses-dev, libncurses5-dev (<< 6.1+20180210),
-          libncursesw5-dev (<< 6.1+20180210), libtinfo-dev (<< 6.1+20180210)
+Replaces: ncurses-dev
 Provides: libncurses5-dev (= ${binary:Version}),
           libncursesw5-dev (= ${binary:Version}),
           libtinfo-dev (= ${binary:Version}), ncurses-dev
-Breaks: libncurses5-dev (<< 6.1+20180210), libncursesw5-dev (<< 6.1+20180210),
-        libtinfo-dev (<< 6.1+20180210)
 Suggests: ncurses-doc
 Description: developer's libraries for ncurses
  The ncurses library routines are a terminal-independent method of
