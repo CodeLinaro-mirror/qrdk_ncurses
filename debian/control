@@ -193,9 +193,6 @@ Depends: lib64ncurses6 (= ${binary:Version}),
          lib64tinfo6 (= ${binary:Version}),
          libncurses-dev (= ${binary:Version}), lib64c-dev, ${misc:Depends}
 Suggests: ncurses-doc
-Replaces: amd64-libs-dev (<= 1.2), lib64ncurses5-dev
-Conflicts: lib64ncurses5-dev
-Provides: lib64ncurses5-dev
 Build-Profiles: <!nobiarch>
 Description: developer's libraries for ncurses (64-bit)
  The ncurses library routines are a terminal-independent method of
@@ -261,9 +258,6 @@ Depends: lib32ncurses6 (= ${binary:Version}),
          lib32tinfo6 (= ${binary:Version}),
          libncurses-dev (= ${binary:Version}), lib32c-dev, ${misc:Depends}
 Suggests: ncurses-doc
-Replaces: lib32ncurses5-dev, lib32ncursesw5-dev, lib32tinfo-dev
-Conflicts: lib32ncurses5-dev, lib32ncursesw5-dev, lib32tinfo-dev
-Provides: lib32ncurses5-dev, lib32ncursesw5-dev, lib32tinfo-dev
 Build-Profiles: <!nobiarch>
 Description: developer's libraries for ncurses (32-bit)
  The ncurses library routines are a terminal-independent method of
