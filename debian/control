@@ -54,6 +54,7 @@ Priority: optional
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Breaks: tmux (<< 3.3a-4)
 Description: shared low-level terminfo library for terminal handling
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.
