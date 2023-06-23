@@ -1,8 +1,8 @@
 Source: ncurses
 Section: libs
 Priority: required
-Maintainer: Craig Small <csmall@debian.org>
-Uploaders: Sven Joachim <svenjoac@gmx.de>
+Maintainer: Ncurses Maintainers <ncurses@packages.debian.org>
+Uploaders: Sven Joachim <svenjoac@gmx.de>, Craig Small <csmall@debian.org>
 Build-Depends: debhelper-compat (= 13),
                libgpm-dev [linux-any],
                pkg-config,
