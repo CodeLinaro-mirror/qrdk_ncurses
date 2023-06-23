@@ -4,6 +4,7 @@ ncurses (6.4+20230603-2) UNRELEASED; urgency=low
   * Remove Replaces/Conflicts/Provides relationships with pre-buster
     packages in lib{32,64}ncurses-dev.
   * Set maintainer to ncurses@packages.debian.org, add Craig to Uploaders.
+  * Stop stripping libncurses++w.a manually.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 19 Jun 2023 17:50:09 +0200
 
