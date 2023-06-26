@@ -4,7 +4,6 @@ usr/share/terminfo/E/Eterm
 usr/share/terminfo/E/Eterm-color
 usr/share/terminfo/a/ansi
 usr/share/terminfo/c/cons25
-usr/share/terminfo/c/cons25-debian
 usr/share/terminfo/c/cygwin
 usr/share/terminfo/d/dumb
 usr/share/terminfo/h/hurd

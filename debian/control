@@ -23,7 +23,7 @@ Depends: ${misc:Depends}
 Provides: ncurses-runtime
 Replaces: ncurses-term (<< 6.4+20230603)
 Breaks: neovim (<< 0.6.0), vim-common (<< 2:9.0.1000-2),
-        ncurses-term (<< 6.4+20230603), cryptsetup-initramfs (<< 2:2.6.1)
+        ncurses-term (<< 6.4+20230625), cryptsetup-initramfs (<< 2:2.6.1)
 Description: basic terminal type definitions
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.
@@ -37,9 +37,10 @@ Architecture: all
 Section: misc
 Priority: standard
 Multi-Arch: foreign
-Depends: ncurses-base (>= 6.4+20230603), ${misc:Depends}
+Depends: ncurses-base (>= 6.4+20230625), ${misc:Depends}
 Replaces: alacritty (<< 0.3.4~), jfbterm (<< 0.4.7-10),
-          kon2 (<< 0.3.9b-21), libiterm1 (<< 0.5-9), tn5250 (<< 0.17.4-3)
+          kon2 (<< 0.3.9b-21), libiterm1 (<< 0.5-9), tn5250 (<< 0.17.4-3),
+          ncurses-base (<< 6.4+20230625)
 Breaks: vim-common (<< 2:9.0.1000-2)
 Description: additional terminal type definitions
  The ncurses library routines are a terminal-independent method of
