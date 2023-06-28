@@ -37,7 +37,7 @@ Architecture: all
 Section: misc
 Priority: standard
 Multi-Arch: foreign
-Depends: ncurses-base (>= 6.4+20230625), ${misc:Depends}
+Depends: ncurses-base (= ${binary:Version}), ${misc:Depends}
 Replaces: alacritty (<< 0.3.4~), jfbterm (<< 0.4.7-10),
           kon2 (<< 0.3.9b-21), libiterm1 (<< 0.5-9), tn5250 (<< 0.17.4-3),
           ncurses-base (<< 6.4+20230625)

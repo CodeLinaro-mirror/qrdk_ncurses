@@ -8,6 +8,8 @@ ncurses (6.4+20230625-1) UNRELEASED; urgency=low
   * Stop stripping libncurses++w.a manually.
   * Move the cons25-debian terminfo entry from ncurses-base to
     ncurses-term, it had only been used in Debian GNU/kFreeBSD 6.0.
+  * Tighten the dependency of ncurses-term on ncurses-base, so that they
+    are always from the same version.
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 19 Jun 2023 17:50:09 +0200
 
