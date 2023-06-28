@@ -10,6 +10,9 @@ ncurses (6.4+20230625-1) UNRELEASED; urgency=low
     ncurses-term, it had only been used in Debian GNU/kFreeBSD 6.0.
   * Tighten the dependency of ncurses-term on ncurses-base, so that they
     are always from the same version.
+  * New patch debian-alacritty.diff: remove xterm+focus from the alacritty
+    terminfo entry, as it triggers misbehavior in Vim version before
+    9.0.1619 (see #1038401).
 
  -- Sven Joachim <svenjoac@gmx.de>  Mon, 19 Jun 2023 17:50:09 +0200
 
