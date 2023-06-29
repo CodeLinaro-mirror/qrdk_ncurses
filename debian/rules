@@ -46,9 +46,6 @@ package-dev-32=lib32ncurses-dev
 package-dev-64=lib64ncurses-dev
 package-term=ncurses-term
 package-examples=ncurses-examples
-package-lib-legacy=libncurses5
-package-ti-legacy=libtinfo5
-package-libw-legacy=libncursesw5
 
 workdir=$(shell pwd)
 tempdir=debian/tmp
@@ -65,8 +62,6 @@ wobjdir-static=$(srcdir)/obj-wide-static
 wobjdir-32=$(srcdir)/obj-wide-32
 wobjdir-64=$(srcdir)/obj-wide-64
 objdir-test=$(srcdir)/obj-test
-objdir-legacy=$(srcdir)/obj-legacy
-wobjdir-legacy=$(srcdir)/obj-wide-legacy
 
 autogen-files := debian/libtermcap.so
 
@@ -103,10 +98,6 @@ endif
 ifneq (,$(filter nobiarch,$(DEB_BUILD_PROFILES)))
 override build_32=
 override build_64=
-endif
-
-ifeq (,$(filter pkg.ncurses.nolegacy,$(DEB_BUILD_PROFILES)))
-build_legacy = build-legacy build-wide-legacy
 endif
 
 ifeq (,$(filter pkg.ncurses.noexamples,$(DEB_BUILD_PROFILES)))
@@ -153,15 +144,6 @@ CONFARGS =	--prefix=/usr \
 		--enable-overwrite \
 		--with-xterm-kbs=del
 
-CONFARGS-LEGACY =	$(CONFARGS) \
-			--with-abi-version=5 \
-			--disable-lp64 \
-			--with-chtype='long' \
-			--with-mmask-t='long' \
-			--disable-overwrite \
-			--without-cxx-binding \
-			--without-normal
-
 CONFARGS-TEST =	--prefix=/usr \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--bindir=/usr/libexec/ncurses-examples \
@@ -173,7 +155,6 @@ CONFARGS-TEST =	--prefix=/usr \
 
 ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 CONFARGS += --with-build-cc=gcc --host=$(DEB_HOST_GNU_TYPE)
-CONFARGS-LEGACY += --with-build-cc=gcc --host=$(DEB_HOST_GNU_TYPE)
 CONFARGS-TEST += --host=$(DEB_HOST_GNU_TYPE)
 endif
 
@@ -276,17 +257,6 @@ $(wobjdir-64)/config.status: config.guess-stamp
 		--enable-widec \
 		--libdir=/usr/lib64
 
-$(objdir-legacy)/config.status: config.guess-stamp
-	test -d $(objdir-legacy) || mkdir $(objdir-legacy)
-	cd $(objdir-legacy) && $(relsrcdir)/configure \
-		$(CONFARGS-LEGACY)
-
-$(wobjdir-legacy)/config.status: config.guess-stamp
-	test -d $(wobjdir-legacy) || mkdir $(wobjdir-legacy)
-	cd $(wobjdir-legacy) && $(relsrcdir)/configure \
-		$(CONFARGS-LEGACY) \
-		--enable-widec
-
 $(objdir-test)/config.status: build-wide config.guess-stamp
 	test -d $(objdir-test) || mkdir $(objdir-test)
 	export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$(wobjdir)/lib && \
@@ -298,7 +268,7 @@ build-indep: build-normal build-wide
 	touch $@
 
 build-arch build: build-indep build-static build-wide-static $(build_examples) \
-	          $(build_legacy) $(build_64) $(build_32)
+	          $(build_64) $(build_32)
 	touch build-arch build
 
 build-normal: $(objdir)/config.status
@@ -335,14 +305,6 @@ build-wide-64: $(wobjdir-64)/config.status
 	cd $(wobjdir-64) && $(MAKE) CC="$(HOST_CC) -m64" CXX="$(HOST_CXX) -m64"
 	touch $@
 
-build-legacy: $(objdir-legacy)/config.status
-	cd $(objdir-legacy) && $(MAKE)
-	touch $@
-
-build-wide-legacy: $(wobjdir-legacy)/config.status
-	cd $(wobjdir-legacy) && $(MAKE)
-	touch $@
-
 build-test: $(objdir-test)/config.status
 	cd $(objdir-test) && $(MAKE)
 	touch $@
@@ -351,7 +313,7 @@ clean:
 	dh_testdir
 	rm -f build build-arch build-indep
 	rm -f build-normal build-static build-wide \
-		build-wide-static build-legacy build-wide-legacy build-test $(build_32) $(build_64)
+		build-wide-static build-test $(build_32) $(build_64)
 	rm -rf $(objdir)
 	rm -rf $(objdir-static)
 	rm -rf $(objdir-32)
@@ -360,8 +322,6 @@ clean:
 	rm -rf $(wobjdir-static)
 	rm -rf $(wobjdir-32)
 	rm -rf $(wobjdir-64)
-	rm -rf $(objdir-legacy)
-	rm -rf $(wobjdir-legacy)
 	rm -rf $(objdir-test)
 	rm -f $(autogen-files)
 	dh_autoreconf_clean
@@ -461,13 +421,9 @@ binary-arch: build-arch install-arch $(autogen-files)
 	dh_installman -a
 	dh_installdocs -p$(package-ti) -p$(package-bin) -p$(package-examples)
 	dh_installdocs -a -N$(package-bin) -N$(package-ti) -N$(package-examples) \
-		       -N$(package-ti-legacy) -N$(package-lib-legacy) -N$(package-libw-legacy) \
 		       -N$(package-lib-32) -N$(package-libw-32) -N$(package-dev-32) -N$(package-ti-32) \
 		       -N$(package-lib-64) -N$(package-libw-64) -N$(package-dev-64) -N$(package-ti-64) \
 		       --link-doc=$(package-ti)
-	dh_installdocs -p$(package-ti-legacy)
-	dh_installdocs -p$(package-lib-legacy) -p$(package-libw-legacy) \
-		       --link-doc=$(package-ti-legacy)
 ifneq ($(build_32),)
 	dh_installdocs -p$(package-ti-32)
 	dh_installdocs -p$(package-lib-32) -p$(package-libw-32) -p$(package-dev-32) \
@@ -496,9 +452,6 @@ endif
 	dh_makeshlibs -p$(package-ti) -V "$(package-ti) $(sodepver)" --add-udeb=$(package-ti)-udeb -- -c4
 	dh_makeshlibs -p$(package-lib) -V "$(package-lib) $(sodepver)" -- -c4
 	dh_makeshlibs -p$(package-libw) -V "$(package-libw) $(sodepver)" --add-udeb=$(package-libw)-udeb -- -c4
-	dh_makeshlibs -p$(package-ti-legacy) -V "$(package-ti-legacy) $(sodepver)" -- -c4
-	dh_makeshlibs -p$(package-lib-legacy) -V "$(package-lib-legacy) $(sodepver)" -- -c4
-	dh_makeshlibs -p$(package-libw-legacy) -V "$(package-libw-legacy) $(sodepver)" -- -c4
 ifneq ($(build_32),)
 	dh_makeshlibs -p$(package-ti-32) -V "$(package-ti-32) $(sodepver)" -- -c4
 	dh_makeshlibs -p$(package-lib-32) -V "$(package-lib-32) $(sodepver)" -- -c4
