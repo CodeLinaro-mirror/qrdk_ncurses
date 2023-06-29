@@ -86,7 +86,7 @@ build_64 = build-64 build-wide-64
 endif
 
 ifeq ($(DEB_HOST_ARCH),amd64)
-build_32_target = i486-$(DEB_HOST_GNU_SYSTEM)
+build_32_target = i686-$(DEB_HOST_GNU_SYSTEM)
 build_32 = build-32 build-wide-32
 endif
 
