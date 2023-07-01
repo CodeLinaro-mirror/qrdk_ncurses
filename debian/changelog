@@ -1,4 +1,4 @@
-ncurses (6.4+20230625-1) UNRELEASED; urgency=low
+ncurses (6.4+20230625-1) unstable; urgency=low
 
   * New upstream patchlevel.
   * Add Breaks against tmux (<< 3.3a-4) to libtinfo6 (see #1038269).
@@ -15,8 +15,9 @@ ncurses (6.4+20230625-1) UNRELEASED; urgency=low
     9.0.1619 (see #1038401).
   * Stop building the libtinfo5, libncurses5 and libncursew5 packages
     (Closes: #1025964).
+  * Upload to unstable.
 
- -- Sven Joachim <svenjoac@gmx.de>  Mon, 19 Jun 2023 17:50:09 +0200
+ -- Sven Joachim <svenjoac@gmx.de>  Sat, 01 Jul 2023 10:15:14 +0200
 
 ncurses (6.4+20230603-1) experimental; urgency=low
 
