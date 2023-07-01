@@ -386,20 +386,6 @@ install-arch: build-arch install-indep
 	echo "INPUT(libncurses.so.6 -ltinfo)" > $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libncurses.so
 	rm -f $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libncursesw.so
 	echo "INPUT(libncursesw.so.6 -ltinfo)" > $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libncursesw.so
-ifneq (,$(build_32))
-	mkdir -p $(tempdir)/usr/lib32
-	rm -f $(tempdir)/usr/lib32/libncurses.so
-	echo "INPUT(libncurses.so.6 -ltinfo)" > $(tempdir)/usr/lib32/libncurses.so
-	rm -f $(tempdir)/usr/lib32/libncursesw.so
-	echo "INPUT(libncursesw.so.6 -ltinfo)" > $(tempdir)/usr/lib32/libncursesw.so
-endif
-ifneq (,$(build_64))
-	mkdir -p $(tempdir)/usr/lib64
-	rm -f $(tempdir)/usr/lib64/libncurses.so
-	echo "INPUT(libncurses.so.6 -ltinfo)" > $(tempdir)/usr/lib64/libncurses.so
-	rm -f $(tempdir)/usr/lib64/libncursesw.so
-	echo "INPUT(libncursesw.so.6 -ltinfo)" > $(tempdir)/usr/lib64/libncursesw.so
-endif
 
 ifneq ($(build_examples),)
 	# Install the test programs, sparing the detour to debian/tmp.
