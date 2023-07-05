@@ -437,9 +437,9 @@ ifneq ($(build_examples),)
 	chmod -x debian/$(package-examples)/usr/libexec/ncurses-examples/README*
 endif
 	dh_missing -a --fail-missing
-	dh_makeshlibs -p$(package-ti) -V "$(package-ti) $(sodepver)" --add-udeb=$(package-ti)-udeb -- -c4
+	dh_makeshlibs -p$(package-ti) -V "$(package-ti) $(sodepver)" -- -c4
 	dh_makeshlibs -p$(package-lib) -V "$(package-lib) $(sodepver)" -- -c4
-	dh_makeshlibs -p$(package-libw) -V "$(package-libw) $(sodepver)" --add-udeb=$(package-libw)-udeb -- -c4
+	dh_makeshlibs -p$(package-libw) -V "$(package-libw) $(sodepver)" -- -c4
 ifneq ($(build_32),)
 	dh_makeshlibs -p$(package-ti-32) -V "$(package-ti-32) $(sodepver)" -- -c4
 	dh_makeshlibs -p$(package-lib-32) -V "$(package-lib-32) $(sodepver)" -- -c4
