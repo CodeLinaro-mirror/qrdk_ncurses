@@ -179,7 +179,8 @@ config.guess-stamp:
 $(objdir)/config.status: config.guess-stamp
 	test -d $(objdir) || mkdir $(objdir)
 	cd $(objdir) && $(relsrcdir)/configure \
-		$(CONFARGS)
+		$(CONFARGS) \
+		--without-normal
 
 $(objdir-static)/config.status: config.guess-stamp
 	test -d $(objdir-static) || mkdir $(objdir-static)
@@ -218,6 +219,7 @@ $(wobjdir)/config.status: config.guess-stamp
 	test -d $(wobjdir) || mkdir $(wobjdir)
 	cd $(wobjdir) && $(relsrcdir)/configure \
 		$(CONFARGS) \
+		--without-normal \
 		--with-progs \
 		--enable-widec
 
