@@ -476,7 +476,7 @@ binary-indep: build-indep install-indep
 	dh_link -i
 	dh_compress -i
 	dh_fixperms -i
-	dh_missing -i --fail-missing
+	dh_missing -i --fail-missing -Xusr/lib
 	dh_installdeb -i
 	dh_gencontrol -i
 	dh_md5sums -i

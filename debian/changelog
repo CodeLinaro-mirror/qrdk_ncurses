@@ -6,6 +6,8 @@ ncurses (6.4+20230625-2) UNRELEASED; urgency=medium
     Debian changes in a new patch 02-debian-rxvt.diff.
     - Set kbs=^? according to the Debian keyboard policy.
     - Provide rxvt-m as an alias to rxvt-basic.
+  * Pass "-Xusr/lib" to dh_missing in the binary-indep target to work
+    around spurious failures in full builds (see #1039941).
 
  -- Sven Joachim <svenjoac@gmx.de>  Wed, 05 Jul 2023 19:35:36 +0200
 
