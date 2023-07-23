@@ -158,7 +158,7 @@ CONFARGS += --with-build-cc=gcc --host=$(DEB_HOST_GNU_TYPE)
 CONFARGS-TEST += --host=$(DEB_HOST_GNU_TYPE)
 endif
 
-# Blacklist terminfo entries shipped by other Debian packages so that we do
+# Exclude terminfo entries shipped by other Debian packages so that we do
 # not begin shipping them by accident.
 badterminfo = f/fbterm k/kbtin x/xterm-kitty K/KBtin
 
@@ -344,7 +344,7 @@ install-indep: build-indep
 	# Move terminfo files to the right place.
 	mv $(tempdir)/etc/terminfo $(tempdir)/usr/share/terminfo
 
-	# Remove blacklisted terminal types and other stuff we don't install
+	# Remove excluded terminal types and other stuff we don't install
 	cd $(tempdir)/usr/share/terminfo && rm -f $(badterminfo)
 	rm -f $(tempdir)/usr/lib/terminfo \
 	      $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libcurses.so \
