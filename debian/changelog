@@ -13,6 +13,8 @@ ncurses (6.4+20230625-2) UNRELEASED; urgency=medium
     xterm-256color.
   * Take over the foot and foot-direct terminfo entries from the
     foot-terminfo package in ncurses-term (see #1041685).
+    - Add a versioned Provides on foot-terminfo to ncurses-term in order
+      to help with partial upgrades.
 
  -- Sven Joachim <svenjoac@gmx.de>  Wed, 05 Jul 2023 19:35:36 +0200
 
