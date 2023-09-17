@@ -1,0 +1,1 @@
+TERM=vxt-delay ASAN_OPTIONS=detect_odr_violation=0 ./lib_mvcur

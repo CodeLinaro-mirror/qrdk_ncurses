@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ../ncurses
+make || exit
+cd ../progs
+make || exit
+export TERMINFO=/tmp/FOO
+rm -rf $TERMINFO
+mkdir -p $TERMINFO
+rm -f trace
+shlib ./tic -v2 -x /var/mail/long_name.ti
+shlib ./infocmp -x xy
