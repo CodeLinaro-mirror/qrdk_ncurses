@@ -4,6 +4,7 @@ ncurses (6.4+20231007-1) UNRELEASED; urgency=medium
     - Improve manual description of immedok (Closes: #1053603).
     - Fix a few formatting issues with manpages (Closes: #1053123).
   * Update libtinfo6 symbols file, adding eight new symbols.
+  * Refresh Debian patches.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 08 Oct 2023 17:36:15 +0200
 
