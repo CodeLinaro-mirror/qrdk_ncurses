@@ -1,6 +1,5 @@
-'\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,31 +27,38 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.31 2022/02/12 20:03:40 tom Exp $
-.TH form_field_buffer 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: form_field_buffer.3x,v 1.40 2023/10/07 21:19:07 tom Exp $
+.TH form_field_buffer 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBform_field_buffer\fP \- field buffer control
+\fBform_field_buffer\fP \-
+field buffer control
 .SH SYNOPSIS
-\fB#include <form.h>\fP
-.sp
-\fBint set_field_buffer(FIELD *\fIfield\fB, int \fIbuf\fB, const char *\fIvalue\fB);\fR
-.br
-\fBchar *field_buffer(const FIELD *\fIfield\fB, int \fIbuffer\fB);\fR
-.sp
-\fBint set_field_status(FIELD *\fIfield\fB, bool \fIstatus\fB);\fR
-.br
-\fBbool field_status(const FIELD *\fIfield\fB);\fR
-.sp
-\fBint set_max_field(FIELD *\fIfield\fB, int \fImax\fB);\fR
-.br
+.nf
+\fB#include <form.h>
+.PP
+\fBint set_field_buffer(FIELD *\fIfield\fP, int \fIbuf\fP, const char *\fIvalue\fP);
+\fBchar *field_buffer(const FIELD *\fIfield\fP, int \fIbuffer\fP);
+.PP
+\fBint set_field_status(FIELD *\fIfield\fP, bool \fIstatus\fP);
+\fBbool field_status(const FIELD *\fIfield\fP);
+.PP
+\fBint set_max_field(FIELD *\fIfield\fP, int \fImax\fP);
+.fi
 .SH DESCRIPTION
 The function \fBset_field_buffer\fP sets the numbered buffer of the given field
 to contain a given string:
@@ -119,9 +125,6 @@ System error occurred (see \fBerrno\fP(3)).
 .TP 5
 .B E_BAD_ARGUMENT
 Routine detected an incorrect or out-of-range argument.
-.SH SEE ALSO
-\fBcurses\fP(3X) and related pages whose names begin \*(``form_\*('' for detailed
-descriptions of the entry points.
 .SH NOTES
 The header file \fB<form.h>\fP automatically includes the header file
 .PP
@@ -142,3 +145,6 @@ limit is smaller than the current field size.
 .SH AUTHORS
 Juergen Pfeifer.
 Manual pages and adaptation for new curses by Eric S. Raymond.
+.SH SEE ALSO
+\fB\%curses\fP(3X) and related pages whose names begin \*(``form_\*(''
+for detailed descriptions of the entry points.

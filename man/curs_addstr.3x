@@ -27,48 +27,46 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addstr.3x,v 1.28 2023/03/11 20:40:52 tom Exp $
-.TH curs_addstr 3X 2023-03-11 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_addstr.3x,v 1.35 2023/10/07 21:19:07 tom Exp $
+.TH curs_addstr 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
-.na
-.hy 0
 .SH NAME
-\fBaddstr\fP,
-\fBaddnstr\fP,
-\fBwaddstr\fP,
-\fBwaddnstr\fP,
-\fBmvaddstr\fP,
-\fBmvaddnstr\fP,
-\fBmvwaddstr\fP,
-\fBmvwaddnstr\fP \- add a string of characters to a \fBcurses\fP window and advance cursor
-.ad
-.hy
+\fB\%addstr\fP,
+\fB\%addnstr\fP,
+\fB\%waddstr\fP,
+\fB\%waddnstr\fP,
+\fB\%mvaddstr\fP,
+\fB\%mvaddnstr\fP,
+\fB\%mvwaddstr\fP,
+\fB\%mvwaddnstr\fP \-
+add a string to a \fIcurses\fR window and advance the cursor
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fP
+\fB#include <curses.h>
 .PP
-\fBint addstr(const char *\fIstr\fB);\fR
-.br
-\fBint addnstr(const char *\fIstr\fB, int \fIn\fB);\fR
-.br
-\fBint waddstr(WINDOW *\fIwin\fB, const char *\fIstr\fB);\fR
-.br
-\fBint waddnstr(WINDOW *\fIwin\fB, const char *\fIstr\fB, int \fIn\fB);\fR
-.sp
-\fBint mvaddstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
-.br
-\fBint mvaddnstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
-.br
-\fBint mvwaddstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
-.br
-\fBint mvwaddnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr, int \fIn\fB);\fR
+\fBint addstr(const char *\fIstr\fP);
+\fBint addnstr(const char *\fIstr\fP, int \fIn\fP);
+\fBint waddstr(WINDOW *\fIwin\fP, const char *\fIstr\fP);
+\fBint waddnstr(WINDOW *\fIwin\fP, const char *\fIstr\fP, int \fIn\fP);
+.PP
+\fBint mvaddstr(int \fIy\fP, int \fIx\fP, const char *\fIstr\fP);
+\fBint mvaddnstr(int \fIy\fP, int \fIx\fP, const char *\fIstr\fP, int \fIn\fP);
+\fBint mvwaddstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const char *\fIstr\fP);
+\fBint mvwaddnstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const char *\fIstr\fP, int \fIn\fP);
 .fi
 .SH DESCRIPTION
 These functions write the (null-terminated) character string
@@ -115,5 +113,5 @@ All of these functions except \fBwaddnstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_addch\fP(3X).
+\fB\%curses\fP(3X),
+\fB\%curs_addch\fP(3X)

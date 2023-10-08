@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,28 +27,34 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insch.3x,v 1.23 2022/02/12 20:05:11 tom Exp $
-.TH curs_insch 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_insch.3x,v 1.33 2023/10/07 21:19:07 tom Exp $
+.TH curs_insch 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBinsch\fP,
-\fBwinsch\fP,
-\fBmvinsch\fP,
-\fBmvwinsch\fP \- insert a character before cursor in a \fBcurses\fP window
+\fB\%insch\fP,
+\fB\%winsch\fP,
+\fB\%mvinsch\fP,
+\fB\%mvwinsch\fP \-
+insert a \fIcurses\fR character in a window
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint insch(chtype \fIch\fB);\fR
-.br
-\fBint winsch(WINDOW *\fIwin\fB, chtype \fIch\fB);\fR
-.sp
-\fBint mvinsch(int \fIy\fB, int \fIx\fB, chtype \fIch\fB);\fR
-.br
-\fBint mvwinsch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB);\fR
-.br
+.nf
+\fB#include <curses.h>
+.PP
+\fBint insch(chtype \fIch\fP);
+\fBint winsch(WINDOW *\fIwin\fP, chtype \fIch\fP);
+.PP
+\fBint mvinsch(int \fIy\fP, int \fIx\fP, chtype \fIch\fP);
+\fBint mvwinsch(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, chtype \fIch\fP);
+.fi
 .SH DESCRIPTION
 These routines insert the character \fIch\fP before the character under the
 cursor.
@@ -72,8 +78,8 @@ Note that \fBinsch\fP, \fBmvinsch\fP, and \fBmvwinsch\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fP(3X).
+\fB\%curses\fP(3X)
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_ins_wch\fP(3X).
+\fB\%curs_ins_wch\fP(3X).

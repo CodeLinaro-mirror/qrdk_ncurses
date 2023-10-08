@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,21 +28,30 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu.3x,v 1.30 2021/12/25 21:49:32 tom Exp $
-.TH menu 3X 2021-12-25 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: menu.3x,v 1.39 2023/10/07 21:19:07 tom Exp $
+.TH menu 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBmenu\fP \- curses extension for programming menus
+\fBmenu\fP \-
+curses extension for programming menus
 .SH SYNOPSIS
-\fB#include <menu.h>\fP
-.br
+.nf
+\fB#include <menu.h>
+.fi
 .SH DESCRIPTION
 The \fBmenu\fP library provides terminal-independent facilities for composing
 menu systems on character-cell terminals.
@@ -70,7 +79,7 @@ rendering of items already created.
 .
 The following table lists each \fBmenu\fP routine and the name of
 the manual page on which it is described.
-.
+.PP
 .TS
 l l .
 \fBcurses\fP Routine Name	Manual Page Name
@@ -206,8 +215,5 @@ NetBSD curses.
 Juergen Pfeifer.
 Manual pages and adaptation for ncurses by Eric S. Raymond.
 .SH SEE ALSO
-\fBcurses\fP(3X) and related pages whose names begin \*(``menu_\*(''
+\fB\%curses\fP(3X) and related pages whose names begin \*(``menu_\*(''
 for detailed descriptions of the entry points.
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

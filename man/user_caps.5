@@ -1,5 +1,6 @@
+'\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2017 Free Software Foundation, Inc.                            *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,37 +28,32 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: user_caps.5,v 1.24 2023/06/17 17:52:54 tom Exp $
-.TH user_caps 5 2023-06-17 "ncurses 6.4" "File formats"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.de NS
-.ie n  .sp
-.el    .sp .5
-.ie n  .in +4
-.el    .in +2
-.nf
-.ft CR			\" Courier
-..
-.de NE
-.fi
-.ft R
-.ie n  .in -4
-.el    .in -2
-..
+.\" $Id: user_caps.5,v 1.41 2023/10/07 21:19:07 tom Exp $
+.TH user_caps 5 2023-10-07 "ncurses 6.4" "File formats"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-user_caps \- user-defined terminfo capabilities
+user_caps \-
+user-defined \fIterminfo\fR capability format
 .SH SYNOPSIS
-.B @TIC@ -x, @INFOCMP@ -x
+.B @INFOCMP@ \-x
+.PP
+.B @TIC@ \-x
 .SH DESCRIPTION
 .SS Background
-.PP
 Before ncurses 5.0,
 terminfo databases used a \fIfixed repertoire\fP of terminal
 capabilities designed for the SVr2 terminal database in 1984,
@@ -188,7 +184,6 @@ Fitting that into termcap's limitation of 2-character names
 would be pointless.
 These extended keys are available only with terminfo.
 .SS Recognized capabilities
-.PP
 The ncurses library uses the user-definable capabilities.
 While the terminfo database may have other extensions,
 ncurses makes explicit checks for these:
@@ -208,6 +203,7 @@ the terminal.
 The command \*(``\fBtput clear\fP\*('' does the same thing.
 .TP 3
 NQ
+\fIboolean\fP,
 used to suppress a consistency check in @TIC@ for the ncurses capabilities
 in user6 through user9 (u6, u7, u8 and u9)
 which tell how to query the terminal's cursor position
@@ -330,22 +326,21 @@ xterm mouse protocols:
 .IP
 .nf
   xterm+x11mouse|X11 xterm mouse protocol,
-          kmous=\\E[M, XM=\\E[?1000%?%p1%{1}%=%th%el%;,
-          xm=\\E[M
+          kmous=\eE[M, XM=\eE[?1000%?%p1%{1}%=%th%el%;,
+          xm=\eE[M
              %?%p4%t%p3%e%{3}%;%'\ '%+%c
              %p2%'!'%+%c
              %p1%'!'%+%c,
 
   xterm+sm+1006|xterm SGR-mouse,
-          kmous=\\E[<, XM=\\E[?1006;1000%?%p1%{1}%=%th%el%;,
-          xm=\\E[<%i%p3%d;
+          kmous=\eE[<, XM=\eE[?1006;1000%?%p1%{1}%=%th%el%;,
+          xm=\eE[<%i%p3%d;
              %p1%d;
              %p2%d;
              %?%p4%tM%em%;,
 .fi
 .
 .SS Extended key-definitions
-.PP
 Several terminals provide the ability to send distinct strings for
 combinations of modified special keys.
 There is no standard for what those keys can send.
@@ -361,6 +356,7 @@ to find these special keys in the terminal description.
 Starting with the curses convention that \fIkey names\fP begin with \*(``k\*(''
 and that shifted special keys are an uppercase name,
 ncurses' terminal database defines these names to which a suffix is added:
+.PP
 .RS 5
 .TS
 tab(/) ;
@@ -380,6 +376,7 @@ kUP/special form of kcuu1 (cursor-up)
 .RE
 .PP
 These are the suffixes used to denote the modifiers:
+.PP
 .RS 5
 .TS
 tab(/) ;
@@ -414,32 +411,29 @@ ask \fBtigetstr\fP(3X) for their values, and
 given the list of values,
 ask \fBkey_defined\fP(3X) for the \fIkey-code\fP which
 would be returned for those keys by \fBwgetch\fP(3X).
-.PP
 .\"
 .SH PORTABILITY
-.PP
 The \*(``\-x\*('' extension feature of \fB@TIC@\fP and \fB@INFOCMP@\fP
 has been adopted in NetBSD curses.
 That implementation stores user-defined capabilities,
 but makes no use of these capabilities itself.
 .\"
+.SH AUTHORS
+Thomas E. Dickey
+.br
+beginning with ncurses 5.0 (1999)
+.\"
 .SH SEE ALSO
-.PP
-\fB@INFOCMP@\fP(1M),
-\fB@TIC@\fP(1M).
+\fB\%@INFOCMP@\fP(1M),
+\fB\%@TIC@\fP(1M)
 .PP
 The terminal database section
 .I "NCURSES USER-DEFINABLE CAPABILITIES"
 summarizes commonly-used user-defined capabilities
 which are used in the terminal descriptions.
-Some of those features are mentioned in \fBscreen\fP(1) or \fBtmux\fP(1).
+Some of those features are mentioned in \fB\%screen\fP(1) or
+\fBtmux\fP(1).
 .PP
 .I "XTerm Control Sequences"
-provides further information on the \fBxterm\fP(1) features
-which are used in these extended capabilities.
-.\"
-.SH AUTHORS
-.PP
-Thomas E. Dickey
-.br
-beginning with ncurses 5.0 (1999)
+provides further information on the \fB\%xterm\fP(1) features
+that are used in these extended capabilities.

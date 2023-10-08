@@ -27,18 +27,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.64 2023/06/10 15:46:24 tom Exp $
-.TH @TSET@ 1 2023-06-10 "ncurses 6.4" "User commands"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: tset.1,v 1.72 2023/10/07 21:19:07 tom Exp $
+.TH @TSET@ 1 2023-10-07 "ncurses 6.4" "User commands"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.ds ^  \(ha
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.ds       ^  ^
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fB@TSET@\fP, \fB@RESET@\fP \- terminal initialization
+\fB\%@TSET@\fP,
+\fB\%@RESET@\fP \-
+initialize or reset terminal state
 .SH SYNOPSIS
 \fB@TSET@\fP [\fB\-IQVcqrsw\fP] [\fB\-\fP] [\fB\-e\fP \fIch\fP] [\fB\-i\fP \fIch\fP] [\fB\-k\fP \fIch\fP] [\fB\-m\fP \fImapping\fP] [\fIterminal\fP]
 .br
@@ -116,7 +127,6 @@ Finally, if the erase, interrupt and line kill characters have changed,
 or are not set to their default values, their values are displayed to the
 standard error output.
 .SS reset - reinitialization
-.PP
 When invoked as \fB@RESET@\fP, \fB@TSET@\fP sets the terminal
 modes to \*(``sane\*('' values:
 .bP
@@ -145,7 +155,6 @@ to work, as carriage-return may no longer work in the abnormal state.
 .bP
 Also, the terminal will often not echo the command.
 .SH OPTIONS
-.PP
 The options are as follows:
 .TP 5
 .B \-c
@@ -200,7 +209,7 @@ unless \fBsetupterm\fP is not able to detect the window size.
 The arguments for the \fB\-e\fP, \fB\-i\fP, and \fB\-k\fP
 options may either be entered as actual characters
 or by using the \*(``hat\*(''
-notation, i.e., control-h may be specified as \*(``^H\*('' or \*(``^h\*(''.
+notation, i.e., control-h may be specified as \*(``\*^H\*('' or \*(``\*^h\*(''.
 .PP
 If neither \fB\-c\fP or \fB\-w\fP is given, both options are assumed.
 .
@@ -219,7 +228,7 @@ Note, the \fBcsh\fP commands set and unset the shell variable
 The following line in the \fB.login\fP
 or \fB.profile\fP files will initialize the environment correctly:
 .sp
-    eval \`@TSET@ \-s options ... \`
+    eval \(ga@TSET@ \-s options ... \(ga
 .
 .SH TERMINAL TYPE MAPPING
 When the terminal is not hardwired into the system (or the current
@@ -284,7 +293,6 @@ entire \fB\-m\fP option argument be placed within single quote characters,
 and that \fBcsh\fP users insert a backslash character (\*(``\e\*('') before
 any exclamation marks (\*(``!\*('').
 .SH HISTORY
-.PP
 A \fBreset\fP command appeared in 1BSD (March 1978), written by Kurt Shoens.
 This program set the \fIerase\fP and \fIkill\fP characters
 to \fB^H\fP (backspace) and \fB@\fP respectively.
@@ -312,7 +320,6 @@ The \fBncurses\fP implementation
 was lightly adapted from the 4.4BSD sources for a terminfo environment by Eric
 S. Raymond <esr@snark.thyrsus.com>.
 .SH COMPATIBILITY
-.PP
 Neither IEEE Std 1003.1/The Open Group Base Specifications Issue 7
 (POSIX.1-2008) nor
 X/Open Curses Issue 7 documents \fB@TSET@\fP or \fB@RESET@\fP.
@@ -424,16 +431,11 @@ system port name to terminal type mapping database (BSD versions only).
 @TERMINFO@
 terminal capability database
 .SH SEE ALSO
-.hy 0
-\fBcsh\fP(1),
-\fBsh\fP(1),
-\fBstty\fP(1),
-\fBcurs_terminfo\fP(3X),
-\fBtty\fP(4),
-\fBterminfo\fP(5),
-\fBttys\fP(5),
-\fBenviron\fP(7)
-.hy
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
+\fB\%csh\fP(1),
+\fB\%sh\fP(1),
+\fB\%stty\fP(1),
+\fB\%curs_terminfo\fP(3X),
+\fB\%tty\fP(4),
+\fB\%terminfo\fP(5),
+\fB\%ttys\fP(5),
+\fB\%environ\fP(7)

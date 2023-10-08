@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2019-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,40 +27,41 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insstr.3x,v 1.30 2022/02/12 20:05:11 tom Exp $
-.TH curs_insstr 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_insstr.3x,v 1.40 2023/10/07 21:19:07 tom Exp $
+.TH curs_insstr 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBinsstr\fP,
-\fBinsnstr\fP,
-\fBwinsstr\fP,
-\fBwinsnstr\fP,
-\fBmvinsstr\fP,
-\fBmvinsnstr\fP,
-\fBmvwinsstr\fP,
-\fBmvwinsnstr\fP \- insert string before cursor in a \fBcurses\fP window
+\fB\%insstr\fP,
+\fB\%insnstr\fP,
+\fB\%winsstr\fP,
+\fB\%winsnstr\fP,
+\fB\%mvinsstr\fP,
+\fB\%mvinsnstr\fP,
+\fB\%mvwinsstr\fP,
+\fB\%mvwinsnstr\fP \-
+insert a string in a \fIcurses\fR window
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.br
-\fBint insstr(const char *\fIstr\fB);\fR
-.br
-\fBint insnstr(const char *\fIstr\fB, int \fIn\fB);\fR
-.br
-\fBint winsstr(WINDOW *\fIwin\fB, const char *\fIstr\fB);\fR
-.br
-\fBint winsnstr(WINDOW *\fIwin\fB, const char *\fIstr\fB, int \fIn\fB);\fR
-.sp
-\fBint mvinsstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
-.br
-\fBint mvinsnstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
-.br
-\fBint mvwinsstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
-.br
-\fBint mvwinsnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
-.br
+.nf
+\fB#include <curses.h>
+\fBint insstr(const char *\fIstr\fP);
+\fBint insnstr(const char *\fIstr\fP, int \fIn\fP);
+\fBint winsstr(WINDOW *\fIwin\fP, const char *\fIstr\fP);
+\fBint winsnstr(WINDOW *\fIwin\fP, const char *\fIstr\fP, int \fIn\fP);
+.PP
+\fBint mvinsstr(int \fIy\fP, int \fIx\fP, const char *\fIstr\fP);
+\fBint mvinsnstr(int \fIy\fP, int \fIx\fP, const char *\fIstr\fP, int \fIn\fP);
+\fBint mvwinsstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const char *\fIstr\fP);
+\fBint mvwinsnstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const char *\fIstr\fP, int \fIn\fP);
+.fi
 .SH DESCRIPTION
 These routines insert a character string
 (as many characters as will fit on the line)
@@ -99,7 +100,7 @@ The Single Unix Specification, Version 2 states that
 This is probably an error, since it makes this group of functions inconsistent.
 Also, no implementation of curses documents this inconsistency.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_util\fP(3X),
-\fBcurs_clear\fP(3X),
-\fBcurs_inch\fP(3X).
+\fB\%curses\fP(3X),
+\fB\%curs_util\fP(3X),
+\fB\%curs_clear\fP(3X),
+\fB\%curs_inch\fP(3X)

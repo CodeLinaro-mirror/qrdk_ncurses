@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,20 +28,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.77 2022/02/12 20:02:20 tom Exp $
-.TH @TPUT@ 1 2022-02-12 "ncurses 6.4" "User commands"
-.ds d @TERMINFO@
-.ds n 1
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: tput.1,v 1.86 2023/10/07 21:19:07 tom Exp $
+.TH @TPUT@ 1 2023-10-07 "ncurses 6.4" "User commands"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
+.ds n 1
+.ds d @TERMINFO@
 .SH NAME
-\fB@TPUT@\fP, \fBreset\fP \- initialize a terminal or query terminfo database
+\fB\%@TPUT@\fP,
+\fB\%reset\fP \-
+initialize a terminal or query \fIterminfo\fR database
 .SH SYNOPSIS
 \fB@TPUT@\fR [\fB\-T\fItype\fR] \fIcapname\fR [\fIparameters\fR]
 .br
@@ -56,7 +65,6 @@
 \fB@TPUT@ \-S\fP  \fB<<\fP
 .br
 \fB@TPUT@ \-V\fP
-.br
 .SH DESCRIPTION
 The \fB@TPUT@\fP utility uses the \fBterminfo\fP database to make the
 values of terminal-dependent capabilities and information available to
@@ -273,7 +281,6 @@ same effect as \fB@TPUT@ init\fP.
 Again, you are less likely to use that link because another program
 named \fBinit\fP has a more well-established use.
 .SS Terminal Size
-.PP
 Besides the special commands (e.g., \fBclear\fP),
 @TPUT@ treats certain terminfo capabilities specially:
 \fBlines\fP and \fBcols\fP.
@@ -320,12 +327,12 @@ Print the number of columns for the current terminal.
 \fB@TPUT@ \-T450 cols\fP
 Print the number of columns for the 450 terminal.
 .TP 5
-\fBbold=`@TPUT@ smso` offbold=`@TPUT@ rmso`\fP
+\fBbold=\(ga@TPUT@ smso\(ga offbold=\(ga@TPUT@ rmso\(ga\fP
 Set the shell variables \fBbold\fP, to begin stand-out mode
 sequence, and \fBoffbold\fP, to end standout mode sequence,
 for the current terminal.
 This might be followed by a
-prompt: \fBecho "${bold}Please type in your name: ${offbold}\\c"\fP
+prompt: \fBecho "${bold}Please type in your name: ${offbold}\ec"\fP
 .TP 5
 \fB@TPUT@ hc\fP
 Set exit code to indicate if the current terminal is a hard copy terminal.
@@ -481,7 +488,6 @@ almost without change,
 Raymond made improvements to the way the command-line parameters
 were handled.
 .SH PORTABILITY
-.PP
 This implementation of \fBtput\fP differs from AT&T \fBtput\fP in
 two important areas:
 .bP
@@ -609,12 +615,9 @@ as ncurses.
 NetBSD curses documents different exit codes which do not correspond
 to either ncurses or X/Open.
 .SH SEE ALSO
-\fB@CLEAR@\fP(\*n),
-\fBstty\fP(1),
-\fB@TABS@\fP(\*n),
-\fB@TSET@\fP(\*n),
-\fBcurs_termcap\fP(3X),
-\fBterminfo\fP(5).
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
+\fB\%@CLEAR@\fP(\*n),
+\fB\%stty\fP(1),
+\fB\%@TABS@\fP(\*n),
+\fB\%@TSET@\fP(\*n),
+\fB\%curs_termcap\fP(3X),
+\fB\%terminfo\fP(5)

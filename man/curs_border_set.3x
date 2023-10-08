@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2019-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2002-2011,2012 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,38 +27,40 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border_set.3x,v 1.17 2022/02/12 20:06:41 tom Exp $
-.TH curs_border_set 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.na
-.hy 0
+.\" $Id: curs_border_set.3x,v 1.27 2023/10/07 21:19:07 tom Exp $
+.TH curs_border_set 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBborder_set\fP,
-\fBwborder_set\fP,
-\fBbox_set\fP,
-\fBhline_set\fP,
-\fBwhline_set\fP,
-\fBmvhline_set\fP,
-\fBmvwhline_set\fP,
-\fBvline_set\fP,
-\fBwvline_set\fP,
-\fBmvvline_set\fP,
-\fBmvwvline_set\fP \- create \fBcurses\fP borders or lines using complex characters and renditions
-.ad
-.hy
+\fB\%border_set\fP,
+\fB\%wborder_set\fP,
+\fB\%box_set\fP,
+\fB\%hline_set\fP,
+\fB\%whline_set\fP,
+\fB\%mvhline_set\fP,
+\fB\%mvwhline_set\fP,
+\fB\%vline_set\fP,
+\fB\%wvline_set\fP,
+\fB\%mvvline_set\fP,
+\fB\%mvwvline_set\fP \-
+draw borders and lines in a \fIcurses\fR window of wide characters
 .SH SYNOPSIS
+.nf
+\fB#include <curses.h>
 .PP
-\fB#include <curses.h>\fP
-.sp
-\fBint border_set(\fP
+\fBint border_set(
    \fBconst cchar_t *\fIls\fR, \fBconst cchar_t *\fIrs\fR,
    \fBconst cchar_t *\fIts\fR, \fBconst cchar_t *\fIbs\fR,
    \fBconst cchar_t *\fItl\fR, \fBconst cchar_t *\fItr\fR,
-   \fBconst cchar_t *\fIbl\fR, \fBconst cchar_t *\fIbr\fR
-\fB);\fP
+   \fBconst cchar_t *\fIbl\fR, \fBconst cchar_t *\fIbr\fB);\fR
 .br
 \fBint wborder_set(\fP
    \fBWINDOW *win\fP,
@@ -66,46 +68,36 @@
    \fBconst cchar_t *\fIts\fR, \fBconst cchar_t *\fIbs\fR,
    \fBconst cchar_t *\fItl\fR, \fBconst cchar_t *\fItr\fR,
    \fBconst cchar_t *\fIbl\fR, \fBconst cchar_t *\fIbr\fB);\fR
-.br
 \fBint box_set(\fP
    \fBWINDOW *win\fP,
    \fBconst cchar_t *\fIverch\fR,
    \fBconst cchar_t *\fIhorch\fB);\fR
-.br
 \fBint hline_set(\fP
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint whline_set(\fP
    \fBWINDOW *\fIwin\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint mvhline_set(\fP
    \fBint \fIy\fR, \fBint \fIx\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint mvwhline_set(\fP
    \fBWINDOW *\fIwin\fR,
    \fBint \fIy\fR, \fBint \fIx\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint vline_set(\fP
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint wvline_set(\fP
    \fBWINDOW *\fIwin\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint mvvline_set(\fP
    \fBint \fIy\fR, \fBint \fIx\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
 \fBint mvwvline_set(\fP
    \fBWINDOW *\fIwin\fR,
    \fBint \fIy\fR, \fBint \fIx\fR,
    \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
-.br
+.fi
 .SH DESCRIPTION
-.PP
 The
 \fBborder_set\fP
 and
@@ -181,7 +173,6 @@ The
 functions draw a line proceeding toward the last line of the window.
 .br
 .SH NOTES
-.PP
 Note that
 \fBborder_set\fP,
 \fBhline_set\fP,
@@ -191,9 +182,7 @@ Note that
 \fBmvwvline_set\fP, and
 \fBvline_set\fP
 may be macros.
-.br
 .SH RETURN VALUE
-.PP
 Upon successful completion, these functions return
 \fBOK\fP.
 Otherwise, they return
@@ -205,7 +194,7 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH SEE ALSO
-\fBncurses\fP(3X),
-\fBcurs_add_wch\fP(3X),
-\fBcurs_border\fP(3X),
-\fBcurs_outopts\fP(3X)
+\fB\%ncurses\fP(3X),
+\fB\%curs_add_wch\fP(3X),
+\fB\%curs_border\fP(3X),
+\fB\%curs_outopts\fP(3X)

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,14 +29,17 @@
 .\"
 .\" Author: Thomas E. Dickey 1996
 .\"
-.\" $Id: wresize.3x,v 1.21 2022/02/12 20:07:29 tom Exp $
-.TH wresize 3X 2022-02-12 "ncurses 6.4" "Library calls"
+.\" $Id: wresize.3x,v 1.32 2023/10/07 21:19:07 tom Exp $
+.TH wresize 3X 2023-10-07 "ncurses 6.4" "Library calls"
 .SH NAME
-\fBwresize\fP \- resize a curses window
+\fB\%wresize\fP \-
+resize a \fIcurses\fR window
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint wresize(WINDOW *\fIwin\fB, int \fIlines\fB, int \fIcolumns\fB);\fR
+.nf
+\fB#include <curses.h>
+.PP
+\fBint wresize(WINDOW *\fIwin\fP, int \fIlines\fP, int \fIcolumns\fP);
+.fi
 .SH DESCRIPTION
 This is an extension to the curses library.
 It reallocates storage for an \fBncurses\fP
@@ -55,12 +58,11 @@ simplify the logic of \fBresizeterm\fP.
 The caller must ensure that the window's dimensions fit within the
 actual screen dimensions.
 .SH PORTABILITY
-.PP
 It is not possible to resize windows with SVr4 curses.
 .PP
 This extension of ncurses was introduced in mid-1995.
 It was adopted in NetBSD curses (2001) and PDCurses (2003).
-.SH SEE ALSO
-\fBresizeterm\fP(3X).
 .SH AUTHOR
 Thomas Dickey (from an equivalent function written in 1988 for BSD curses).
+.SH SEE ALSO
+\fB\%resizeterm\fP(3X)

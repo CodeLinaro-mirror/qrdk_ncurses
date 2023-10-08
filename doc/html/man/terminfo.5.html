@@ -5,7 +5,7 @@
   * Note: this must be run through tbl before nroff.
   * The magic cookie on the first line triggers this under some man programs.
   ****************************************************************************
-  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2018-2021,2023 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -32,10 +32,10 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.head,v 1.42 2021/12/25 17:39:16 tom Exp @
+  * @Id: terminfo.head,v 1.52 2023/10/07 21:19:07 tom Exp @
   * Head of terminfo man page ends here
   ****************************************************************************
-  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+  * Copyright 2018-2022,2023 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -62,32 +62,31 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.tail,v 1.113 2022/12/10 19:51:10 tom Exp @
+  * @Id: terminfo.tail,v 1.133 2023/10/07 20:53:54 tom Exp @
   *.in -2
   *.in +2
   *.in -2
   *.in +2
-  *.TH
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>terminfo 5   File Formats</TITLE>
+<TITLE>terminfo 5 2023-10-07 ncurses 6.4 File formats</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 
 </HEAD>
 <BODY>
-<H1 class="no-header">terminfo 5   File Formats</H1>
+<H1 class="no-header">terminfo 5 2023-10-07 ncurses 6.4 File formats</H1>
 <PRE>
-<STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>                      File Formats                      <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
+<STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>                      File formats                      <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       terminfo - terminal capability database
+       <STRONG>terminfo</STRONG> - terminal capability database
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -106,7 +105,7 @@
        have, by specifying how to perform screen operations, and by specifying
        padding requirements and initialization sequences.
 
-       This manual describes <STRONG>ncurses</STRONG> version 6.4 (patch 20230617).
+       This manual describes <STRONG>ncurses</STRONG> version 6.4 (patch 20231007).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -161,6 +160,7 @@
        following suffixes should be used where possible:
 
             <STRONG>Suffix</STRONG>                  <STRONG>Meaning</STRONG>                   <STRONG>Example</STRONG>
+            -------------------------------------------------------------
             -<EM>nn</EM>      Number of lines on the screen            aaa-60
             -<EM>n</EM>p      Number of pages of memory                c100-4p
             -am      With automargins (usually the default)   vt100-am
@@ -283,7 +283,6 @@
 
                   <STRONG>Variable</STRONG>            <STRONG>Cap-</STRONG>      <STRONG>TCap</STRONG>       <STRONG>Description</STRONG>
                   <STRONG>Booleans</STRONG>            <STRONG>name</STRONG>      <STRONG>Code</STRONG>
-
 
 
           auto_left_margin            bw        bw     cub1 wraps from
@@ -1172,9 +1171,14 @@
        numbered keys and the handful of special named keys) is best done using
        the longer names available using terminfo.
 
+       The ncurses library uses a few of these user-defined  capabilities,  as
+       described  in <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.  Other user-defined capabilities (including
+       function keys) are described in the terminal database, in  the  section
+       on <EM>NCURSES</EM> <EM>USER-DEFINABLE</EM> <EM>CAPABILITIES</EM>
+
 
 </PRE><H3><a name="h3-A-Sample-Entry">A Sample Entry</a></H3><PRE>
-       The  following  entry,  describing  an   ANSI-standard   terminal,   is
+       The   following   entry,   describing  an  ANSI-standard  terminal,  is
        representative of what a <STRONG>terminfo</STRONG> entry for a modern terminal typically
        looks like.
 
@@ -1209,41 +1213,41 @@
                smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
                u8=\E[?%[;0123456789]c, u9=\E[c, vpa=\E[%i%p1%dd,
 
-       Entries may continue onto multiple lines by placing white space at  the
-       beginning  of  each line except the first.  Comments may be included on
+       Entries  may continue onto multiple lines by placing white space at the
+       beginning of each line except the first.  Comments may be  included  on
        lines beginning with "#".  Capabilities in <EM>terminfo</EM> are of three types:
 
-       <STRONG>o</STRONG>   Boolean capabilities which indicate  that  the  terminal  has  some
+       <STRONG>o</STRONG>   Boolean  capabilities  which  indicate  that  the terminal has some
            particular feature,
 
        <STRONG>o</STRONG>   numeric capabilities giving the size of the terminal or the size of
            particular delays, and
 
-       <STRONG>o</STRONG>   string capabilities, which give a sequence which  can  be  used  to
+       <STRONG>o</STRONG>   string  capabilities,  which  give  a sequence which can be used to
            perform particular terminal operations.
 
 
 </PRE><H3><a name="h3-Types-of-Capabilities">Types of Capabilities</a></H3><PRE>
        All capabilities have names.  For instance, the fact that ANSI-standard
-       terminals have <EM>automatic</EM> <EM>margins</EM> (i.e., an automatic return  and  line-
-       feed  when the end of a line is reached) is indicated by the capability
-       <STRONG>am</STRONG>.  Hence the description of ansi includes <STRONG>am</STRONG>.   Numeric  capabilities
-       are  followed  by  the  character  "#" and then a positive value.  Thus
+       terminals  have  <EM>automatic</EM> <EM>margins</EM> (i.e., an automatic return and line-
+       feed when the end of a line is reached) is indicated by the  capability
+       <STRONG>am</STRONG>.   Hence  the description of ansi includes <STRONG>am</STRONG>.  Numeric capabilities
+       are followed by the character "#" and  then  a  positive  value.   Thus
        <STRONG>cols</STRONG>, which indicates the number of columns the terminal has, gives the
-       value  "80" for ansi.  Values for numeric capabilities may be specified
-       in decimal, octal or hexadecimal,  using  the  C  programming  language
+       value "80" for ansi.  Values for numeric capabilities may be  specified
+       in  decimal,  octal,  or  hexadecimal, using the C programming language
        conventions (e.g., 255, 0377 and 0xff or 0xFF).
 
-       Finally,  string  valued capabilities, such as <STRONG>el</STRONG> (clear to end of line
-       sequence) are given by the two-character  code,  an  "=",  and  then  a
+       Finally, string valued capabilities, such as <STRONG>el</STRONG> (clear to end  of  line
+       sequence)  are  given  by  the  two-character  code, an "=", and then a
        string ending at the next following ",".
 
-       A  number  of  escape  sequences  are  provided  in  the  string valued
+       A number  of  escape  sequences  are  provided  in  the  string  valued
        capabilities for easy encoding of characters there:
 
        <STRONG>o</STRONG>   Both <STRONG>\E</STRONG> and <STRONG>\e</STRONG> map to an ESCAPE character,
 
-       <STRONG>o</STRONG>   <STRONG>^x</STRONG> maps to a control-x for any appropriate <EM>x</EM>, and
+       <STRONG>o</STRONG>   <STRONG>^</STRONG><EM>x</I<STRONG>x</STRONG> maps to a control-<EM>x</EM> for any appropriate <EM>x</EM>, and
 
        <STRONG>o</STRONG>   the sequences
 
@@ -1256,9 +1260,9 @@
            respectively.
 
        X/Open Curses does not say what "appropriate <EM>x</EM>" might be.  In practice,
-       that  is a printable ASCII graphic character.  The special case "^?" is
-       interpreted as DEL (127).  In all other cases, the character  value  is
-       AND'd  with 0x1f, mapping to ASCII control codes in the range 0 through
+       that is a printable ASCII graphic character.  The special case "^?"  is
+       interpreted  as  DEL (127).  In all other cases, the character value is
+       AND'd with 0x1f, mapping to ASCII control codes in the range 0  through
        31.
 
        Other escapes include
@@ -1274,70 +1278,89 @@
        <STRONG>o</STRONG>   and <STRONG>\0</STRONG> for null.
 
            <STRONG>\0</STRONG> will produce \200, which does not terminate a string but behaves
-           as  a null character on most terminals, providing CS7 is specified.
+           as a null character on most terminals, providing CS7 is  specified.
            See <STRONG>stty(1)</STRONG>.
 
-           The reason for this quirk is to maintain  binary  compatibility  of
-           the  compiled  terminfo files with other implementations, e.g., the
-           SVr4 systems, which document this.   Compiled  terminfo  files  use
-           null-terminated  strings,  with  no  lengths.  Modifying this would
-           require a new binary  format,  which  would  not  work  with  other
+           The  reason  for  this quirk is to maintain binary compatibility of
+           the compiled terminfo files with other implementations,  e.g.,  the
+           SVr4  systems,  which  document  this.  Compiled terminfo files use
+           null-terminated strings, with no  lengths.   Modifying  this  would
+           require  a  new  binary  format,  which  would  not work with other
            implementations.
 
        Finally, characters may be given as three octal digits after a <STRONG>\</STRONG>.
 
-       A  delay  in  milliseconds  may appear anywhere in a string capability,
-       enclosed in $&lt;..&gt; brackets, as in <STRONG>el</STRONG>=\EK$&lt;5&gt;,  and  padding  characters
+       A delay in milliseconds may appear anywhere  in  a  string  capability,
+       enclosed  in  $&lt;..&gt;  brackets, as in <STRONG>el</STRONG>=\EK$&lt;5&gt;, and padding characters
        are supplied by <STRONG><A HREF="curs_terminfo.3x.html">tputs(3x)</A></STRONG> to provide this delay.
 
-       <STRONG>o</STRONG>   The  delay  must  be  a  number  with  at most one decimal place of
+       <STRONG>o</STRONG>   The delay must be a number  with  at  most  one  decimal  place  of
            precision; it may be followed by suffixes "*" or "/" or both.
 
-       <STRONG>o</STRONG>   A "*" indicates that the padding required is  proportional  to  the
-           number  of lines affected by the operation, and the amount given is
-           the per-affected-unit padding required.  (In  the  case  of  insert
+       <STRONG>o</STRONG>   A  "*"  indicates  that the padding required is proportional to the
+           number of lines affected by the operation, and the amount given  is
+           the  per-affected-unit  padding  required.   (In the case of insert
            character, the factor is still the number of <EM>lines</EM> affected.)
 
            Normally, padding is advisory if the device has the <STRONG>xon</STRONG> capability;
            it is used for cost computation but does not trigger delays.
 
-       <STRONG>o</STRONG>   A "/" suffix indicates that the padding is mandatory and  forces  a
+       <STRONG>o</STRONG>   A  "/"  suffix indicates that the padding is mandatory and forces a
            delay of the given number of milliseconds even on devices for which
            <STRONG>xon</STRONG> is present to indicate flow control.
 
-       Sometimes individual capabilities must be commented out.  To  do  this,
-       put  a  period before the capability name.  For example, see the second
+       Sometimes  individual  capabilities must be commented out.  To do this,
+       put a period before the capability name.  For example, see  the  second
        <STRONG>ind</STRONG> in the example above.
 
 
 </PRE><H3><a name="h3-Fetching-Compiled-Descriptions">Fetching Compiled Descriptions</a></H3><PRE>
-       The <STRONG>ncurses</STRONG> library  searches  for  terminal  descriptions  in  several
-       places.   It  uses only the first description found.  The library has a
-       compiled-in list of  places  to  search  which  can  be  overridden  by
-       environment  variables.   Before starting to search, <STRONG>ncurses</STRONG> eliminates
-       duplicates in its search list.
+       Terminal  descriptions  in  <STRONG>ncurses</STRONG>  are  stored in terminal databases.
+       These databases, which are found by their pathname, may  be  configured
+       either as directory trees or hashed databases (see <STRONG><A HREF="term.5.html">term(5)</A></STRONG>),
 
-       <STRONG>o</STRONG>   If the environment variable TERMINFO is set, it is  interpreted  as
-           the pathname of a directory containing the compiled description you
-           are working on.  Only that directory is searched.
+       The  library  uses  a  compiled-in  list  of  pathnames,  which  can be
+       overridden  by  environment  variables.   Before  starting  to  search,
+       <STRONG>ncurses</STRONG>  checks  the  search list, eliminating duplicates and pathnames
+       where no terminal database is found.  The  <STRONG>ncurses</STRONG>  library  reads  the
+       first description which passes its consistency checks.
 
-       <STRONG>o</STRONG>   If TERMINFO is not set, <STRONG>ncurses</STRONG> will instead look in the  directory
-           <STRONG>$HOME/.terminfo</STRONG> for a compiled description.
+       <STRONG>o</STRONG>   The  environment variable <STRONG>TERMINFO</STRONG> is checked first, for a terminal
+           database containing the terminal description.
 
-       <STRONG>o</STRONG>   Next,  if  the  environment  variable TERMINFO_DIRS is set, <STRONG>ncurses</STRONG>
-           will interpret the contents of that variable as a  list  of  colon-
-           separated directories (or database files) to be searched.
+       <STRONG>o</STRONG>   Next, <STRONG>ncurses</STRONG> looks in <STRONG>$HOME/.terminfo</STRONG> for a compiled description.
 
-           An  empty directory name (i.e., if the variable begins or ends with
-           a colon, or contains adjacent colons) is interpreted as the  system
+           This is an optional feature which may be omitted entirely from  the
+           library,  or  limited  to  prevent  accidental  use  by  privileged
+           applications.
+
+       <STRONG>o</STRONG>   Next, if the environment variable  <STRONG>TERMINFO_DIRS</STRONG>  is  set,  <STRONG>ncurses</STRONG>
+           interprets  the  contents  of  that  variable  as  a list of colon-
+           separated pathnames of terminal databases to be searched.
+
+           An empty pathname (i.e., if the variable  begins  or  ends  with  a
+           colon,  or  contains  adjacent colons) is interpreted as the system
            location <EM>/usr/share/terminfo</EM>.
 
        <STRONG>o</STRONG>   Finally, <STRONG>ncurses</STRONG> searches these compiled-in locations:
 
-           <STRONG>o</STRONG>   a list of directories (no default value), and
+           <STRONG>o</STRONG>   a list of directories (/usr/share/terminfo), and
 
-           <STRONG>o</STRONG>   the   system   terminfo   directory,  <EM>/usr/share/terminfo</EM>  (the
-               compiled-in default).
+           <STRONG>o</STRONG>   the system terminfo directory, <EM>/usr/share/terminfo</EM>
+
+       The <STRONG>TERMINFO</STRONG> variable can contain a terminal description instead of the
+       pathname  of  a terminal database.  If this variable begins with "hex:"
+       or "b64:" then <STRONG>ncurses</STRONG> reads a terminal description  from  hexadecimal-
+       or  base64-encoded  data,  and  if  that  description  matches the name
+       sought, will use that.  This encoded data can be  set  using  the  "-Q"
+       option of <STRONG>tic</STRONG> or <STRONG>infocmp</STRONG>.
+
+       The  preceding addresses the usual configuration of <STRONG>ncurses</STRONG>, which uses
+       terminal descriptions prepared in <EM>terminfo</EM> format.   While  <EM>termcap</EM>  is
+       less  expressive,  <STRONG>ncurses</STRONG>  can  also  be  configured  to  read <EM>termcap</EM>
+       descriptions.   In  that  configuration,  it  checks  the  <STRONG>TERMCAP</STRONG>  and
+       <STRONG>TERMPATH</STRONG>  variables  (for  content and search path, respectively) after
+       the system terminal database.
 
 
 </PRE><H3><a name="h3-Preparing-Descriptions">Preparing Descriptions</a></H3><PRE>
@@ -1450,7 +1473,7 @@
             the next character to be a "-" flag, avoiding interpreting "%-" as
             an operator.
 
-       %c   print <EM>pop()</EM> like %c in <STRONG>printf</STRONG>
+       <STRONG>%c</STRONG>   print <EM>pop()</EM> like %c in <STRONG>printf</STRONG>
 
        <STRONG>%s</STRONG>   print <EM>pop()</EM> like %s in <STRONG>printf</STRONG>
 
@@ -1550,28 +1573,31 @@
        variables are persistent across escape-string evaluations.
 
        Consider  the HP2645, which, to get to row 3 and column 12, needs to be
-       sent \E&amp;a12c03Y padded for 6 milliseconds.  Note that the order of  the
-       rows  and  columns  is  inverted  here, and that the row and column are
-       printed   as   two   digits.     Thus    its    <STRONG>cup</STRONG>    capability    is
-       "cup=6\E&amp;%p2%2dc%p1%2dY".
+       sent \E&amp;a12c03Y padded for 6 milliseconds.  The order of the  rows  and
+       columns  is  inverted  here,  and the row and column are printed as two
+       digits.  The corresponding terminal description is expressed thus:
+              cup=\E&amp;a%p2%dc%p1%dY$&lt;6&gt;,
 
-       The  Microterm ACT-IV needs the current row and column sent preceded by
-       a  <STRONG>^T</STRONG>,  with  the  row   and   column   simply   encoded   in   binary,
-       "cup=^T%p1%c%p2%c".   Terminals  which  use  "%c"  need  to  be able to
-       backspace the cursor (<STRONG>cub1</STRONG>), and to move the cursor up one line on  the
-       screen  (<STRONG>cuu1</STRONG>).   This  is  necessary  because it is not always safe to
-       transmit <STRONG>\n</STRONG> <STRONG>^D</STRONG> and <STRONG>\r</STRONG>, as the system may change or discard them.   (The
-       library  routines  dealing with terminfo set tty modes so that tabs are
-       never expanded, so \t is safe to send.  This turns out to be  essential
-       for the Ann Arbor 4080.)
+       The Microterm ACT-IV needs the current row and column sent preceded  by
+       a <STRONG>^T</STRONG>, with the row and column simply encoded in binary,
+              cup=^T%p1%c%p2%c
 
-       A  final example is the LSI ADM-3a, which uses row and column offset by
-       a blank character, thus "cup=\E=%p1%' '%+%c%p2%' '%+%c".  After sending
-       "\E=",  this  pushes  the first parameter, pushes the ASCII value for a
-       space (32), adds them (pushing the sum on the stack in place of the two
-       previous  values) and outputs that value as a character.  Then the same
-       is done for the second parameter.  More complex arithmetic is  possible
-       using the stack.
+       Terminals  which  use  "%c"  need  to  be  able to backspace the cursor
+       (<STRONG>cub1</STRONG>), and to move the cursor up one line on the screen (<STRONG>cuu1</STRONG>).   This
+       is necessary because it is not always safe to transmit <STRONG>\n</STRONG> <STRONG>^D</STRONG> and <STRONG>\r</STRONG>, as
+       the system may change or discard them.  (The library  routines  dealing
+       with  terminfo  set tty modes so that tabs are never expanded, so \t is
+       safe to send.  This turns out to be essential for the Ann Arbor 4080.)
+
+       A final example is the LSI ADM-3a, which uses row and column offset  by
+       a blank character, thus
+              cup=\E=%p1%' '%+%c%p2%' '%+%c
+
+       After  sending "\E=", this pushes the first parameter, pushes the ASCII
+       value for a space (32), adds them (pushing the  sum  on  the  stack  in
+       place  of  the  two  previous  values)  and  outputs  that  value  as a
+       character.  Then the same is  done  for  the  second  parameter.   More
+       complex arithmetic is possible using the stack.
 
 
 </PRE><H3><a name="h3-Cursor-Motions">Cursor Motions</a></H3><PRE>
@@ -1652,18 +1678,18 @@
 
        These are the margin-related capabilities:
 
-                <STRONG>Name</STRONG>       <STRONG>Description</STRONG>
-                ------------------------------------------------------
-                smgl       Set left margin at current column
-                smgr       Set right margin at current column
-                smgb       Set bottom margin at current line
-                smgt       Set top margin at current line
-                smgbp      Set bottom margin at line <EM>N</EM>
-                smglp      Set left margin at column <EM>N</EM>
-                smgrp      Set right margin at column <EM>N</EM>
-                smgtp      Set top margin at line <EM>N</EM>
-                smglr      Set both left and right margins to <EM>L</EM> and <EM>R</EM>
-                smgtb      Set both top and bottom margins to <EM>T</EM> and <EM>B</EM>
+                 <STRONG>Name</STRONG>    <STRONG>Description</STRONG>
+                 ---------------------------------------------------
+                 <STRONG>smgl</STRONG>    Set left margin at current column
+                 <STRONG>smgr</STRONG>    Set right margin at current column
+                 <STRONG>smgb</STRONG>    Set bottom margin at current line
+                 <STRONG>smgt</STRONG>    Set top margin at current line
+                 <STRONG>smgbp</STRONG>   Set bottom margin at line <EM>N</EM>
+                 <STRONG>smglp</STRONG>   Set left margin at column <EM>N</EM>
+                 <STRONG>smgrp</STRONG>   Set right margin at column <EM>N</EM>
+                 <STRONG>smgtp</STRONG>   Set top margin at line <EM>N</EM>
+                 <STRONG>smglr</STRONG>   Set both left and right margins to <EM>L</EM> and <EM>R</EM>
+                 <STRONG>smgtb</STRONG>   Set both top and bottom margins to <EM>T</EM> and <EM>B</EM>
 
        When writing an application that uses these  string  capabilities,  the
        pairs  should be first checked to see if each capability in the pair is
@@ -1887,26 +1913,26 @@
 
        If there is a sequence to set arbitrary  combinations  of  modes,  this
        should  be  given  as  <STRONG>sgr</STRONG> (set attributes), taking 9 parameters.  Each
-       parameter is either 0 or nonzero, as the corresponding attribute is  on
-       or  off.  The 9 parameters are, in order: standout, underline, reverse,
-       blink, dim, bold, blank, protect, alternate  character  set.   Not  all
-       modes  need  be  supported  by  <STRONG>sgr</STRONG>, only those for which corresponding
-       separate attribute commands exist.
+       parameter is either zero (0) or nonzero, as the corresponding attribute
+       is  on  or  off.   The 9 parameters are, in order: standout, underline,
+       reverse, blink, dim, bold, blank,  protect,  alternate  character  set.
+       Not  all  modes  need  be  supported  by  <STRONG>sgr</STRONG>,  only  those  for  which
+       corresponding separate attribute commands exist.
 
        For example, the DEC vt220 supports most of the modes:
 
-               <STRONG>tparm</STRONG> <STRONG>parameter</STRONG>      <STRONG>attribute</STRONG>        <STRONG>escape</STRONG> <STRONG>sequence</STRONG>
-
-               none                 none             \E[0m
-               p1                   standout         \E[0;1;7m
-               p2                   underline        \E[0;4m
-               p3                   reverse          \E[0;7m
-               p4                   blink            \E[0;5m
-               p5                   dim              not available
-               p6                   bold             \E[0;1m
-               p7                   invis            \E[0;8m
-               p8                   protect          not used
-               p9                   altcharset       ^O (off) ^N (on)
+                   <STRONG>tparm</STRONG> <STRONG>Parameter</STRONG>   <STRONG>Attribute</STRONG>    <STRONG>Escape</STRONG> <STRONG>Sequence</STRONG>
+                   ------------------------------------------------
+                   none              none         \E[0m
+                   p1                standout     \E[0;1;7m
+                   p2                underline    \E[0;4m
+                   p3                reverse      \E[0;7m
+                   p4                blink        \E[0;5m
+                   p5                dim          not available
+                   p6                bold         \E[0;1m
+                   p7                invis        \E[0;8m
+                   p8                protect      not used
+                   p9                altcharset   ^O (off) ^N (on)
 
        We begin each escape sequence by turning off any existing modes,  since
        there  is  no quick way to determine whether they are active.  Standout
@@ -1923,16 +1949,16 @@
 
        Writing out the above sequences, along with their dependencies yields
 
-            <STRONG>sequence</STRONG>             <STRONG>when</STRONG> <STRONG>to</STRONG> <STRONG>output</STRONG>      <STRONG>terminfo</STRONG> <STRONG>translation</STRONG>
-
-            \E[0                 always              \E[0
-            ;1                   if p1 or p6         %?%p1%p6%|%t;1%;
-            ;4                   if p2               %?%p2%|%t;4%;
-            ;5                   if p4               %?%p4%|%t;5%;
-            ;7                   if p1 or p3         %?%p1%p3%|%t;7%;
-            ;8                   if p7               %?%p7%|%t;8%;
-            m                    always              m
-            ^N or ^O             if p9 ^N, else ^O   %?%p9%t^N%e^O%;
+                 <STRONG>Sequence</STRONG>   <STRONG>When</STRONG> <STRONG>to</STRONG> <STRONG>Output</STRONG>      <STRONG>terminfo</STRONG> <STRONG>Translation</STRONG>
+                 ----------------------------------------------------
+                 \E[0       always              \E[0
+                 ;1         if p1 or p6         %?%p1%p6%|%t;1%;
+                 ;4         if p2               %?%p2%|%t;4%;
+                 ;5         if p4               %?%p4%|%t;5%;
+                 ;7         if p1 or p3         %?%p1%p3%|%t;7%;
+                 ;8         if p7               %?%p7%|%t;8%;
+                 m          always              m
+                 ^N or ^O   if p9 ^N, else ^O   %?%p9%t^N%e^O%;
 
        Putting this all together into the sgr sequence gives:
 
@@ -2216,42 +2242,41 @@
        4410v1 added.  This alternate character set may  be  specified  by  the
        <STRONG>acsc</STRONG> capability.
 
-         <STRONG>Glyph</STRONG>                       <STRONG>ACS</STRONG>            <STRONG>Ascii</STRONG>     <STRONG>acsc</STRONG>     <STRONG>acsc</STRONG>
-         <STRONG>Name</STRONG>                        <STRONG>Name</STRONG>           <STRONG>Default</STRONG>   <STRONG>Char</STRONG>     <STRONG>Value</STRONG>
+                                                   <STRONG>ASCII</STRONG>      <STRONG>acsc</STRONG>     <STRONG>acsc</STRONG>
+         <STRONG>Glyph</STRONG> <STRONG>Name</STRONG>                 <STRONG>ACS</STRONG> <STRONG>Name</STRONG>       <STRONG>Fallback</STRONG>   <STRONG>Symbol</STRONG>   <STRONG>Value</STRONG>
          --------------------------------------------------------------------
-         arrow pointing right        ACS_RARROW     &gt;         +        0x2b
-         arrow pointing left         ACS_LARROW     &lt;         ,        0x2c
-
-         arrow pointing up           ACS_UARROW     ^         -        0x2d
-         arrow pointing down         ACS_DARROW     v         .        0x2e
-         solid square block          ACS_BLOCK      #         0        0x30
-         diamond                     ACS_DIAMOND    +         `        0x60
-         checker board (stipple)     ACS_CKBOARD    :         a        0x61
-         degree symbol               ACS_DEGREE     \         f        0x66
-         plus/minus                  ACS_PLMINUS    #         g        0x67
-         board of squares            ACS_BOARD      #         h        0x68
-         lantern symbol              ACS_LANTERN    #         i        0x69
-         lower right corner          ACS_LRCORNER   +         j        0x6a
-         upper right corner          ACS_URCORNER   +         k        0x6b
-         upper left corner           ACS_ULCORNER   +         l        0x6c
-         lower left corner           ACS_LLCORNER   +         m        0x6d
-         large plus or crossover     ACS_PLUS       +         n        0x6e
-         scan line 1                 ACS_S1         ~         o        0x6f
-         scan line 3                 ACS_S3         -         p        0x70
-         horizontal line             ACS_HLINE      -         q        0x71
-         scan line 7                 ACS_S7         -         r        0x72
-         scan line 9                 ACS_S9         _         s        0x73
-         tee pointing right          ACS_LTEE       +         t        0x74
-         tee pointing left           ACS_RTEE       +         u        0x75
-         tee pointing up             ACS_BTEE       +         v        0x76
-         tee pointing down           ACS_TTEE       +         w        0x77
-         vertical line               ACS_VLINE      |         x        0x78
-         less-than-or-equal-to       ACS_LEQUAL     &lt;         y        0x79
-         greater-than-or-equal-to    ACS_GEQUAL     &gt;         z        0x7a
-         greek pi                    ACS_PI         *         {        0x7b
-         not-equal                   ACS_NEQUAL     !         |        0x7c
-         UK pound sign               ACS_STERLING   f         }        0x7d
-         bullet                      ACS_BULLET     o         ~        0x7e
+         arrow pointing right       <STRONG>ACS_RARROW</STRONG>     &gt;          +        0x2b
+         arrow pointing left        <STRONG>ACS_LARROW</STRONG>     &lt;          ,        0x2c
+         arrow pointing up          <STRONG>ACS_UARROW</STRONG>     ^          -        0x2d
+         arrow pointing down        <STRONG>ACS_DARROW</STRONG>     v          .        0x2e
+         solid square block         <STRONG>ACS_BLOCK</STRONG>      #          0        0x30
+         diamond                    <STRONG>ACS_DIAMOND</STRONG>    +          `        0x60
+         checker board (stipple)    <STRONG>ACS_CKBOARD</STRONG>    :          a        0x61
+         degree symbol              <STRONG>ACS_DEGREE</STRONG>     \          f        0x66
+         plus/minus                 <STRONG>ACS_PLMINUS</STRONG>    #          g        0x67
+         board of squares           <STRONG>ACS_BOARD</STRONG>      #          h        0x68
+         lantern symbol             <STRONG>ACS_LANTERN</STRONG>    #          i        0x69
+         lower right corner         <STRONG>ACS_LRCORNER</STRONG>   +          j        0x6a
+         upper right corner         <STRONG>ACS_URCORNER</STRONG>   +          k        0x6b
+         upper left corner          <STRONG>ACS_ULCORNER</STRONG>   +          l        0x6c
+         lower left corner          <STRONG>ACS_LLCORNER</STRONG>   +          m        0x6d
+         large plus or crossover    <STRONG>ACS_PLUS</STRONG>       +          n        0x6e
+         scan line 1                <STRONG>ACS_S1</STRONG>         ~          o        0x6f
+         scan line 3                <STRONG>ACS_S3</STRONG>         -          p        0x70
+         horizontal line            <STRONG>ACS_HLINE</STRONG>      -          q        0x71
+         scan line 7                <STRONG>ACS_S7</STRONG>         -          r        0x72
+         scan line 9                <STRONG>ACS_S9</STRONG>         _          s        0x73
+         tee pointing right         <STRONG>ACS_LTEE</STRONG>       +          t        0x74
+         tee pointing left          <STRONG>ACS_RTEE</STRONG>       +          u        0x75
+         tee pointing up            <STRONG>ACS_BTEE</STRONG>       +          v        0x76
+         tee pointing down          <STRONG>ACS_TTEE</STRONG>       +          w        0x77
+         vertical line              <STRONG>ACS_VLINE</STRONG>      |          x        0x78
+         less-than-or-equal-to      <STRONG>ACS_LEQUAL</STRONG>     &lt;          y        0x79
+         greater-than-or-equal-to   <STRONG>ACS_GEQUAL</STRONG>     &gt;          z        0x7a
+         greek pi                   <STRONG>ACS_PI</STRONG>         *          {        0x7b
+         not-equal                  <STRONG>ACS_NEQUAL</STRONG>     !          |        0x7c
+         UK pound sign              <STRONG>ACS_STERLING</STRONG>   f          }        0x7d
+         bullet                     <STRONG>ACS_BULLET</STRONG>     o          ~        0x7e
 
        A few notes apply to the table itself:
 
@@ -2332,28 +2357,30 @@
        free  to  map  these  as  it  likes, but the RGB values indicate normal
        locations in color space.
 
-                    <STRONG>Color</STRONG>       <STRONG>#define</STRONG>       <STRONG>Value</STRONG>       <STRONG>RGB</STRONG>
-                    black     <STRONG>COLOR_BLACK</STRONG>       0     0, 0, 0
-                    red       <STRONG>COLOR_RED</STRONG>         1     max,0,0
-                    green     <STRONG>COLOR_GREEN</STRONG>       2     0,max,0
-                    yellow    <STRONG>COLOR_YELLOW</STRONG>      3     max,max,0
-                    blue      <STRONG>COLOR_BLUE</STRONG>        4     0,0,max
-                    magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max,0,max
-                    cyan      <STRONG>COLOR_CYAN</STRONG>        6     0,max,max
-                    white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max
+                    <STRONG>Color</STRONG>      <STRONG>#define</STRONG>       <STRONG>Value</STRONG>        <STRONG>RGB</STRONG>
+                   ------------------------------------------------
+                   black     <STRONG>COLOR_BLACK</STRONG>       0     0,   0,   0
+                   red       <STRONG>COLOR_RED</STRONG>         1     max, 0,   0
+                   green     <STRONG>COLOR_GREEN</STRONG>       2     0,   max, 0
+                   yellow    <STRONG>COLOR_YELLOW</STRONG>      3     max, max, 0
+                   blue      <STRONG>COLOR_BLUE</STRONG>        4     0,   0,   max
+                   magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max, 0,   max
+                   cyan      <STRONG>COLOR_CYAN</STRONG>        6     0,   max, max
+                   white     <STRONG>COLOR_WHITE</STRONG>       7     max, max, max
 
        The argument values of <STRONG>setf</STRONG>/<STRONG>setb</STRONG> historically correspond to a different
        mapping, i.e.,
 
-                    <STRONG>Color</STRONG>       <STRONG>#define</STRONG>       <STRONG>Value</STRONG>       <STRONG>RGB</STRONG>
-                    black     <STRONG>COLOR_BLACK</STRONG>       0     0, 0, 0
-                    blue      <STRONG>COLOR_BLUE</STRONG>        1     0,0,max
-                    green     <STRONG>COLOR_GREEN</STRONG>       2     0,max,0
-                    cyan      <STRONG>COLOR_CYAN</STRONG>        3     0,max,max
-                    red       <STRONG>COLOR_RED</STRONG>         4     max,0,0
-                    magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max,0,max
-                    yellow    <STRONG>COLOR_YELLOW</STRONG>      6     max,max,0
-                    white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max
+                    <STRONG>Color</STRONG>      <STRONG>#define</STRONG>       <STRONG>Value</STRONG>        <STRONG>RGB</STRONG>
+                   ------------------------------------------------
+                   black     <STRONG>COLOR_BLACK</STRONG>       0     0,   0,   0
+                   blue      <STRONG>COLOR_BLUE</STRONG>        1     0,   0,   max
+                   green     <STRONG>COLOR_GREEN</STRONG>       2     0,   max, 0
+                   cyan      <STRONG>COLOR_CYAN</STRONG>        3     0,   max, max
+                   red       <STRONG>COLOR_RED</STRONG>         4     max, 0,   0
+                   magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max, 0,   max
+                   yellow    <STRONG>COLOR_YELLOW</STRONG>      6     max, max, 0
+                   white     <STRONG>COLOR_WHITE</STRONG>       7     max, max, max
 
        It  is  important  to  not  confuse the two sets of color capabilities;
        otherwise red/blue will be interchanged on the display.
@@ -2383,23 +2410,25 @@
        of  attributes  not  to  be  used  when  colors   are   enabled.    The
        correspondence with the attributes understood by <STRONG>curses</STRONG> is as follows:
 
-                  <STRONG>Attribute</STRONG>              <STRONG>Bit</STRONG>   <STRONG>Decimal</STRONG>      <STRONG>Set</STRONG> <STRONG>by</STRONG>
-                  A_STANDOUT             0     1            sgr
-                  A_UNDERLINE            1     2            sgr
-                  A_REVERSE              2     4            sgr
-                  A_BLINK                3     8            sgr
-                  A_DIM                  4     16           sgr
-                  A_BOLD                 5     32           sgr
-                  A_INVIS                6     64           sgr
-                  A_PROTECT              7     128          sgr
-                  A_ALTCHARSET           8     256          sgr
-                  A_HORIZONTAL           9     512          sgr1
-                  A_LEFT                 10    1024         sgr1
-                  A_LOW                  11    2048         sgr1
-                  A_RIGHT                12    4096         sgr1
-                  A_TOP                  13    8192         sgr1
-                  A_VERTICAL             14    16384        sgr1
-                  A_ITALIC               15    32768        sitm
+                         <STRONG>Attribute</STRONG>     <STRONG>Bit</STRONG>   <STRONG>Decimal</STRONG>   <STRONG>Set</STRONG> <STRONG>by</STRONG>
+                        --------------------------------------
+                        <STRONG>A_STANDOUT</STRONG>      0         1    <STRONG>sgr</STRONG>
+                        <STRONG>A_UNDERLINE</STRONG>     1         2    <STRONG>sgr</STRONG>
+                        <STRONG>A_REVERSE</STRONG>       2         4    <STRONG>sgr</STRONG>
+                        <STRONG>A_BLINK</STRONG>         3         8    <STRONG>sgr</STRONG>
+                        <STRONG>A_DIM</STRONG>           4        16    <STRONG>sgr</STRONG>
+                        <STRONG>A_BOLD</STRONG>          5        32    <STRONG>sgr</STRONG>
+                        <STRONG>A_INVIS</STRONG>         6        64    <STRONG>sgr</STRONG>
+                        <STRONG>A_PROTECT</STRONG>       7       128    <STRONG>sgr</STRONG>
+                        <STRONG>A_ALTCHARSET</STRONG>    8       256    <STRONG>sgr</STRONG>
+                        <STRONG>A_HORIZONTAL</STRONG>    9       512    <STRONG>sgr1</STRONG>
+                        <STRONG>A_LEFT</STRONG>         10      1024    <STRONG>sgr1</STRONG>
+                        <STRONG>A_LOW</STRONG>          11      2048    <STRONG>sgr1</STRONG>
+                        <STRONG>A_RIGHT</STRONG>        12      4096    <STRONG>sgr1</STRONG>
+                        <STRONG>A_TOP</STRONG>          13      8192    <STRONG>sgr1</STRONG>
+
+                        <STRONG>A_VERTICAL</STRONG>     14     16384    <STRONG>sgr1</STRONG>
+                        <STRONG>A_ITALIC</STRONG>       15     32768    <STRONG>sitm</STRONG>
 
        For  example, on many IBM PC consoles, the underline attribute collides
        with the foreground color blue and is  not  available  in  color  mode.
@@ -2513,12 +2542,18 @@
        safe length for a termcap entry 1k-1 (1023) bytes.  Depending  on  what
        the  application  and the termcap library being used does, and where in
        the termcap file the terminal type that <STRONG>tgetent</STRONG> is  searching  for  is,
-       several bad things can happen.
+       several bad things can happen:
 
-       Some  termcap libraries print a warning message or exit if they find an
-       entry that's longer than 1023 bytes; others do not; others truncate the
-       entries  to  1023  bytes.  Some application programs allocate more than
-       the recommended 1K for the termcap entry; others do not.
+       <STRONG>o</STRONG>   some termcap libraries print a warning message,
+
+       <STRONG>o</STRONG>   some exit if they find an entry that's longer than 1023 bytes,
+
+       <STRONG>o</STRONG>   some neither exit nor warn, doing nothing useful, and
+
+       <STRONG>o</STRONG>   some simply truncate the entries to 1023 bytes.
+
+       Some application programs allocate more than the recommended 1K for the
+       termcap entry; others do not.
 
        Each termcap entry has two important sizes associated with  it:  before
        "tc"  expansion, and after "tc" expansion.  "tc" is the capability that
@@ -2612,9 +2647,9 @@
 
        X/Open Curses does not mention  italics.   Portable  applications  must
        assume  that  numeric  capabilities  are  signed  16-bit  values.  This
-       includes the <EM>no</EM><STRONG>_</STRONG><EM>color</EM><STRONG>_</STRONG><EM>video</EM> (ncv) capability.   The  32768  mask  value
-       used  for  italics with ncv can be confused with an absent or cancelled
-       ncv.  If italics should work with colors, then the ncv  value  must  be
+       includes the <EM>no</EM><STRONG>_</STRONG><EM>color</EM><STRONG>_</STRONG><EM>video</EM> (<STRONG>ncv</STRONG>) capability.   The  32768  mask  value
+       used  for  italics with <STRONG>ncv</STRONG> can be confused with an absent or cancelled
+       <STRONG>ncv</STRONG>.  If italics should work with colors, then the <STRONG>ncv</STRONG>  value  must  be
        specified, even if it is zero.
 
        Different  commercial  ports  of  terminfo and curses support different
@@ -2645,19 +2680,19 @@
        /usr/share/terminfo/?/*  files containing terminal descriptions
 
 
-</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,    <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>,    <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,     <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,     <STRONG>printf(3)</STRONG>,     <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.     <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
-       <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
-
-
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Zeyd M. Ben-Halim, Eric S. Raymond, Thomas E. Dickey.  Based on <EM>pcurses</EM>
        by Pavel Curtis.
 
 
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,     <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>,    <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,    <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,  <STRONG>printf(3)</STRONG>,  <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>,
+       <STRONG><A HREF="term.5.html">term(5)</A></STRONG>, <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>
 
-                                                                   <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
+
+
+ncurses 6.4                       2023-10-07                       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>
@@ -2696,8 +2731,8 @@
 </li>
 <li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-FILES">FILES</a></li>
-<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHORS">AUTHORS</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 </ul>
 </div>
 </BODY>

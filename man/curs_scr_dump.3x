@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,50 +27,49 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scr_dump.3x,v 1.21 2022/02/12 20:05:11 tom Exp $
-.TH curs_scr_dump 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_scr_dump.3x,v 1.31 2023/10/07 21:19:07 tom Exp $
+.TH curs_scr_dump 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
-.na
-.hy 0
 .SH NAME
-\fBscr_dump\fP,
-\fBscr_restore\fP,
-\fBscr_init\fP,
-\fBscr_set\fP \- read (write) a \fBcurses\fP screen from (to) a file
-.ad
-.hy
+\fB\%scr_dump\fP,
+\fB\%scr_restore\fP,
+\fB\%scr_init\fP,
+\fB\%scr_set\fP \-
+read/write a \fIcurses\fR screen from/to a file
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint scr_dump(const char *\fIfilename\fB);\fR
-.br
-\fBint scr_restore(const char *\fIfilename\fB);\fR
-.br
-\fBint scr_init(const char *\fIfilename\fB);\fR
-.br
-\fBint scr_set(const char *\fIfilename\fB);\fR
-.br
+.nf
+\fB#include <curses.h>
+.PP
+\fBint scr_dump(const char *\fIfilename\fP);
+\fBint scr_restore(const char *\fIfilename\fP);
+\fBint scr_init(const char *\fIfilename\fP);
+\fBint scr_set(const char *\fIfilename\fP);
+.fi
 .SH DESCRIPTION
 .SS scr_dump
-.PP
 The \fBscr_dump\fP routine dumps the current contents
 of the \fIvirtual screen\fP
 to the file \fIfilename\fP.
 .SS scr_restore
-.PP
 The \fBscr_restore\fP routine sets the \fIvirtual screen\fP to the contents
 of \fIfilename\fP, which must have been written using \fBscr_dump\fP.
 The next call to \fBdoupdate\fP restores
 the \fIphysical screen\fP to the way it looked in the dump file.
 .SS scr_init
-.PP
 The \fBscr_init\fP routine reads in the contents of \fIfilename\fP and uses
 them to initialize the \fBcurses\fP data structures about what the terminal
 currently has on its screen.
@@ -87,7 +86,6 @@ if the terminfo capabilities \fBrmcup\fP and \fBnrrmc\fP exist, also
 .bP
 if the terminal has been written to since the preceding \fBscr_dump\fP call.
 .SS scr_set
-.PP
 The \fBscr_set\fP routine is a combination of \fBscr_restore\fP and
 \fBscr_init\fP.  It tells the program that the information in \fIfilename\fP is
 what is currently on the screen, and also what the program wants on the screen.
@@ -112,9 +110,9 @@ The SVr4 docs merely say under \fBscr_init\fP that the dump data is also
 considered invalid "if the time-stamp of the tty is old" but do not define
 \*(``old\*(''.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_initscr\fP(3X),
-\fBcurs_refresh\fP(3X),
-\fBcurs_util\fP(3X),
-\fBscr_dump\fP(5),
-\fBsystem\fP(3)
+\fB\%curses\fP(3X),
+\fB\%curs_initscr\fP(3X),
+\fB\%curs_refresh\fP(3X),
+\fB\%curs_util\fP(3X),
+\fB\%scr_dump\fP(5),
+\fB\%system\fP(3)

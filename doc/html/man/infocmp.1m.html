@@ -28,19 +28,19 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.84 2023/06/17 17:50:37 tom Exp @
+  * @Id: infocmp.1m,v 1.96 2023/10/07 21:19:07 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>infocmp 1m 2023-06-17 ncurses 6.4 User commands</TITLE>
+<TITLE>infocmp 1m 2023-10-07 ncurses 6.4 User commands</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 
 </HEAD>
 <BODY>
-<H1 class="no-header">infocmp 1m 2023-06-17 ncurses 6.4 User commands</H1>
+<H1 class="no-header">infocmp 1m 2023-10-07 ncurses 6.4 User commands</H1>
 <PRE>
 <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>                      User commands                     <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
 
@@ -219,18 +219,19 @@
        Like  other  <STRONG>ncurses</STRONG>  utilities,  <STRONG>infocmp</STRONG>  looks   for   the   terminal
        descriptions   in  several  places.   You  can  use  the  <STRONG>TERMINFO</STRONG>  and
        <STRONG>TERMINFO_DIRS</STRONG> environment variables to override the compiled-in default
-       list of places to search (see <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> for details).
+       list  of  places  to  search.   See <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, as well as the <EM>Fetching</EM>
+       <EM>Compiled</EM> <EM>Descriptions</EM> section in <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       You  can  also use the options <STRONG>-A</STRONG> and <STRONG>-B</STRONG> to override the list of places
+       You can also use the options <STRONG>-A</STRONG> and <STRONG>-B</STRONG> to override the list  of  places
        to search when comparing terminal descriptions:
 
        <STRONG>o</STRONG>   The <STRONG>-A</STRONG> option sets the location for the first <EM>termname</EM>
 
        <STRONG>o</STRONG>   The <STRONG>-B</STRONG> option sets the location for the other <EM>termnames</EM>.
 
-       Using these options, it is  possible  to  compare  descriptions  for  a
-       terminal  with  the  same name located in two different databases.  For
-       instance, you can use this feature for comparing descriptions  for  the
+       Using  these  options,  it  is  possible  to compare descriptions for a
+       terminal with the same name located in two  different  databases.   For
+       instance,  you  can use this feature for comparing descriptions for the
        same terminal created by different people.
 
 
@@ -238,118 +239,118 @@
        <STRONG>-0</STRONG>   causes the fields to be printed on one line, without wrapping.
 
        <STRONG>-1</STRONG>   causes the fields to be printed out one to a line.  Otherwise, the
-            fields will be printed several to a line to a maximum width of  60
+            fields  will be printed several to a line to a maximum width of 60
             characters.
 
-       <STRONG>-a</STRONG>   tells  <STRONG>infocmp</STRONG>  to  retain  commented-out capabilities rather than
-            discarding them.  Capabilities are  commented  by  prefixing  them
+       <STRONG>-a</STRONG>   tells <STRONG>infocmp</STRONG> to retain  commented-out  capabilities  rather  than
+            discarding  them.   Capabilities  are  commented by prefixing them
             with a period.
 
        <STRONG>-D</STRONG>   tells <STRONG>infocmp</STRONG> to print the database locations that it knows about,
             and exit.
 
-       <STRONG>-E</STRONG>   Dump the capabilities of the given terminal as tables,  needed  in
-            the   C   initializer  for  a  TERMTYPE  structure  (the  terminal
-            capability structure in the <STRONG>&lt;term.h&gt;</STRONG>).  This option is useful  for
-            preparing  versions  of  the  curses library hardwired for a given
-            terminal type.  The tables are all declared static, and are  named
-            according  to  the type and the name of the corresponding terminal
+       <STRONG>-E</STRONG>   Dump  the  capabilities of the given terminal as tables, needed in
+            the  C  initializer  for  a  TERMTYPE  structure   (the   terminal
+            capability  structure in the <STRONG>&lt;term.h&gt;</STRONG>).  This option is useful for
+            preparing versions of the curses library  hardwired  for  a  given
+            terminal  type.  The tables are all declared static, and are named
+            according to the type and the name of the  corresponding  terminal
             entry.
 
-            Before ncurses 5.0, the split between the <STRONG>-e</STRONG> and  <STRONG>-E</STRONG>  options  was
-            not  needed;  but  support  for extended names required making the
-            arrays  of  terminal  capabilities  separate  from  the   TERMTYPE
+            Before  ncurses  5.0,  the split between the <STRONG>-e</STRONG> and <STRONG>-E</STRONG> options was
+            not needed; but support for extended  names  required  making  the
+            arrays   of  terminal  capabilities  separate  from  the  TERMTYPE
             structure.
 
        <STRONG>-e</STRONG>   Dump the capabilities of the given terminal as a C initializer for
-            a TERMTYPE structure (the terminal  capability  structure  in  the
-            <STRONG>&lt;term.h&gt;</STRONG>).   This  option  is useful for preparing versions of the
+            a  TERMTYPE  structure  (the  terminal capability structure in the
+            <STRONG>&lt;term.h&gt;</STRONG>).  This option is useful for preparing  versions  of  the
             curses library hardwired for a given terminal type.
 
        <STRONG>-F</STRONG>   compare terminfo files.  This assumes that two following arguments
-            are  filenames.   The  files  are  searched  for  pairwise matches
-            between entries, with two entries considered to match  if  any  of
-            their  names  do.   The  report  printed  to standard output lists
-            entries with no matches in the other file, and entries  with  more
-            than  one match.  For entries with exactly one match it includes a
-            difference report.  Normally, to reduce the volume of the  report,
-            use  references  are  not resolved before looking for differences,
+            are filenames.   The  files  are  searched  for  pairwise  matches
+            between  entries,  with  two entries considered to match if any of
+            their names do.  The  report  printed  to  standard  output  lists
+            entries  with  no matches in the other file, and entries with more
+            than one match.  For entries with exactly one match it includes  a
+            difference  report.  Normally, to reduce the volume of the report,
+            use references are not resolved before  looking  for  differences,
             but resolution can be forced by also specifying <STRONG>-r</STRONG>.
 
-       <STRONG>-f</STRONG>   Display complex terminfo strings which contain  if/then/else/endif
+       <STRONG>-f</STRONG>   Display  complex terminfo strings which contain if/then/else/endif
             expressions indented for readability.
 
-       <STRONG>-G</STRONG>   Display  constant  literals  in  decimal  form  rather  than their
+       <STRONG>-G</STRONG>   Display constant  literals  in  decimal  form  rather  than  their
             character equivalents.
 
-       <STRONG>-g</STRONG>   Display constant character literals in  quoted  form  rather  than
+       <STRONG>-g</STRONG>   Display  constant  character  literals  in quoted form rather than
             their decimal equivalents.
 
-       <STRONG>-i</STRONG>   Analyze  the  initialization (<STRONG>is1</STRONG>, <STRONG>is2</STRONG>, <STRONG>is3</STRONG>), and reset (<STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>,
-            <STRONG>rs3</STRONG>),  strings  in  the  entry,  as  well  as   those   used   for
-            starting/stopping  cursor-positioning  mode (<STRONG>smcup</STRONG>, <STRONG>rmcup</STRONG>) as well
+       <STRONG>-i</STRONG>   Analyze the initialization (<STRONG>is1</STRONG>, <STRONG>is2</STRONG>, <STRONG>is3</STRONG>), and reset  (<STRONG>rs1</STRONG>,  <STRONG>rs2</STRONG>,
+            <STRONG>rs3</STRONG>),   strings   in   the  entry,  as  well  as  those  used  for
+            starting/stopping cursor-positioning mode (<STRONG>smcup</STRONG>, <STRONG>rmcup</STRONG>)  as  well
             as starting/stopping keymap mode (<STRONG>smkx</STRONG>, <STRONG>rmkx</STRONG>).
 
-            For each string, the code tries to  analyze  it  into  actions  in
-            terms  of  the  other capabilities in the entry, certain X3.64/ISO
+            For  each  string,  the  code  tries to analyze it into actions in
+            terms of the other capabilities in the  entry,  certain  X3.64/ISO
             6429/ECMA-48 capabilities, and certain DEC VT-series private modes
-            (the  set  of  recognized  special sequences has been selected for
-            completeness over the existing terminfo  database).   Each  report
-            line  consists  of  the  capability  name, followed by a colon and
-            space, followed by a printable expansion of the capability  string
-            with   sections   matching   recognized  actions  translated  into
+            (the set of recognized special sequences  has  been  selected  for
+            completeness  over  the  existing terminfo database).  Each report
+            line consists of the capability name,  followed  by  a  colon  and
+            space,  followed by a printable expansion of the capability string
+            with  sections  matching  recognized   actions   translated   into
             {}-bracketed descriptions.
 
             Here is a list of the DEC/ANSI special sequences recognized:
 
-                         Action        Meaning
-                         -----------------------------------------
-                         RIS           full reset
-                         SC            save cursor
-                         RC            restore cursor
-                         LL            home-down
-                         RSR           reset scroll region
-                         -----------------------------------------
-                         DECSTR        soft reset (VT320)
-                         S7C1T         7-bit controls (VT220)
-                         -----------------------------------------
+                      Action        Meaning
+                      -----------------------------------------
+                      RIS           full reset
+                      SC            save cursor
+                      RC            restore cursor
+                      LL            home-down
+                      RSR           reset scroll region
+                      -----------------------------------------
+                      DECSTR        soft reset (VT320)
 
-                         ISO DEC G0    enable DEC graphics for G0
-                         ISO UK G0     enable UK chars for G0
-                         ISO US G0     enable US chars for G0
-                         ISO DEC G1    enable DEC graphics for G1
-                         ISO UK G1     enable UK chars for G1
-                         ISO US G1     enable US chars for G1
-                         -----------------------------------------
-                         DECPAM        application keypad mode
-                         DECPNM        normal keypad mode
-                         DECANSI       enter ANSI mode
-                         -----------------------------------------
-                         ECMA[+-]AM    keyboard action mode
-                         ECMA[+-]IRM   insert replace mode
-                         ECMA[+-]SRM   send receive mode
-                         ECMA[+-]LNM   linefeed mode
-                         -----------------------------------------
-                         DEC[+-]CKM    application cursor keys
-                         DEC[+-]ANM    set VT52 mode
-                         DEC[+-]COLM   132-column mode
-                         DEC[+-]SCLM   smooth scroll
-                         DEC[+-]SCNM   reverse video mode
-                         DEC[+-]OM     origin mode
-                         DEC[+-]AWM    wraparound mode
-                         DEC[+-]ARM    auto-repeat mode
 
-            It  also  recognizes  a  SGR  action  corresponding  to   ANSI/ISO
-            6429/ECMA  Set  Graphics  Rendition, with the values NORMAL, BOLD,
-            UNDERLINE, BLINK, and REVERSE.  All but  NORMAL  may  be  prefixed
-            with
+                      S7C1T         7-bit controls (VT220)
+                      -----------------------------------------
+                      ISO DEC G0    enable DEC graphics for G0
+                      ISO UK G0     enable UK chars for G0
+                      ISO US G0     enable US chars for G0
+                      ISO DEC G1    enable DEC graphics for G1
+                      ISO UK G1     enable UK chars for G1
+                      ISO US G1     enable US chars for G1
+                      -----------------------------------------
+                      DECPAM        application keypad mode
+                      DECPNM        normal keypad mode
+                      DECANSI       enter ANSI mode
+                      -----------------------------------------
+                      ECMA[+-]AM    keyboard action mode
+                      ECMA[+-]IRM   insert replace mode
+                      ECMA[+-]SRM   send receive mode
+                      ECMA[+-]LNM   linefeed mode
+                      -----------------------------------------
+                      DEC[+-]CKM    application cursor keys
+                      DEC[+-]ANM    set VT52 mode
+                      DEC[+-]COLM   132-column mode
+                      DEC[+-]SCLM   smooth scroll
+                      DEC[+-]SCNM   reverse video mode
+                      DEC[+-]OM     origin mode
+                      DEC[+-]AWM    wraparound mode
+                      DEC[+-]ARM    auto-repeat mode
 
-            <STRONG>o</STRONG>   "+" (turn on) or
+       It also recognizes a SGR action corresponding to ANSI/ISO 6429/ECMA Set
+       Graphics Rendition, with the values NORMAL, BOLD, UNDERLINE, BLINK, and
+       REVERSE.  All but NORMAL may be prefixed with
 
-            <STRONG>o</STRONG>   "-" (turn off).
+              <STRONG>o</STRONG>   "+" (turn on) or
 
-            An  SGR0  designates  an  empty  highlight sequence (equivalent to
-            {SGR:NORMAL}).
+              <STRONG>o</STRONG>   "-" (turn off).
+
+              An  SGR0  designates  an empty highlight sequence (equivalent to
+              {SGR:NORMAL}).
 
        <STRONG>-l</STRONG>   Set output format to terminfo.
 
@@ -515,22 +516,20 @@
        The <STRONG>-F</STRONG> option of <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> should be a <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG> mode.
 
 
-</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
-       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
-
-       https://invisible-island.net/ncurses/tctest.html
-
-       This describes <STRONG>ncurses</STRONG> version 6.4 (patch 20230617).
-
-
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Eric S. Raymond &lt;esr@snark.thyrsus.com&gt; and
        Thomas E. Dickey &lt;dickey@invisible-island.net&gt;
 
 
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
+       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>
 
-ncurses 6.4                       2023-06-17                       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
+       https://invisible-island.net/ncurses/tctest.html
+
+
+
+ncurses 6.4                       2023-10-07                       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>
@@ -550,8 +549,8 @@ ncurses 6.4                       2023-06-17                       <STRONG><A HR
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-BUGS">BUGS</a></li>
-<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHOR">AUTHOR</a></li>
+<li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 </ul>
 </div>
 </BODY>

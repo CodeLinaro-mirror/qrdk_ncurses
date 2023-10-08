@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,44 +28,46 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.64 2022/02/12 20:07:45 tom Exp $
-.TH curs_getch 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.na
-.hy 0
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_getch.3x,v 1.75 2023/10/07 21:19:07 tom Exp $
+.TH curs_getch 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBgetch\fP,
-\fBwgetch\fP,
-\fBmvgetch\fP,
-\fBmvwgetch\fP,
-\fBungetch\fP,
-\fBhas_key\fP \- get (or push back) characters from \fBcurses\fP terminal keyboard
-.ad
-.hy
+\fB\%getch\fP,
+\fB\%wgetch\fP,
+\fB\%mvgetch\fP,
+\fB\%mvwgetch\fP,
+\fB\%ungetch\fP,
+\fB\%has_key\fP \-
+get (or push back) characters from \fIcurses\fR terminal keyboard
 .SH SYNOPSIS
+.nf
 .B #include <curses.h>
 .PP
 .B int getch(void);
-.br
-.B int wgetch(WINDOW *\fIwin\fB);
-.sp
-.B int mvgetch(int \fIy\fB, int \fIx\fB);
-.br
-.B int mvwgetch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);
-.sp
-.B int ungetch(int \fIch\fB);
-.sp
-/* extension */
-.br
-.B int has_key(int \fIch\fB);
-.br
+.B int wgetch(WINDOW *\fIwin\fP);
+.PP
+.B int mvgetch(int \fIy\fP, int \fIx\fP);
+.B int mvwgetch(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP);
+.PP
+.B int ungetch(int \fIch\fP);
+.PP
+\fI/* extension */\fP
+.B int has_key(int \fIch\fP);
+.fi
 .SH DESCRIPTION
 .SS Reading characters
 The \fBgetch\fP, \fBwgetch\fP, \fBmvgetch\fP and \fBmvwgetch\fP, routines read
@@ -101,7 +103,6 @@ If the window is not a pad, and it has been moved or modified since the last
 call to \fBwrefresh\fP, \fBwrefresh\fP will be called before another character
 is read.
 .SS Keypad mode
-.PP
 If \fBkeypad\fP is \fBTRUE\fP, and a function key is pressed, the token for
 that function key is returned instead of the raw characters:
 .bP
@@ -136,11 +137,9 @@ Because function keys usually begin with an escape character,
 the terminal may appear to hang in notimeout mode after pressing the escape key
 until another key is pressed.
 .SS Ungetting characters
-.PP
 The \fBungetch\fP routine places \fIch\fP back onto the input queue to be
 returned by the next call to \fBwgetch\fP.
 There is just one input queue for all windows.
-.PP
 .SS Predefined key-codes
 The following special keys are defined in \fB<curses.h>\fP.
 .bP
@@ -154,8 +153,9 @@ misspellings (such as \*(``RSUME\*('' for \*(``resume\*('').
 The names correspond to the long terminfo capability names for the keys,
 and were defined long ago, in the 1980s.
 .PP
+.RS
 .TS
-center tab(/) ;
+tab(/) ;
 l l .
 \fBName\fP/\fBKey\fP \fBname\fP
 _
@@ -256,16 +256,19 @@ KEY_SUNDO/Shifted undo key
 KEY_SUSPEND/Suspend key
 KEY_UNDO/Undo key
 .TE
+.RE
 .PP
 Keypad is arranged like this:
-.br
+.PP
+.RS
 .TS
-center allbox tab(/) ;
+allbox tab(/) ;
 c c c .
 \fBA1\fP/\fBup\fP/\fBA3\fP
 \fBleft\fP/\fBB2\fP/\fBright\fP
 \fBC1\fP/\fBdown\fP/\fBC3\fP
 .TE
+.RE
 .sp
 A few of these predefined values do \fInot\fP correspond to a real key:
 .bP
@@ -281,7 +284,6 @@ because (e.g., with \fBxterm\fP(1) mouse prototocol) ncurses must
 read escape sequences,
 just like a function key.
 .SS Testing key-codes
-.PP
 The \fBhas_key\fP routine takes a key-code value from the above list, and
 returns \fBTRUE\fP or \fBFALSE\fP according to whether
 the current terminal type recognizes a key with that value.
@@ -296,7 +298,6 @@ defines a key-code for a given string (see \fBdefine_key\fP(3X)).
 checks if there is a key-code defined for a given
 string (see \fBkey_defined\fP(3X)).
 .RE
-.PP
 .SH RETURN VALUE
 All routines return the integer \fBERR\fP upon failure and an integer value
 other than \fBERR\fP (\fBOK\fP in the case of \fBungetch\fP) upon successful
@@ -404,15 +405,15 @@ The \fBhas_key\fP function is unique to \fBncurses\fP.
 We recommend that
 any code using it be conditionalized on the \fBNCURSES_VERSION\fP feature macro.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_inopts\fP(3X),
-\fBcurs_mouse\fP(3X),
-\fBcurs_move\fP(3X),
-\fBcurs_outopts\fP(3X),
-\fBcurs_refresh\fP(3X),
-\fBcurs_variables\fP(3X),
-\fBresizeterm\fP(3X).
+\fB\%curses\fP(3X),
+\fB\%curs_inopts\fP(3X),
+\fB\%curs_mouse\fP(3X),
+\fB\%curs_move\fP(3X),
+\fB\%curs_outopts\fP(3X),
+\fB\%curs_refresh\fP(3X),
+\fB\%curs_variables\fP(3X),
+\fB\%resizeterm\fP(3X)
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_get_wch\fP(3X).
+\fB\%curs_get_wch\fP(3X).

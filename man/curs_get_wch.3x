@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,38 +27,41 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wch.3x,v 1.18 2022/02/12 20:07:29 tom Exp $
-.TH curs_get_wch 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.na
-.hy 0
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: curs_get_wch.3x,v 1.26 2023/10/07 21:19:07 tom Exp $
+.TH curs_get_wch 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBget_wch\fP,
-\fBwget_wch\fP,
-\fBmvget_wch\fP,
-\fBmvwget_wch\fP,
-\fBunget_wch\fP \- get (or push back) a wide character from curses terminal keyboard
-.ad
-.hy
+\fB\%get_wch\fP,
+\fB\%wget_wch\fP,
+\fB\%mvget_wch\fP,
+\fB\%mvwget_wch\fP,
+\fB\%unget_wch\fP \-
+get (or push back) a wide character from \fIcurses\fR terminal keyboard
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint get_wch(wint_t *\fIwch\fB);\fR
-.br
-\fBint wget_wch(WINDOW *\fIwin\fB, wint_t *\fIwch\fB);\fR
-.br
-\fBint mvget_wch(int \fIy\fB, int \fIx\fB, wint_t *\fIwch\fB);\fR
-.br
-\fBint mvwget_wch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, wint_t *\fIwch\fB);\fR
-.sp
-\fBint unget_wch(const wchar_t \fIwch\fB);\fR
+.nf
+\fB#include <curses.h>
+.PP
+\fBint get_wch(wint_t *\fIwch\fP);
+\fBint wget_wch(WINDOW *\fIwin\fP, wint_t *\fIwch\fP);
+\fBint mvget_wch(int \fIy\fP, int \fIx\fP, wint_t *\fIwch\fP);
+\fBint mvwget_wch(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, wint_t *\fIwch\fP);
+.PP
+\fBint unget_wch(const wchar_t \fIwch\fP);
+.fi
 .SH DESCRIPTION
 .SS wget_wch
 The
@@ -186,9 +189,9 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_getch\fP(3X),
-\fBcurs_ins_wch\fP(3X),
-\fBcurs_inopts\fP(3X),
-\fBcurs_move\fP(3X),
-\fBcurs_refresh\fP(3X)
+\fB\%curses\fP(3X),
+\fB\%curs_getch\fP(3X),
+\fB\%curs_ins_wch\fP(3X),
+\fB\%curs_inopts\fP(3X),
+\fB\%curs_move\fP(3X),
+\fB\%curs_refresh\fP(3X)

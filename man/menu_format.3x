@@ -1,6 +1,5 @@
-'\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,18 +27,19 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_format.3x,v 1.22 2022/02/12 20:05:11 tom Exp $
-.TH menu_format 3X 2022-02-12 "ncurses 6.4" "Library calls"
+.\" $Id: menu_format.3x,v 1.31 2023/10/07 21:19:07 tom Exp $
+.TH menu_format 3X 2023-10-07 "ncurses 6.4" "Library calls"
 .SH NAME
 \fBset_menu_format\fP,
-\fBmenu_format\fP \- set and get menu sizes
+\fBmenu_format\fP \-
+set and get menu sizes
 .SH SYNOPSIS
-\fB#include <menu.h>\fP
-.sp
-\fBint set_menu_format(MENU *\fImenu\fB, int \fIrows\fB, int \fIcols\fB);\fR
-.br
-\fBvoid menu_format(const MENU *\fImenu\fB, int *\fIrows\fB, int *\fIcols\fB);\fR
-.br
+.nf
+\fB#include <menu.h>
+.PP
+\fBint set_menu_format(MENU *\fImenu\fP, int \fIrows\fP, int \fIcols\fP);
+\fBvoid menu_format(const MENU *\fImenu\fP, int *\fIrows\fP, int *\fIcols\fP);
+.fi
 .SH DESCRIPTION
 The function \fBset_menu_format\fP sets the maximum display size of the given
 menu.
@@ -74,8 +74,6 @@ The menu is already posted.
 .TP 5
 .B E_NOT_CONNECTED
 No items are connected to the menu.
-.SH SEE ALSO
-\fBcurses\fP(3X), \fBmenu\fP(3X).
 .SH NOTES
 The header file \fB<menu.h>\fP automatically includes the header file
 \fB<curses.h>\fP.
@@ -86,3 +84,6 @@ Version 7 or BSD versions.
 .SH AUTHORS
 Juergen Pfeifer.
 Manual pages and adaptation for new curses by Eric S. Raymond.
+.SH SEE ALSO
+\fB\%curses\fP(3X),
+\fB\%menu\fP(3X)

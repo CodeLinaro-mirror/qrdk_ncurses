@@ -28,34 +28,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.84 2023/06/17 17:50:37 tom Exp $
-.TH @INFOCMP@ 1M 2023-06-17 "ncurses 6.4" "User commands"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.ds n 5
+.\" $Id: infocmp.1m,v 1.96 2023/10/07 21:19:07 tom Exp $
+.TH @INFOCMP@ 1M 2023-10-07 "ncurses 6.4" "User commands"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
-.de NS
-.ie n  .sp
-.el    .sp .5
-.ie n  .in +4
-.el    .in +2
-.nf
-.ft CR			\" Courier
-..
-.de NE
-.fi
-.ft R
-.ie n  .in -4
-.el    .in -2
-..
+.
+.ds n 5
 .ds d @TERMINFO@
 .SH NAME
-\fB@INFOCMP@\fP \- compare or print out \fIterminfo\fP descriptions
+\fB@INFOCMP@\fP \-
+compare or print out \fIterminfo\fP descriptions
 .SH SYNOPSIS
 \fB@INFOCMP@\fP [\fB\-\
 1\
@@ -85,11 +80,8 @@ t\
 u\
 x\
 \fP]
-.br
       [\fB\-v\fR \fIn\fR] [\fB\-s d\fR| \fBi\fR| \fBl\fR| \fBc\fR] [\fB\-Q\fR \fIn\fR] [\fB\-R \fBsubset\fR]
-.br
       [\fB\-w\fP\ \fIwidth\fP] [\fB\-A\fP\ \fIdirectory\fP] [\fB\-B\fP\ \fIdirectory\fP]
-.br
       [\fItermname\fP...]
 .SH DESCRIPTION
 \fB@INFOCMP@\fP can be used to compare a binary \fBterminfo\fP entry with other
@@ -152,7 +144,7 @@ for each of the \fItermnames\fP.
 .SS Source Listing Options [\-I] [\-L] [\-C] [\-r]
 The \fB\-I\fP, \fB\-L\fP, and \fB\-C\fP options will produce
 a source listing for each terminal named.
-.
+.PP
 .TS
 center tab(/) ;
 l l .
@@ -215,7 +207,7 @@ will not necessarily reproduce the original \fBterminfo\fP source.
 .PP
 Some common \fBterminfo\fP parameter sequences, their \fBtermcap\fP
 equivalents, and some terminal types which commonly have such sequences, are:
-.
+.PP
 .TS
 center tab(/) ;
 l c l
@@ -277,8 +269,9 @@ were not needed.
 Like other \fBncurses\fP utilities,
 \fB@INFOCMP@\fP looks for the terminal descriptions in several places.
 You can use the \fBTERMINFO\fP and \fBTERMINFO_DIRS\fP environment variables
-to override the compiled-in default list of places to search
-(see \fBcurses\fP(3X) for details).
+to override the compiled-in default list of places to search.
+See \fBcurses\fP(3X), as well as
+the \fIFetching Compiled Descriptions\fP section in \fBterminfo\fR(\*n).
 .PP
 You can also use the options \fB\-A\fP
 and \fB\-B\fP to override the list of places to search
@@ -378,6 +371,7 @@ translated into {}-bracketed descriptions.
 .IP
 Here is a list of the DEC/ANSI
 special sequences recognized:
+.PP
 .TS
 center tab(/) ;
 l l
@@ -456,9 +450,12 @@ hexadecimal and base64
 .IP
 For example, this prints the compiled terminfo value as a string
 which could be assigned to the \fBTERMINFO\fP environment variable:
-.NS
-@INFOCMP@ -0 -q -Q2
-.NE
+.PP
+.RS 9
+.EX
+@INFOCMP@ \-0 \-q \-Q2
+.EE
+.RE
 .TP 5
 \fB\-q\fP
 This makes the output a little shorter:
@@ -636,21 +633,18 @@ To see only the
 4.4BSD set, use \fB\-r\fP \fB\-RBSD\fP.
 .SH BUGS
 The \fB\-F\fP option of \fB@INFOCMP@\fP(1M) should be a \fB@TOE@\fP(1M) mode.
-.SH SEE ALSO
-\fB@CAPTOINFO@\fP(1M),
-\fB@INFOTOCAP@\fP(1M),
-\fB@TIC@\fP(1M),
-\fB@TOE@\fP(1M),
-\fBcurses\fP(3X),
-\fBterminfo\fP(\*n).
-\fBuser_caps\fP(\*n).
-.sp
-https://invisible-island.net/ncurses/tctest.html
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>
 and
 .br
 Thomas E. Dickey <dickey@invisible-island.net>
+.SH SEE ALSO
+\fB\%@CAPTOINFO@\fP(1M),
+\fB\%@INFOTOCAP@\fP(1M),
+\fB\%@TIC@\fP(1M),
+\fB\%@TOE@\fP(1M),
+\fB\%curses\fP(3X),
+\fB\%terminfo\fP(\*n),
+\fB\%user_caps\fP(\*n)
+.PP
+https://invisible-island.net/ncurses/tctest.html

@@ -1,6 +1,5 @@
-'\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,18 +27,19 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_requestname.3x,v 1.19 2022/02/12 20:02:20 tom Exp $
-.TH menu_requestname 3X 2022-02-12 "ncurses 6.4" "Library calls"
+.\" $Id: menu_requestname.3x,v 1.28 2023/10/07 21:19:07 tom Exp $
+.TH menu_requestname 3X 2023-10-07 "ncurses 6.4" "Library calls"
 .SH NAME
 \fBmenu_request_by_name\fP,
-\fBmenu_request_name\fP \- handle printable menu request names
+\fBmenu_request_name\fP \-
+handle printable menu request names
 .SH SYNOPSIS
-\fB#include <menu.h>\fP
-.sp
-\fBconst char *menu_request_name(int \fIrequest\fB);\fR
-.br
-\fBint menu_request_by_name(const char *\fIname\fB);\fR
-.br
+.nf
+\fB#include <menu.h>
+.PP
+\fBconst char *menu_request_name(int \fIrequest\fP);
+\fBint menu_request_by_name(const char *\fIname\fP);
+.fi
 .SH DESCRIPTION
 The function \fBmenu_request_name\fP returns the printable name of a menu
 request code.
@@ -53,8 +53,6 @@ and sets \fBerrno\fP to \fBE_BAD_ARGUMENT\fP.
 .br
 \fBmenu_request_by_name\fP returns \fBE_NO_MATCH\fP on error.
 It does not set \fBerrno\fP.
-.SH SEE ALSO
-\fBcurses\fP(3X), \fBmenu\fP(3X).
 .SH NOTES
 The header file \fB<menu.h>\fP automatically includes the header file
 \fB<curses.h>\fP.
@@ -67,3 +65,6 @@ any code depending on them be conditioned using NCURSES_VERSION.
 .SH AUTHORS
 Juergen Pfeifer.
 Manual pages and adaptation for new curses by Eric S. Raymond.
+.SH SEE ALSO
+\fB\%curses\fP(3X),
+\fB\%menu\fP(3X)

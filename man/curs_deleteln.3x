@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,30 +27,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_deleteln.3x,v 1.21 2022/02/12 20:06:41 tom Exp $
-.TH curs_deleteln 3X 2022-02-12 "ncurses 6.4" "Library calls"
+.\" $Id: curs_deleteln.3x,v 1.31 2023/10/07 21:19:07 tom Exp $
+.TH curs_deleteln 3X 2023-10-07 "ncurses 6.4" "Library calls"
 .SH NAME
-\fBdeleteln\fP,
-\fBwdeleteln\fP,
-\fBinsdelln\fP,
-\fBwinsdelln\fP,
-\fBinsertln\fP,
-\fBwinsertln\fP \- delete and insert lines in a \fBcurses\fP window
+\fB\%deleteln\fP,
+\fB\%wdeleteln\fP,
+\fB\%insdelln\fP,
+\fB\%winsdelln\fP,
+\fB\%insertln\fP,
+\fB\%winsertln\fP \-
+delete or insert lines in a \fIcurses\fR window
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint deleteln(void);\fP
-.br
-\fBint wdeleteln(WINDOW *\fIwin\fB);\fR
-.sp
-\fBint insdelln(int \fIn\fB);\fR
-.br
-\fBint winsdelln(WINDOW *\fIwin\fB, int \fIn\fB);\fR
-.sp
-\fBint insertln(void);\fP
-.br
-\fBint winsertln(WINDOW *\fIwin\fB);\fR
-.br
+.nf
+\fB#include <curses.h>
+.PP
+\fBint deleteln(void);
+\fBint wdeleteln(WINDOW *\fIwin\fP);
+.PP
+\fBint insdelln(int \fIn\fP);
+\fBint winsdelln(WINDOW *\fIwin\fP, int \fIn\fP);
+.PP
+\fBint insertln(void);
+\fBint winsertln(WINDOW *\fIwin\fP);
+.fi
 .SH DESCRIPTION
 The \fBdeleteln\fP and \fBwdeleteln\fP routines delete the line under the
 cursor in the window; all lines below the current line are moved up one line.
@@ -90,4 +89,4 @@ terminal.
 In fact, they will not use hardware line delete/insert unless
 \fBidlok(..., TRUE)\fP has been set on the current window.
 .SH SEE ALSO
-\fBcurses\fP(3X)
+\fB\%curses\fP(3X)

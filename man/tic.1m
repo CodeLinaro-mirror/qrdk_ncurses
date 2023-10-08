@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,20 +27,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.85 2022/09/17 19:01:24 tom Exp $
-.TH @TIC@ 1M 2022-09-17 "ncurses 6.4" "User commands"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.ds n 5
-.ds d @TERMINFO@
+.\" $Id: tic.1m,v 1.97 2023/10/07 21:19:07 tom Exp $
+.TH @TIC@ 1M 2023-10-07 "ncurses 6.4" "User commands"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
+.
+.ds n 5
+.ds d @TERMINFO@
 .SH NAME
-\fB@TIC@\fP \- the \fIterminfo\fP entry-description compiler
+\fB\%@TIC@\fP \-
+compile terminal descriptions for \fIterminfo\fR or \fItermcap\fR
 .SH SYNOPSIS
 \fB@TIC@\fP
 [\fB\-\
@@ -74,7 +83,6 @@ x\
 [\fB\-v\fP[\fIn\fP]]
 [\fB\-w\fP[\fIn\fP]]
 \fIfile\fP
-.br
 .SH DESCRIPTION
 The \fB@TIC@\fP command translates a \fBterminfo\fP file from source
 format into compiled format.
@@ -129,8 +137,10 @@ directories listed in the TERMINFO_DIRS environment variable,
 a compiled-in list of directories (@TERMINFO_DIRS@), and
 .bP
 the system terminfo database (\fI\*d\fP).
-.SS ALIASES
 .PP
+The \fIFetching Compiled Descriptions\fP section in the \fBterminfo\fR(\*n)
+manual goes into further detail.
+.SS ALIASES
 This is the same program as @INFOTOCAP@ and @CAPTOINFO@;
 usually those are linked to, or copied from this program:
 .bP
@@ -234,7 +244,7 @@ Force source translation to terminfo format.
 .TP
 \fB\-K\fP
 Suppress some longstanding ncurses extensions to termcap format,
-e.g., "\\s" for space.
+e.g., "\es" for space.
 .TP
 \fB\-L\fP
 Force source translation to terminfo format
@@ -282,9 +292,17 @@ This option is for use with archaic
 versions of terminfo like those on SVr1, Ultrix, or HP-UX that do not support
 the full set of SVR4/XSI Curses terminfo; and outright broken ports like AIX 3.x
 that have their own extensions incompatible with SVr4/XSI.
-Available subsets
-are \*(``SVr1\*('', \*(``Ultrix\*('', \*(``HP\*('', \*(``BSD\*('' and \*(``AIX\*('';
-see \fBterminfo\fP(\*n) for details.
+.IP
+Available subsets are
+.RS
+\*(``SVr1\*('',
+\*(``Ultrix\*('',
+\*(``HP\*('',
+\*(``BSD\*('', and
+\*(``AIX\*(''
+.RE
+.IP
+See \fBterminfo\fP(\*n) for details.
 .TP
 \fB\-r\fP
 Force entry resolution (so there are no remaining tc capabilities) even
@@ -394,7 +412,6 @@ describes the capabilities of a particular terminal.
 If \fIfile\fP is \*(``-\*('', then the data is read from the standard input.
 The \fIfile\fP parameter may also be the path of a character-device.
 .SS PROCESSING
-.PP
 All but one of the capabilities recognized by \fB@TIC@\fP are documented
 in \fBterminfo\fP(\*n).
 The exception is the \fBuse\fP capability.
@@ -422,7 +439,6 @@ Terminal names exceeding the maximum alias length
 will be truncated to the maximum alias length
 and a warning message will be printed.
 .SH HISTORY
-.PP
 System V Release 2 provided a \fBtic\fP utility.
 It accepted a single option: \fB\-v\fP (optionally followed by a number).
 According to Ross Ridge's comment in \fImytinfo\fP,
@@ -485,7 +501,6 @@ It is also used to ensure consistency with the user-defined capabilities.
 There are 527 distinct capabilities in ncurses' terminal database;
 128 of those are user-defined.
 .SH PORTABILITY
-.PP
 X/Open Curses, Issue 7 (2009) provides a brief description of \fBtic\fP.
 It lists one option: \fB\-c\fP.
 The omission of \fB\-v\fP is unexpected.
@@ -582,20 +597,17 @@ System V does not compile entries to or read entries from your
 .TP 5
 \fB\*d/?/*\fP
 Compiled terminal description database.
-.SH SEE ALSO
-\fB@CAPTOINFO@\fP(1M),
-\fB@INFOCMP@\fP(1M),
-\fB@INFOTOCAP@\fP(1M),
-\fB@TOE@\fP(1M),
-\fBcurses\fP(3X),
-\fBterm\fP(\*n).
-\fBterminfo\fP(\*n).
-\fBuser_caps\fP(\*n).
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>
 and
 .br
 Thomas E. Dickey <dickey@invisible-island.net>
+.SH SEE ALSO
+\fB\%@CAPTOINFO@\fP(1M),
+\fB\%@INFOCMP@\fP(1M),
+\fB\%@INFOTOCAP@\fP(1M),
+\fB\%@TOE@\fP(1M),
+\fB\%curses\fP(3X),
+\fB\%term\fP(\*n),
+\fB\%terminfo\fP(\*n),
+\fB\%user_caps\fP(\*n)

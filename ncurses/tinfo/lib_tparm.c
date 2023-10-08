@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.150 2023/06/24 16:12:52 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.152 2023/09/16 16:30:27 tom Exp $")
 
 /*
  *	char *
@@ -607,8 +607,8 @@ tparm_setup(TERMINAL *term, const char *string, TPARM_DATA *result)
     TPS(out_used) = 0;
     memset(result, 0, sizeof(*result));
 
-    if (string == NULL) {
-	TR(TRACE_CALLS, ("%s: format is null", TPS(tname)));
+    if (!VALID_STRING(string)) {
+	TR(TRACE_CALLS, ("%s: format is invalid", TPS(tname)));
 	rc = ERR;
     } else {
 #if HAVE_TSEARCH
@@ -647,7 +647,7 @@ tparm_setup(TERMINAL *term, const char *string, TPARM_DATA *result)
 		    result->num_parsed = NUM_PARM;
 		if (result->num_popped > NUM_PARM)
 		    result->num_popped = NUM_PARM;
-		result->num_actual = max(result->num_popped, result->num_parsed);
+		result->num_actual = Max(result->num_popped, result->num_parsed);
 
 		for (n = 0; n < result->num_actual; ++n) {
 		    if (result->p_is_s[n])

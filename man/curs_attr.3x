@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,123 +28,90 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.74 2023/06/17 17:50:37 tom Exp $
-.TH curs_attr 3X 2023-06-17 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.de NS
-.ie n  .sp
-.el    .sp .5
-.ie n  .in +4
-.el    .in +2
-.nf
-.ft CR			\" Courier
-..
-.de NE
-.fi
-.ft R
-.ie n  .in -4
-.el    .in -2
-..
+.\" $Id: curs_attr.3x,v 1.87 2023/10/07 22:21:46 tom Exp $
+.TH curs_attr 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
-.na
-.hy 0
 .\" ---------------------------------------------------------------------------
 .SH NAME
-.\" attr_get
-\fBattr_get\fP,
-\fBwattr_get\fP,
-\fBattr_set\fP,
-\fBwattr_set\fP,
-.\" .br
-\fBattr_off\fP,
-\fBwattr_off\fP,
-\fBattr_on\fP,
-\fBwattr_on\fP,
-.\" .br
-\fBattroff\fP,
-\fBwattroff\fP,
-\fBattron\fP,
-\fBwattron\fP,
-\fBattrset\fP,
-\fBwattrset\fP,
-.\" .br
-\fBchgat\fP,
-\fBwchgat\fP,
-\fBmvchgat\fP,
-\fBmvwchgat\fP,
-.\" .br
-\fBcolor_set\fP,
-\fBwcolor_set\fP,
-.\" .br
-\fBstandend\fP,
-\fBwstandend\fP,
-\fBstandout\fP,
-\fBwstandout\fP \- \fBcurses\fP character and window attribute control routines
-.ad
-.hy
+\fB\%attr_get\fP,
+\fB\%wattr_get\fP,
+\fB\%attr_set\fP,
+\fB\%wattr_set\fP,
+\fB\%attr_off\fP,
+\fB\%wattr_off\fP,
+\fB\%attr_on\fP,
+\fB\%wattr_on\fP,
+\fB\%attroff\fP,
+\fB\%wattroff\fP,
+\fB\%attron\fP,
+\fB\%wattron\fP,
+\fB\%attrset\fP,
+\fB\%wattrset\fP,
+\fB\%chgat\fP,
+\fB\%wchgat\fP,
+\fB\%mvchgat\fP,
+\fB\%mvwchgat\fP,
+\fB\%color_set\fP,
+\fB\%wcolor_set\fP,
+\fB\%standend\fP,
+\fB\%wstandend\fP,
+\fB\%standout\fP,
+\fB\%wstandout\fP \-
+manipulate attributes of character cells in \fIcurses\fR windows
 .\" ---------------------------------------------------------------------------
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint attr_get(attr_t *\fIattrs\fB, short *\fIpair\fB, void *\fIopts\fB);\fR
-.br
-\fBint wattr_get(WINDOW *\fIwin\fB, attr_t *\fIattrs\fB, short *\fIpair\fB,\fR \fBvoid *\fIopts\fB);\fR
-.br
-\fBint attr_set(attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB);\fR
-.br
-\fBint wattr_set(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB);\fR
-.sp
-\fBint attr_off(attr_t \fIattrs\fB, void *\fIopts\fB);\fR
-.br
-\fBint wattr_off(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, void *\fIopts\fB);\fR
-.br
-\fBint attr_on(attr_t \fIattrs\fB, void *\fIopts\fB);\fR
-.br
-\fBint wattr_on(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, void *\fIopts\fB);\fR
-.sp
-\fBint attroff(int \fIattrs);\fR
-.br
-\fBint wattroff(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
-.br
-\fBint attron(int \fIattrs\fB);\fR
-.br
-\fBint wattron(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
-.br
-\fBint attrset(int \fIattrs\fB);\fR
-.br
-\fBint wattrset(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
-.sp
-\fBint chgat(int \fIn\fB, attr_t \fIattr\fB, short \fIpair\fB,\fR \fBconst void *\fIopts\fB);\fR
-.br
-\fBint wchgat(WINDOW *\fIwin\fB,\fR
+.nf
+\fB#include <curses.h>
+.PP
+\fBint attr_get(attr_t *\fIattrs\fP, short *\fIpair\fP, void *\fIopts\fP);
+\fBint wattr_get(WINDOW *\fIwin\fP, attr_t *\fIattrs\fP, short *\fIpair\fP,\fR \fPvoid *\fIopts\fP);
+\fBint attr_set(attr_t \fIattrs\fP, short \fIpair\fP, void *\fIopts\fP);
+\fBint wattr_set(WINDOW *\fIwin\fP, attr_t \fIattrs\fP, short \fIpair\fP, void *\fIopts\fP);
+.PP
+\fBint attr_off(attr_t \fIattrs\fP, void *\fIopts\fP);
+\fBint wattr_off(WINDOW *\fIwin\fP, attr_t \fIattrs\fP, void *\fIopts\fP);
+\fBint attr_on(attr_t \fIattrs\fP, void *\fIopts\fP);
+\fBint wattr_on(WINDOW *\fIwin\fP, attr_t \fIattrs\fP, void *\fIopts\fP);
+.PP
+\fBint attroff(int \fIattrs\fP);
+\fBint wattroff(WINDOW *\fIwin\fP, int \fIattrs\fP);
+\fBint attron(int \fIattrs\fP);
+\fBint wattron(WINDOW *\fIwin\fP, int \fIattrs\fP);
+\fBint attrset(int \fIattrs\fP);
+\fBint wattrset(WINDOW *\fIwin\fP, int \fIattrs\fP);
+.PP
+\fBint chgat(int \fIn\fP, attr_t \fIattr\fP, short \fIpair\fP,\fR \fPconst void *\fIopts\fP);
+\fBint wchgat(WINDOW *\fIwin\fP,
       \fBint \fIn\fB, attr_t \fIattr\fB,\fR \fBshort \fIpair\fB, const void *\fIopts\fB);\fR
-.br
 \fBint mvchgat(int \fIy\fB, int \fIx\fB,\fR
       \fBint \fIn\fB, attr_t \fIattr\fB,\fR \fBshort \fIpair\fB, const void *\fIopts\fB);\fR
-.br
 \fBint mvwchgat(WINDOW *\fIwin, int \fIy, int \fIx\fB,\fR
       \fBint \fIn,\fR \fBattr_t \fIattr\fB, short \fIpair\fB, const void *\fIopts\fB);\fR
-.sp
+.PP
 \fBint color_set(short \fIpair\fB, void* \fIopts\fB);\fR
-.br
-\fBint wcolor_set(WINDOW *\fIwin\fB, short \fIpair\fB,\fR \fBvoid* \fIopts);\fR
-.sp
+\fBint wcolor_set(WINDOW *\fIwin\fB, short \fIpair\fB,\fR \fBvoid* \fIopts\fP);\fR
+.PP
 \fBint standend(void);\fP
-.br
 \fBint wstandend(WINDOW *\fIwin\fB);\fR
-.br
 \fBint standout(void);\fP
-.br
 \fBint wstandout(WINDOW *\fIwin\fB);\fR
+.fi
 .\" ---------------------------------------------------------------------------
 .SH DESCRIPTION
-.PP
 These routines manipulate the current attributes of the named window,
 which then apply to all characters that are written into
 the window with \fBwaddch\fP, \fBwaddstr\fP and \fBwprintw\fP.
@@ -165,7 +132,6 @@ For example,
 \fBattr_set\fP is the \fBstdscr\fP variant of \fBwattr_set\fP.
 .\" ---------------------------------------------------------------------------
 .SS Window attributes
-.PP
 There are two sets of functions:
 .bP
 functions for manipulating the window attributes and color:
@@ -204,10 +170,13 @@ the attribute parameter.
 For example,
 as long as that value fits into the \fBA_COLOR\fP mask,
 then these calls produce similar results:
-.NS
+.PP
+.RS 4
+.EX
 attrset(A_BOLD | COLOR_PAIR(\fIpair\fP));
 attr_set(A_BOLD, \fIpair\fP, NULL);
-.NE
+.EE
+.RE
 .PP
 However, if the value does not fit, then the \fBCOLOR_PAIR\fP macro
 uses only the bits that fit.
@@ -219,10 +188,13 @@ The \fBPAIR_NUMBER\fP macro extracts a pair number from an \fBint\fP
 (or \fBchtype\fP).
 For example, the \fIinput\fP and \fIoutput\fP values in these statements
 would be the same:
-.NS
+.PP
+.RS 4
+.EX
 int value = A_BOLD | COLOR_PAIR(\fIinput\fP);
 int \fIoutput\fP = PAIR_NUMBER(value);
-.NE
+.EE
+.RE
 .PP
 The \fBattrset\fP routine is a legacy feature predating SVr4 curses
 but kept in X/Open Curses for the same reason that SVr4 curses kept it:
@@ -236,7 +208,6 @@ There is no corresponding \fBattrget\fP function as such in X/Open Curses,
 although ncurses provides \fBgetattrs\fP (see curs_legacy(3X)).
 .\" ---------------------------------------------------------------------------
 .SS Change character rendition
-.PP
 The routine \fBchgat\fP changes the attributes of a given number of characters
 starting at the current cursor location of \fBstdscr\fP.
 It does not update
@@ -256,7 +227,6 @@ The routine \fBcolor_set\fP sets the current color of the given window to the
 foreground/background combination described by the color \fIpair\fP parameter.
 .\" ---------------------------------------------------------------------------
 .SS Standout
-.PP
 The routine \fBstandout\fP is
 the same as \fBattron(A_STANDOUT)\fP.
 The routine \fBstandend\fP is the same
@@ -299,6 +269,7 @@ l l .
 .PP
 These video attributes are supported by \fBattr_on\fP and related functions
 (which also support the attributes recognized by \fBattron\fP, etc.):
+.PP
 .RS
 .TS
 l l
@@ -391,6 +362,7 @@ the format and size of the defined constants
 as well as clues such as the alternate character set implementation.
 A 32-bit library can be used on a 64-bit system,
 but not necessarily the reverse.
+.PP
 .RS
 .TS
 l l l l l l
@@ -467,7 +439,6 @@ The resulting 4.4BSD curses was replaced by ncurses over the next ten years.
 U/Win is rarely used now.
 .\" ---------------------------------------------------------------------------
 .SH EXTENSIONS
-.PP
 This implementation provides the \fBA_ITALIC\fP attribute for terminals
 which have the \fBenter_italics_mode\fP (\fBsitm\fP)
 and \fBexit_italics_mode\fP (\fBritm\fP) capabilities.
@@ -609,10 +580,9 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 or if the window pointer is null.
 .\" ---------------------------------------------------------------------------
 .SH SEE ALSO
-.na
-\fBcurses\fP(3X),
-\fBcurs_addch\fP(3X),
-\fBcurs_addstr\fP(3X),
-\fBcurs_bkgd\fP(3X),
-\fBcurs_printw\fP(3X),
-\fBcurs_variables\fP(3X)
+\fB\%curses\fP(3X),
+\fB\%curs_addch\fP(3X),
+\fB\%curs_addstr\fP(3X),
+\fB\%curs_bkgd\fP(3X),
+\fB\%curs_printw\fP(3X),
+\fB\%curs_variables\fP(3X)

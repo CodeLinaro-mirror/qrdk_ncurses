@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2019-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,44 +27,41 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_ins_wstr.3x,v 1.15 2022/02/12 20:05:11 tom Exp $
-.TH curs_ins_wstr 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.na
-.hy 0
+.\" $Id: curs_ins_wstr.3x,v 1.23 2023/10/07 22:22:46 tom Exp $
+.TH curs_ins_wstr 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBins_wstr\fP,
-\fBins_nwstr\fP,
-\fBwins_wstr\fP,
-\fBwins_nwstr\fP,
-\fBmvins_wstr\fP,
-\fBmvins_nwstr\fP,
-\fBmvwins_wstr\fP,
-\fBmvwins_nwstr\fP \- insert a wide-character string into a curses window
-.ad
-.hy
+\fB\%ins_wstr\fP,
+\fB\%ins_nwstr\fP,
+\fB\%wins_wstr\fP,
+\fB\%wins_nwstr\fP,
+\fB\%mvins_wstr\fP,
+\fB\%mvins_nwstr\fP,
+\fB\%mvwins_wstr\fP,
+\fB\%mvwins_nwstr\fP \-
+insert a wide-character string in a \fIcurses\fR window
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fP
-.sp
-\fBint ins_wstr(const wchar_t *\fIwstr);\fR
-.br
-\fBint ins_nwstr(const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
-.br
-\fBint wins_wstr(WINDOW *\fIwin\fB, const wchar_t *\fIwstr\fB);\fR
-.br
-\fBint wins_nwstr(WINDOW *\fIwin\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
-.sp
-\fBint mvins_wstr(int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB);\fR
-.br
-\fBint mvins_nwstr(int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
-.br
-\fBint mvwins_wstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB);\fR
-.br
-\fBint mvwins_nwstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
+\fB#include <curses.h>
+.PP
+\fBint ins_wstr(const wchar_t *\fIwstr\fP);
+\fBint ins_nwstr(const wchar_t *\fIwstr\fP, int \fIn\fP);
+\fBint wins_wstr(WINDOW *\fIwin\fP, const wchar_t *\fIwstr\fP);
+\fBint wins_nwstr(WINDOW *\fIwin\fP, const wchar_t *\fIwstr\fP, int \fIn\fP);
+.PP
+\fBint mvins_wstr(int \fIy\fP, int \fIx\fP, const wchar_t *\fIwstr\fP);
+\fBint mvins_nwstr(int \fIy\fP, int \fIx\fP, const wchar_t *\fIwstr\fP, int \fIn\fP);
+\fBint mvwins_wstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const wchar_t *\fIwstr\fP);
+\fBint mvwins_nwstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const wchar_t *\fIwstr\fP, int \fIn\fP);
 .fi
 .SH DESCRIPTION
 These routines insert a \fBwchar_t\fP character string
@@ -105,7 +102,7 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH SEE ALSO
-\fBcurses\fP(3X),
-\fBcurs_insstr\fP(3X),
-\fBcurs_in_wch\fP(3X),
-\fBcurs_ins_wch\fP(3X).
+\fB\%curses\fP(3X),
+\fB\%curs_insstr\fP(3X),
+\fB\%curs_in_wch\fP(3X),
+\fB\%curs_ins_wch\fP(3X)

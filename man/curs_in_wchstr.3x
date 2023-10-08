@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,44 +27,41 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_in_wchstr.3x,v 1.18 2022/02/12 20:07:29 tom Exp $
-.TH curs_in_wchstr 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.na
-.hy 0
+.\" $Id: curs_in_wchstr.3x,v 1.26 2023/10/07 21:19:07 tom Exp $
+.TH curs_in_wchstr 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBin_wchstr\fP,
-\fBin_wchnstr\fP,
-\fBwin_wchstr\fP,
-\fBwin_wchnstr\fP,
-\fBmvin_wchstr\fP,
-\fBmvin_wchnstr\fP,
-\fBmvwin_wchstr\fP,
-\fBmvwin_wchnstr\fP \- get an array of complex characters and renditions from a curses window
-.ad
-.hy
+\fB\%in_wchstr\fP,
+\fB\%in_wchnstr\fP,
+\fB\%win_wchstr\fP,
+\fB\%win_wchnstr\fP,
+\fB\%mvin_wchstr\fP,
+\fB\%mvin_wchnstr\fP,
+\fB\%mvwin_wchstr\fP,
+\fB\%mvwin_wchnstr\fP \-
+get a \fIcurses\fR complex character string from a window
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fP
-.sp
-\fBint in_wchstr(cchar_t *\fIwchstr\fB);\fR
-.br
-\fBint in_wchnstr(cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
-.br
-\fBint win_wchstr(WINDOW *\fIwin\fB, cchar_t *\fIwchstr\fB);\fR
-.br
-\fBint win_wchnstr(WINDOW *\fIwin\fB, cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
-.sp
-\fBint mvin_wchstr(int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB);\fR
-.br
-\fBint mvin_wchnstr(int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
-.br
-\fBint mvwin_wchstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB);\fR
-.br
-\fBint mvwin_wchnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fR, int \fIn\fB);\fR
+\fB#include <curses.h>
+.PP
+\fBint in_wchstr(cchar_t *\fIwchstr\fP);
+\fBint in_wchnstr(cchar_t *\fIwchstr\fP, int \fIn\fP);
+\fBint win_wchstr(WINDOW *\fIwin\fP, cchar_t *\fIwchstr\fP);
+\fBint win_wchnstr(WINDOW *\fIwin\fP, cchar_t *\fIwchstr\fP, int \fIn\fP);
+.PP
+\fBint mvin_wchstr(int \fIy\fP, int \fIx\fP, cchar_t *\fIwchstr\fP);
+\fBint mvin_wchnstr(int \fIy\fP, int \fIx\fP, cchar_t *\fIwchstr\fP, int \fIn\fP);
+\fBint mvwin_wchstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, cchar_t *\fIwchstr\fP);
+\fBint mvwin_wchnstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, cchar_t *\fIwchstr\fP, int \fIn\fP);
 .fi
 .SH DESCRIPTION
 These functions return an array of complex characters in \fIwchstr\fP,
@@ -82,7 +79,6 @@ with at most
 \fIn\fP
 \fBcchar_t\fP
 elements.
-.br
 .SH NOTES
 Note that all routines except
 \fBwin_wchnstr\fP
@@ -118,9 +114,8 @@ The XSI Curses defines no error conditions.
 This implementation checks for null pointers,
 returning \fBERR\fP in that case.
 .SH SEE ALSO
-Functions:
-\fBcurses\fP(3X),
-\fBcurs_in_wch\fP(3X),
-\fBcurs_instr\fP(3X),
-\fBcurs_inwstr\fP(3X)
-\fBcurs_inchstr\fP(3X)
+\fB\%curses\fP(3X),
+\fB\%curs_in_wch\fP(3X),
+\fB\%curs_instr\fP(3X),
+\fB\%curs_inwstr\fP(3X)
+\fB\%curs_inchstr\fP(3X)

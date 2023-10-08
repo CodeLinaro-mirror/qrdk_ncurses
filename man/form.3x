@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,21 +28,30 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form.3x,v 1.39 2021/12/25 21:49:32 tom Exp $
-.TH form 3X 2021-12-25 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
+.\" $Id: form.3x,v 1.48 2023/10/07 21:19:07 tom Exp $
+.TH form 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
+.
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBform\fP \- curses extension for programming forms
+\fBform\fP \-
+curses extension for programming forms
 .SH SYNOPSIS
-\fB#include <form.h>\fP
-.br
+.nf
+\fB#include <form.h>
+.fi
 .SH DESCRIPTION
 The \fBform\fP library provides terminal-independent facilities for composing
 form screens on character-cell terminals.
@@ -81,7 +90,7 @@ The following table lists each \fBform\fP routine and the name of
 the manual page on which it is described.
 Routines flagged with \*(``*\*(''
 are ncurses-specific, not present in SVr4.
-.
+.PP
 .TS
 l l
 l l .
@@ -237,8 +246,5 @@ Juergen Pfeifer.
 Manual pages and adaptation for ncurses by Eric
 S. Raymond.
 .SH SEE ALSO
-\fBcurses\fP(3X) and related pages whose names begin \*(``form_\*('' for detailed
-descriptions of the entry points.
-.PP
-This describes \fBncurses\fP
-version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
+\fBcurses\fP(3X) and related pages whose names begin \*(``form_\*('' for
+detailed descriptions of the entry points.

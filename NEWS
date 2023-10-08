@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3971 2023/06/25 18:16:49 tom Exp $
+-- $Id: NEWS,v 1.4012 2023/10/07 23:07:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,105 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20231007
+	+ improve loop-limit for get_position().
+	+ improve manual description of immedok (Debian #1053603).
+	+ fix a few formatting issues with manpages (Debian #1053123).
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+
+20231001
+	+ modify setupterm to provide for using ANSI cursor-position report (in
+	  user6/user7 terminfo capabilities) to obtain screensize if neither
+	  environment variables or ioctl is used.  The ncurses test-program
+	  with options "-E -T" demonstrates this feature.
+	+ improve error messages in tic (patch by Branden Robinson).
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ modify test/clip_printw.c to optionally test non-wrapped updates.
+	+ fix reallocation loop for vsnprintf() in _nc_sprintf_string() by
+	  copying the va_list variable (patch by Ian Abbott).
+
+20230923
+	+ improve formatting of manpages (patches by Branden Robinson).
+	+ amend change to delscreen() to limit the windows which it creates to
+	  just those associated with the screen (report by Frederic Boiteux,
+	  cf: 20220813).
+
+20230918
+	+ new tarball/errata (report by Sven Joachim).
+
+20230917
+	+ improve formatting of manpages (integrated patches by Branden
+	  Robinson).
+	+ correct limit for name-length in write_entry.c (report/testcase by
+	  Luna Saphie Mittelbach).
+	+ limit delays to 30 seconds, i.e., padding delays in terminfo, as well
+	  as napms() and delay_output() functions.
+	+ improve a few pointer-checks.
+	+ improve parsing in _nc_msec_cost, allowing a single decimal point.
+
+20230909
+	+ improve formatting of manpages (patches by Branden Robinson), for
+	  captoinfo.1m and terminfo.5
+	> patches by Nicholas Marriott:
+	  + use string-hacks in alloc_entry.c, alloc_type.c and hardscroll.c,
+	    overlooked due to compiler changes in recent OpenBSD releases.
+	  + add "-6" option to ncu2openbsd script.
+
+20230902
+	+ improve description of search rules for terminal descriptions in
+	  terminfo manpage (report by Sven Joachim).
+
+20230826
+	+ fixes for compiler-warnings.
+	+ update config.guess, config.sub
+
+20230819
+	+ various manpage-formatting fixes.
+	+ correct formatting of table header in curs_inopts.3x (Branden
+	  Robinson).
+	+ correct manpage description of panel_hidden (report by Benjamin
+	  Mordaunt).
+
+20230812
+	+ add/use putty+cursor to reflect amending of modified cursor-keys in
+	  2021 -TD
+	+ add ecma+strikeout to putty -TD
+	+ add functions to query tty-flags in SCREEN (request by Bill Gray).
+
+20230805
+	+ fix a few manpages needing tbl marker, seen by lintian warning.
+	+ fixes for compiler-warnings.
+	+ minor grammatical fix for manpages (Branden Robinson).
+
+20230729
+	+ improve manpages for wgetnstr() and wget_wnstr().
+	+ modify MinGW configuration to provide for running in MSYS/MSYS2
+	  shells, assuming ConPTY support (patch by Pavel Fedin).
+	+ add assignment in CF_MAN_PAGES to fill in value for TERMINFO_DIRS in
+	  ncurses, terminfo and tic manpages (patch by Sven Joachim).
+
+20230722
+	+ add "auto" default for --with-xterm-kbs configure option.
+
+20230715
+	+ correct wadd_wch_literal() when adding a non-spacing character to a
+	  double-width character.
+	+ improve manual page for curs_util.
+	+ improve manual page for wadd_wch().
+
+20230708
+	+ add linux+kbs for terminals which imitate xterm's behavior with
+	  Linux -TD
+	+ modify MinGW driver to return KEY_BACKSPACE when an unmodified
+	  VK_BACK virtual key is entered (prompted by patch by Pavel Fedin,
+	  Savannah #64292).
+	+ disallow using $TERMINFO or $HOME/.terminfo when tic "-o" option is
+	  used (report by Sven Joachim, Debian #1040048).
+
+20230701
+	+ fix mandoc warnings about unnecessary markup.
+	+ improve parameter check in tparm_setup()
 
 20230625
 	+ adjust man/make_sed.sh to work with dates as the third field of TH.

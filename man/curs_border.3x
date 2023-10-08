@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,56 +27,53 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border.3x,v 1.31 2022/02/12 20:06:41 tom Exp $
-.TH curs_border 3X 2022-02-12 "ncurses 6.4" "Library calls"
-.ie \n(.g .ds `` \(lq
-.el       .ds `` ``
-.ie \n(.g .ds '' \(rq
-.el       .ds '' ''
-.na
-.hy 0
+.\" $Id: curs_border.3x,v 1.41 2023/10/07 21:19:07 tom Exp $
+.TH curs_border 3X 2023-10-07 "ncurses 6.4" "Library calls"
+.ie \n(.g \{\
+.ds `` \(lq
+.ds '' \(rq
+.\}
+.el \{\
+.ie t .ds `` ``
+.el   .ds `` ""
+.ie t .ds '' ''
+.el   .ds '' ""
+.\}
 .SH NAME
-\fBborder\fP,
-\fBwborder\fP,
-\fBbox\fP,
-\fBhline\fP,
-\fBwhline\fP,
-\fBvline\fP,
-\fBwvline\fP,
-\fBmvhline\fP,
-\fBmvwhline\fP,
-\fBmvvline\fP,
-\fBmvwvline\fP \- create \fBcurses\fP borders, horizontal and vertical lines
-.ad
-.hy
+\fB\%border\fP,
+\fB\%wborder\fP,
+\fB\%box\fP,
+\fB\%hline\fP,
+\fB\%whline\fP,
+\fB\%vline\fP,
+\fB\%wvline\fP,
+\fB\%mvhline\fP,
+\fB\%mvwhline\fP,
+\fB\%mvvline\fP,
+\fB\%mvwvline\fP \-
+draw borders and lines in a \fIcurses\fR window of characters
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
-.sp
-\fBint border(chtype \fIls\fB, chtype \fIrs\fB, chtype \fIts\fB, chtype \fIbs\fB,\fR
+.nf
+\fB#include <curses.h>
+.PP
+\fBint border(chtype \fIls\fP, chtype \fIrs\fP, chtype \fIts\fP, chtype \fIbs\fP,
            \fBchtype \fItl\fB, chtype \fItr\fB, chtype \fIbl\fB, chtype \fIbr\fB);\fR
-.br
 \fBint wborder(WINDOW *\fIwin\fB, chtype \fIls\fB, chtype \fIrs\fB,\fR
             \fBchtype \fIts\fB, chtype \fIbs\fB, chtype \fItl\fB, chtype \fItr\fB,\fR
             \fBchtype \fIbl\fB, chtype \fIbr\fB);\fR
-.sp
+.PP
 \fBint box(WINDOW *\fIwin\fB, chtype \fIverch\fB, chtype \fIhorch\fB);\fR
-.sp
+.PP
 \fBint hline(chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint whline(WINDOW *\fIwin\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint vline(chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint wvline(WINDOW *\fIwin\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.sp
+.PP
 \fBint mvhline(int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint mvwhline(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint mvvline(int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.br
 \fBint mvwvline(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
-.br
+.fi
 .SH DESCRIPTION
 The \fBborder\fP, \fBwborder\fP and \fBbox\fP routines
 draw a box around the edges of a window.
@@ -160,4 +157,5 @@ These functions are described in the XSI Curses standard, Issue 4.
 The standard specifies that they return \fBERR\fP on failure,
 but specifies no error conditions.
 .SH SEE ALSO
-\fBcurses\fP(3X), \fBcurs_outopts\fP(3X).
+\fB\%curses\fP(3X),
+\fB\%curs_outopts\fP(3X)
