@@ -13,7 +13,8 @@ export CXXFLAGS := $(shell DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow dpkg-build
 export LDFLAGS := $(shell DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow dpkg-buildflags --get LDFLAGS)
 export BUILD_CFLAGS := $(shell DEB_HOST_ARCH=`dpkg --print-architecture` dpkg-buildflags --get CFLAGS)
 export BUILD_CPPFLAGS := $(shell DEB_HOST_ARCH=`dpkg --print-architecture` dpkg-buildflags --get CPPFLAGS)
-export BUILD_LDFLAGS := $(shell DEB_HOST_ARCH=`dpkg --print-architecture` dpkg-buildflags --get LDFLAGS)
+export BUILD_LDFLAGS := $(shell DEB_HOST_ARCH=`dpkg --print-architecture` \
+				DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow dpkg-buildflags --get LDFLAGS)
 export ARFLAGS = -crv
 
 include /usr/share/dpkg/architecture.mk
