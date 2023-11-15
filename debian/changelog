@@ -1,3 +1,9 @@
+ncurses (6.4+20231016-2) UNRELEASED; urgency=medium
+
+  * Move all libraries below /usr (Closes: #1055940).
+
+ -- Sven Joachim <svenjoac@gmx.de>  Wed, 15 Nov 2023 17:31:31 +0100
+
 ncurses (6.4+20231016-1) unstable; urgency=medium
 
   * New upstream patchlevel.
