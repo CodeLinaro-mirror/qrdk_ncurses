@@ -64,8 +64,6 @@ wobjdir-32=$(srcdir)/obj-wide-32
 wobjdir-64=$(srcdir)/obj-wide-64
 objdir-test=$(srcdir)/obj-test
 
-autogen-files := debian/libtermcap.so
-
 ifeq ($(DEB_HOST_ARCH),i386)
 build_64_target = x86_64-$(DEB_HOST_GNU_SYSTEM)
 build_64 = build-64 build-wide-64
@@ -326,7 +324,6 @@ clean:
 	rm -rf $(wobjdir-32)
 	rm -rf $(wobjdir-64)
 	rm -rf $(objdir-test)
-	rm -f $(autogen-files)
 	dh_autoreconf_clean
 	dh_clean
 
@@ -396,12 +393,9 @@ ifneq ($(build_examples),)
 		$(workdir)/debian/$(package-examples)/usr/libexec/ncurses-examples/tracemunch
 endif
 
-debian/libtermcap.so: debian/libtermcap.so.in
-	cat $< > $@
-
 binary:	binary-arch binary-indep
 
-binary-arch: build-arch install-arch $(autogen-files)
+binary-arch: build-arch install-arch
 	dh_testdir
 	dh_testroot
 	dh_installdirs -a

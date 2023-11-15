@@ -20,4 +20,3 @@ obj-wide-64/lib/libncurses++w.a usr/lib64
 obj-wide-64/lib/libformw.a usr/lib64
 obj-wide-64/lib/libmenuw.a usr/lib64
 obj-wide-64/lib/libpanelw.a usr/lib64
-debian/libtermcap.so  usr/lib64
