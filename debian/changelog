@@ -61,7 +61,7 @@ ncurses (6.4+20230625-1) unstable; urgency=low
   * New patch debian-alacritty.diff: remove xterm+focus from the alacritty
     terminfo entry, as it triggers misbehavior in Vim version before
     9.0.1619 (see #1038401).
-  * Stop building the libtinfo5, libncurses5 and libncursew5 packages
+  * Stop building the libtinfo5, libncurses5 and libncursesw5 packages
     (Closes: #1025964).
   * Upload to unstable.
 
@@ -312,7 +312,7 @@ ncurses (6.2+20200912-1) unstable; urgency=medium
   * Bump autoconf-dickey build dependency to (>= 2.52+20200111), as per
     configure.in.
   * Bump debhelper compatibility level to 13.
-    - Use the substition feature in that compat level to get rid of the
+    - Use the substitution feature in that compat level to get rid of the
       debian/*.{install,links}.in files.
 
   [ Debian Janitor ]
@@ -621,7 +621,7 @@ ncurses (6.0+20170701-1) unstable; urgency=low
   * Refresh Debian patches.
   * Update symbols files.
     - Add new symbol _nc_read_entry2.
-    - Drop wo unused symbols obsoleted in 2004: _nc_check_termtype and
+    - Drop two unused symbols obsoleted in 2004: _nc_check_termtype and
       _nc_resolve_uses.
   * Blacklist dvtm and dvtm-256color terminfo entries which are shipped
     in the dvtm package (Closes: #863969).
@@ -1644,7 +1644,7 @@ ncurses (5.6+20080913-1) unstable; urgency=low
 ncurses (5.6+20080907-1) unstable; urgency=low
 
   * Merging upstream version 5.6+20080907.
-  * Installing changelog and docs also for ncurse-base and ncurse-term.
+  * Installing changelog and docs also for ncurses-base and ncurses-term.
     This allows replace the strict versioned depends against libncurses5
     with an unversioned depends.
 
