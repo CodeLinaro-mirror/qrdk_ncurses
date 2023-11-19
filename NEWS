@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.4016 2023/10/16 23:09:02 tom Exp $
+-- $Id: NEWS,v 1.4033 2023/11/19 00:46:27 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,47 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20231118
+	+ improve description of length-parameter and error-returns in several
+	  manpages:  curs_addchstr.3x, curs_addstr.3x, curs_addwstr.3x,
+	  curs_in_wch.3x, curs_in_wchstr.3x, curs_inchstr.3x, curs_ins_wstr.3x,
+	  curs_insstr.3x, curs_instr.3x, curs_inwstr.3x
+	+ amend parameter check for entire string versus specific length in
+	  winsnstr() and wins_nwstr() to match Solaris.
+	+ make similar correction to wins_nwstr().
+	+ correct loop termination condition in waddnstr() and waddnwstr()
+	  (Debian #1055882, cf: 20201205).
+
+20231111
+	+ used "infocmp -u" to help trim redundant capabilities -TD
+	+ add limit checks in infocmp needed when processing extended
+	  capabilities with the "-u" option.
+	+ fix inconsistent sort-order in see-also sections of manpages.
+	+ fix a few compiler warnings for Solaris 10.
+	+ modify endwin() to return an error if it is called again without an
+	  intervening screen update (report by Rajeev Pillai, NetBSD #57592).
+
+20231104
+	+ modify reset command to avoid altering clocal if the terminal uses a
+	  modem (prompted by discussion with Werner Fink, Michal Suchanek,
+	  OpenSUSE #1201384, Debian #60377).
+	+ build-fixes for --with-caps variations.
+	+ correct a couple of section-references in INSTALL.
+
+20231028
+	+ move xterm focus mode 1004 from xterm+sm+1006 into xterm+focus as
+	  fe/fd capabilities, like vim (vim-pr #13440).
+	+ modify --with-pkg-config-libdir option to make "libdir" the default,
+	  as documented, rather than "auto" (report by Branden Robinson).
+	+ improve messages from configure script (patches by Branden Robinson).
+
+20231021
+	+ use oldxterm+sm+1006 in vte-2014 (report by Benno Schulenberg) -TD
+	+ add ansi+apparrows -TD
+	+ change defaults for configure opaque and widec options (prompted by
+	  discussion with Branden Robinson).
+	+ minor cleanup of compiler- and manpage-warnings.
 
 20231016
 	+ make the recent change to setupterm optional "--enable-check-size"
@@ -5570,7 +5611,7 @@ it is not possible to add this information.
 	  function pointer passed to tputs().
 	+ modify init_pair() to accept -1's for color value after
 	  assume_default_colors() has been called (Debian #337095).
-	+ modify test/background.c, adding commmand-line options to demonstrate
+	+ modify test/background.c, adding command-line options to demonstrate
 	  assume_default_colors() and use_default_colors().
 
 20110416
