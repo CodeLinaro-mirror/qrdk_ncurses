@@ -1,6 +1,7 @@
 ncurses (6.4+20231118-1) UNRELEASED; urgency=medium
 
   * New upstream patchlevel.
+  * Refresh Debian patches.
   * Move all libraries below /usr (Closes: #1055940).
   * Install libtermcap.so as a symlink rather than a linker script.
   * Explicitly configure the non-wide builds with --disable-widec.

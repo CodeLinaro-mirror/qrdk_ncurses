@@ -14,7 +14,7 @@ Last-Update: 2023-07-05
 
 --- a/misc/terminfo.src
 +++ b/misc/terminfo.src
-@@ -6744,7 +6744,7 @@ mlterm-256color|mlterm 3.0 with xterm 25
+@@ -6743,7 +6743,7 @@ mlterm-256color|mlterm 3.0 with xterm 25
  #
  # removed dch/dch1 because they are inconsistent with bce/ech -TD
  # remove km as per tack test -TD
@@ -23,7 +23,7 @@ Last-Update: 2023-07-05
  	OTbs, am, bce, eo, mir, msgr, xenl, xon, XT,
  	cols#80, it#8, lines#24,
  	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
-@@ -6756,7 +6756,7 @@ rxvt-basic|rxvt terminal base (X Window
+@@ -6755,7 +6755,7 @@ rxvt-basic|rxvt terminal base (X Window
  	enacs=\E(B\E)0, flash=\E[?5h$<100/>\E[?5l, home=\E[H,
  	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
  	ind=\n, is1=\E[?47l\E=\E[?1l,
