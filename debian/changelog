@@ -2,6 +2,8 @@ ncurses (6.4+20231118-1) UNRELEASED; urgency=medium
 
   * New upstream patchlevel.
   * Refresh Debian patches.
+    - Drop the workaround for #933053 from patch 02-debian-xterm.diff,
+      it had been non-functional since version 6.2+20210905-1.
   * Move all libraries below /usr (Closes: #1055940).
   * Install libtermcap.so as a symlink rather than a linker script.
   * Explicitly configure the non-wide builds with --disable-widec.
