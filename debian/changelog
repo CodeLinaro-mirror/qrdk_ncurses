@@ -1,11 +1,11 @@
-ncurses (6.4+20231209-1) UNRELEASED; urgency=medium
+ncurses (6.4+20231209-1) unstable; urgency=medium
 
   * New upstream patchlevel.
     - Remove xterm+sm+1006 from tmux (Closes: #1057688).
     - Update man/edit_man.sh to allow for "\%" markers embedded after
       bold font escapes in manpage cross-references (Closes: #1057651).
 
- -- Sven Joachim <svenjoac@gmx.de>  Sun, 10 Dec 2023 17:18:49 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 11 Dec 2023 17:03:08 +0100
 
 ncurses (6.4+20231121-1) unstable; urgency=medium
 
