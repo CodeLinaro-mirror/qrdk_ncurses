@@ -27,8 +27,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.55 2023/11/25 19:52:56 tom Exp $
-.TH terminfo 5 2023-11-25 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "File formats"
+.\" $Id: terminfo.head,v 1.60 2023/12/30 22:21:45 tom Exp $
+.TH terminfo 5 2023-12-30 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "File formats"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -75,9 +75,9 @@ describes terminals by giving a set of capabilities which they
 have, by specifying how to perform screen operations, and by
 specifying padding requirements and initialization sequences.
 .PP
-This manual describes \fBncurses\fP
+This manual describes \fI\%ncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
-.SS Terminfo Entry Syntax
+.SS "\fIterminfo\fP Entry Syntax"
 Entries in
 .I terminfo
 consist of a sequence of fields:
@@ -156,17 +156,17 @@ _
 .TE
 .PP
 For more on terminal naming conventions, see the \fBterm\fP(7) manual page.
-.SS Terminfo Capabilities Syntax
+.SS "\fIterminfo\fP Capabilities Syntax"
 The terminfo entry consists of several \fIcapabilities\fP,
 i.e., features that the terminal has,
 or methods for exercising the terminal's features.
 .PP
 After the first field (giving the name(s) of the terminal entry),
 there should be one or more \fIcapability\fP fields.
-These are boolean, numeric or string names with corresponding values:
+These are Boolean, numeric or string names with corresponding values:
 .bP
 Boolean capabilities are true when present, false when absent.
-There is no explicit value for boolean capabilities.
+There is no explicit value for Boolean capabilities.
 .bP
 Numeric capabilities have a \*(``#\*('' following the name,
 then an unsigned decimal integer value.
@@ -185,7 +185,7 @@ Any capability can be \fIcanceled\fP,
 i.e., suppressed from the terminal entry,
 by following its name with \*(``@\*(''
 rather than a capability value.
-.SS Similar Terminals
+.SS "Similar Terminals"
 If there are two very similar terminals, one (the variant) can be defined as
 being just like the other (the base) with certain exceptions.
 In the
@@ -220,6 +220,6 @@ user preferences.
 An entry included via \fBuse\fP can contain canceled capabilities,
 which have the same effect as if those cancels were inline in the
 using terminal entry.
-.SS Predefined Capabilities
+.SS "Predefined Capabilities"
 .\" Head of terminfo man page ends here
 .ps -1

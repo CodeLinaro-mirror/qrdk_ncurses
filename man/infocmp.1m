@@ -28,8 +28,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.101 2023/12/02 20:49:04 tom Exp $
-.TH @INFOCMP@ 1M 2023-12-02 "ncurses 6.4" "User commands"
+.\" $Id: infocmp.1m,v 1.104 2023/12/30 21:36:32 tom Exp $
+.TH @INFOCMP@ 1M 2023-12-30 "ncurses 6.4" "User commands"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -87,24 +87,24 @@ x\
 terminfo entries, rewrite a \fBterminfo\fP description to take advantage of the
 \fBuse=\fP terminfo field, or print out a \fBterminfo\fP description from the
 binary file (\fBterm\fP) in a variety of formats.
-In all cases, the boolean
+In all cases, the Boolean
 fields will be printed first, followed by the numeric fields, followed by the
 string fields.
-.SS Default Options
+.SS "Default Options"
 If no options are specified and zero or one \fIterminal-types\fP are
 specified,
 the
 \fB\-I\fP option will be assumed.
 If more than one \fIterminal-type\fP is specified,
 the \fB\-d\fP option will be assumed.
-.SS Comparison Options [\-d] [\-c] [\-n]
+.SS "Comparison Options [\-d] [\-c] [\-n]"
 \fB@INFOCMP@\fP compares the \fBterminfo\fP description of the first terminal
 \fIterminal-type\fP with each of the descriptions given by the entries
 for the other terminal's \fIterminal-types\fP.
 If a capability is defined for only one of the
 terminals, the value returned depends on the type of the capability:
 .bP
-\fBF\fP for missing boolean variables
+\fBF\fP for missing Boolean variables
 .bP
 \fBNULL\fP for missing integer or string variables
 .PP
@@ -142,7 +142,7 @@ capabilities (names prefixed with \*(``OT\*('').
 If no \fIterminal-types\fP are given,
 \fB@INFOCMP@\fP uses the environment variable \fITERM\fP
 for each of the \fIterminal-types\fP.
-.SS Source Listing Options [\-I] [\-L] [\-C] [\-r]
+.SS "Source Listing Options [\-I] [\-L] [\-C] [\-r]"
 The \fB\-I\fP, \fB\-L\fP, and \fB\-C\fP options will produce
 a source listing for each terminal named.
 .PP
@@ -222,7 +222,7 @@ l l l.
 \fB%p1%?%'x'%>%t%p1%'y'%+%;/%>xy\fP/concept
 \fB%p2\fP is printed before \fB%p1/%r\fP/hp
 .TE
-.SS Use= Option [\-u]
+.SS "Use= Option [\-u]"
 The \fB\-u\fP option produces a \fBterminfo\fP source description of the first
 terminal \fIterminal-type\fP which is relative to the sum of the
 descriptions given by the entries for the other \fIterminal-types\fP.
@@ -269,8 +269,8 @@ the compilation time, is specifying extra \fBuse=\fP fields that are
 superfluous.
 \fB@INFOCMP@\fP will flag any other \fIterminal-type use=\fP fields that
 were not needed.
-.SS Changing Databases [\-A \fIdirectory\fR] [\-B \fIdirectory\fR]
-Like other \fBncurses\fP utilities,
+.SS "Changing Databases [\-A \fIdirectory\fR] [\-B \fIdirectory\fR]"
+Like other \fI\%ncurses\fP utilities,
 \fB@INFOCMP@\fP looks for the terminal descriptions in several places.
 You can use the \fI\%TERMINFO\fP and \fI\%TERMINFO_DIRS\fP environment
 variables to override the compiled-in default list of places to search.
@@ -292,7 +292,7 @@ databases.
 For instance,
 you can use this feature for comparing descriptions for the same terminal
 created by different people.
-.SS Other Options
+.SS "Other Options"
 .TP 5
 \fB\-0\fP
 causes the fields to be printed on one line, without wrapping.
@@ -321,9 +321,10 @@ for a given terminal type.
 The tables are all declared static, and are named according to the type
 and the name of the corresponding terminal entry.
 .sp
-Before ncurses 5.0, the split between the \fB\-e\fP and \fB\-E\fP
-options was not needed; but support for extended names required making
-the arrays of terminal capabilities separate from the TERMTYPE structure.
+Before \fI\%ncurses\fP 5.0,
+the split between the \fB\-e\fP and \fB\-E\fP options was not needed;
+but support for extended names required making the arrays of terminal
+capabilities separate from the TERMTYPE structure.
 .TP 5
 \fB\-e\fP
 Dump the capabilities of the given terminal as a C initializer for a
@@ -551,14 +552,16 @@ since it excludes the inferences that \fB@INFOCMP@\fP makes to fill in missing
 data.
 .TP 5
 \fB\-V\fP
-reports the version of ncurses which was used in this program, and exits.
+reports the version of \fI\%ncurses\fP which was used in this program,
+and exits.
 .TP 5
 \fB\-v\fP \fIn\fP
 prints out tracing information on standard error as the program runs.
 .IP
 The optional parameter \fIn\fP is a number from 1 to 10, inclusive,
 indicating the desired level of detail of information.
-If ncurses is built without tracing support, the optional parameter is ignored.
+If \fI\%ncurses\fP is built without tracing support,
+the optional parameter is ignored.
 .TP
 \fB\-W\fP
 By itself, the \fB\-w\fP option will not force long strings to be wrapped.
@@ -618,7 +621,7 @@ Tony Hansen (AT&T) wrote the first \fBinfocmp\fP in early 1984,
 for System V Release 3.
 .PP
 Eric Raymond used the AT&T documentation in 1995 to provide an equivalent
-\fB@INFOCMP@\fP for ncurses.
+\fB@INFOCMP@\fP for \fI\%ncurses\fP.
 In addition, he added a few new features such as:
 .bP
 the \fB\-e\fP option, to support \fIfallback\fP
@@ -633,9 +636,9 @@ user-defined capabilities.
 For a complete list, see the \fIEXTENSIONS\fP section.
 .PP
 In 2010, Roy Marples provided an \fBinfocmp\fP program for NetBSD.
-It is less capable than the SVr4 or ncurses versions
+It is less capable than the SVr4 or \fI\%ncurses\fP versions
 (e.g., it lacks the sorting options documented in X/Open),
-but does include the \fB\-x\fP option adapted from ncurses.
+but does include the \fB\-x\fP option adapted from \fI\%ncurses\fP.
 .SH BUGS
 The \fB\-F\fP option of \fB\%@INFOCMP@\fP(1M) should be a
 \fB\%@TOE@\fP(1M) mode.
