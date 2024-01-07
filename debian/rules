@@ -341,6 +341,7 @@ install-indep: build-indep
 	$(MAKE) -C $(objdir) install.libs
 	rm -f $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libtinfo.so*
 	rm -f $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libtic.so*
+	install -m 644 $(objdir)/man/ncurses6-config.1 $(wobjdir)/man
 	$(MAKE) -C $(wobjdir) install
 
 	# Move terminfo files to the right place.

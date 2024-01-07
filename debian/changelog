@@ -3,6 +3,8 @@ ncurses (6.4+20240106-1) UNRELEASED; urgency=medium
   * New upstream patchlevel.
   * Refresh Debian patches.
   * Update years in debian/copyright.
+  * Install ncurses6-config.1 via "make install" to ensure it contains
+    correct cross-references (Closes: #1060211).
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 07 Jan 2024 18:03:39 +0100
 
