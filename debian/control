@@ -5,7 +5,7 @@ Maintainer: Ncurses Maintainers <ncurses@packages.debian.org>
 Uploaders: Sven Joachim <svenjoac@gmx.de>, Craig Small <csmall@debian.org>
 Build-Depends: debhelper-compat (= 13),
                libgpm-dev [linux-any],
-               pkg-config,
+               pkgconf,
                autoconf-dickey (>= 2.52+20210509),
 Build-Depends-Arch: g++-multilib [amd64 i386 powerpc ppc64 s390 sparc] <!nobiarch>
 Standards-Version: 4.6.2
