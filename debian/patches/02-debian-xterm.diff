@@ -11,7 +11,7 @@ Last-Update: 2023-11-19
 
 --- a/misc/terminfo.src
 +++ b/misc/terminfo.src
-@@ -5707,7 +5707,7 @@ xterm-24|vs100|xterms|xterm terminal emu
+@@ -5667,7 +5667,7 @@ xterm-24|vs100|xterms|xterm terminal emu
  	lines#24, use=xterm-old,
  
  # This is xterm for ncurses.
