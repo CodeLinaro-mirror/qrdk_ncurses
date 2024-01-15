@@ -1,4 +1,4 @@
-ncurses (6.4+20240113-1) UNRELEASED; urgency=medium
+ncurses (6.4+20240113-1) unstable; urgency=medium
 
   * New upstream patchlevel.
   * Refresh Debian patches.
@@ -10,7 +10,7 @@ ncurses (6.4+20240113-1) UNRELEASED; urgency=medium
   * Build-Depend on pkgconf rather than on pkg-config.
   * Drop kfreebsd-specific code from debian/rules.
 
- -- Sven Joachim <svenjoac@gmx.de>  Sun, 07 Jan 2024 18:03:39 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 15 Jan 2024 20:34:12 +0100
 
 ncurses (6.4+20231209-1) unstable; urgency=medium
 
