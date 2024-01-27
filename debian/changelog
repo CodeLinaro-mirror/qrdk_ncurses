@@ -1,3 +1,11 @@
+ncurses (6.4+20240113-2) UNRELEASED; urgency=medium
+
+  * Add a new "terminfocheck" target to debian/rules to compare the built
+    terminfo files against the system database, and use it in binary-indep
+    builds in a new pkg.ncurses.terminfocheck build profile.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sat, 27 Jan 2024 16:51:25 +0100
+
 ncurses (6.4+20240113-1) unstable; urgency=medium
 
   * New upstream patchlevel.
