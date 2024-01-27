@@ -375,7 +375,6 @@ else
 		TERMINFO=$(fulltempdir)/usr/share/terminfo \
 		tic -x debian/$$ti.ti; \
 	done
-
 endif
 
 	# Create an empty /etc/terminfo for the sysadmin.
