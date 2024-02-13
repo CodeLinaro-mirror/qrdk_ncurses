@@ -2,6 +2,7 @@
 set -e
 
 libncurses_dev=$(dpkg-query -W -f'${Package}:${Architecture} ' 'libncurses-dev:*')
+# shellcheck disable=SC2086
 manpages=$(dpkg-query -L $libncurses_dev ncurses-bin ncurses-doc \
 	    | grep ^/usr/share/man/man./)
 
