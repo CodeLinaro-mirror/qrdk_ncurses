@@ -1,7 +1,8 @@
 #!/bin/sh
 set -e
 
-manpages=$(dpkg -L libncurses-dev:"$(dpkg --print-architecture)" ncurses-bin ncurses-doc \
+libncurses_dev=$(dpkg-query -W -f'${Package}:${Architecture} ' 'libncurses-dev:*')
+manpages=$(dpkg-query -L $libncurses_dev ncurses-bin ncurses-doc \
 	    | grep ^/usr/share/man/man./)
 
 echo "Checking for broken manpage references ..."
