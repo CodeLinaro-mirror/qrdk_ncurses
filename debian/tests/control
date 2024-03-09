@@ -2,6 +2,6 @@ Tests: manpage-references
 Restrictions: superficial
 Depends: libncurses-dev, ncurses-bin, ncurses-doc
 
-Tests: infocmp-dumb
+Tests: backspace-delete-keys, infocmp-dumb
 Restrictions: superficial
 Depends: ncurses-base, ncurses-bin
