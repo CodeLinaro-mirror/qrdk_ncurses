@@ -107,6 +107,10 @@ ifneq (,$(filter pkg.ncurses.terminfocheck,$(DEB_BUILD_PROFILES)))
 check_ti = terminfocheck
 endif
 
+ifneq (,$(filter terse,$(DEB_BUILD_OPTIONS)))
+echo = --disable-echo
+endif
+
 ifeq ($(DEB_HOST_ARCH_OS),linux)
 with_mouse = --with-gpm
 endif
@@ -117,7 +121,8 @@ CONFARGS =	--prefix=/usr \
 		--mandir=/usr/share/man \
 		--with-manpage-format=normal \
 		--without-profile --without-debug \
-		--disable-rpath --enable-echo \
+		--disable-rpath \
+		$(echo) \
 		--disable-stripping \
 		--enable-const \
 		--enable-pc-files \
@@ -148,6 +153,7 @@ CONFARGS-TEST =	--prefix=/usr \
 		--bindir=/usr/libexec/ncurses-examples \
 		--datadir=/usr/share/ncurses-examples \
 		--disable-stripping \
+		$(echo) \
 		--with-x11-rgb=/etc/X11/rgb.txt \
 		--with-ncursesw \
 		--with-curses-dir=$(wobjdir)

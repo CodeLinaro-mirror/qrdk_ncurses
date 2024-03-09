@@ -7,6 +7,7 @@ ncurses (6.4+20240113-2) UNRELEASED; urgency=medium
     'dumb' terminfo entry matches expectations (see #868266).
   * Add another smoke autopkgtest to ensure that the backspace/delete key
     definitions match expectations (see Policy §9.8).
+  * If DEB_BUILD_OPTIONS matches "terse", configure with --disable-echo.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 27 Jan 2024 16:51:25 +0100
 
