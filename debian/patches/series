@@ -1,4 +1,3 @@
 01-debian-no-ada-doc.diff
 02-debian-backspace.diff
-02-debian-rxvt.diff
 03-debian-ncursesconfig-omit-L.diff

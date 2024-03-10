@@ -11,6 +11,7 @@ ncurses (6.4+20240113-2) UNRELEASED; urgency=medium
   * Stop patching terminfo.src for the Debian-specific terminfo aliases
     xterm-debian and rxvt-m, create symlinks for them instead.
     - Drop patch 02-debian-xterm.diff.
+    - Merge patch 02-debian-rxvt.diff into 02-debian-backspace.diff.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 27 Jan 2024 16:51:25 +0100
 
