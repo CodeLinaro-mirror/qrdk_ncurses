@@ -383,6 +383,10 @@ else
 	done
 endif
 
+	# Create Debian-specific aliases xterm-debian and rxvt-m
+	ln -sf xterm $(fulltempdir)/usr/share/terminfo/x/xterm-debian
+	ln -sf rxvt-basic $(fulltempdir)/usr/share/terminfo/r/rxvt-m
+
 	# Create an empty /etc/terminfo for the sysadmin.
 	mkdir -p $(tempdir)/etc/terminfo
 	install --mode 644 debian/README.etc $(tempdir)/etc/terminfo/README

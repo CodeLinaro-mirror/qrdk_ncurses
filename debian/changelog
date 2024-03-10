@@ -8,6 +8,9 @@ ncurses (6.4+20240113-2) UNRELEASED; urgency=medium
   * Add another smoke autopkgtest to ensure that the backspace/delete key
     definitions match expectations (see Policy §9.8).
   * If DEB_BUILD_OPTIONS matches "terse", configure with --disable-echo.
+  * Stop patching terminfo.src for the Debian-specific terminfo aliases
+    xterm-debian and rxvt-m, create symlinks for them instead.
+    - Drop patch 02-debian-xterm.diff.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 27 Jan 2024 16:51:25 +0100
 
