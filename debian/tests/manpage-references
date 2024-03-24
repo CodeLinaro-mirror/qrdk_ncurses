@@ -9,6 +9,6 @@ manpages=$(dpkg-query -L $libncurses_dev ncurses-bin ncurses-doc \
 echo "Checking for broken manpage references ..."
 for manpage in $manpages ; do
     if [ -f "$manpage" ] && [ ! -L "$manpage" ] ; then
-	zgrep -nH '(3X)' "$manpage" 1>&2 || true
+	zgrep -nH '(3X)' "$manpage" | grep -v ':[0-9]\+:\.\\"' 1>&2 || true
     fi
 done
