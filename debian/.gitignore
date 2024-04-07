@@ -1,7 +1,6 @@
 autoreconf.after
 autoreconf.before
 files
-libtermcap.so
 *.substvars
 *.debhelper
 *.debhelper.log
