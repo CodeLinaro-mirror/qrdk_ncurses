@@ -6,3 +6,4 @@ fix_crash_on_very_long_tc-use_clause.diff
 fix-configure-root-args-option.diff
 debian-env-access.diff
 CVE-2023-50495.diff
+CVE-2023-45918.diff
