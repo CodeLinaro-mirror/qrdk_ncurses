@@ -11,6 +11,7 @@ ncurses (6.4-4+deb12u1) UNRELEASED; urgency=medium
     - Modify _nc_read_file_entry() to show relevant filename in warnings.
     - Improve checks in convert_string() for corrupt terminfo entry
       (report and test-case by Gregory James Duck, CVE-2023-45918).
+  * Use bookworm as the release in the Salsa CI pipeline.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sat, 13 Apr 2024 17:52:54 +0200
 

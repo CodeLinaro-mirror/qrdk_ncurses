@@ -3,3 +3,4 @@ include:
   - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/pipeline-jobs.yml
 variables:
   SALSA_CI_DISABLE_PIUPARTS: 1
+  RELEASE: 'bookworm'
