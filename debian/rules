@@ -356,7 +356,6 @@ install-indep: build-indep
 	# Remove excluded terminal types and other stuff we don't install
 	cd $(tempdir)/usr/share/terminfo && rm -f $(badterminfo)
 	rm -f $(tempdir)/usr/lib/terminfo \
-	      $(tempdir)/usr/share/man/man1/init.1 \
 	      $(tempdir)/usr/lib/$(DEB_HOST_MULTIARCH)/libcurses.so
 
 	# Provide header file symlinks under usr/include/ncursesw
