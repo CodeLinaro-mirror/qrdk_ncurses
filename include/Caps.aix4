@@ -29,7 +29,7 @@
 #
 # Author: Thomas Dickey
 #
-# $Id: Caps.aix4,v 1.24 2024/01/13 22:05:39 tom Exp $
+# $Id: Caps.aix4,v 1.27 2024/03/16 15:26:09 Branden.Robinson Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is designed to align with AIX 4.x's terminfo.
@@ -153,64 +153,100 @@
 # to buy space for non-essentials Emacs is still using.  Capabilities high
 # on that hit list: rc, sc, uc.
 #
+# FORMATTING THE TABLES
+#
+# We manually specify a (minimum) column width for the capability name
+# and terminfo code columns in the tables to achieve a consistent
+# arrangement; as used here, tbl(1) cannot know the width required by
+# one table's data while formatting another's.
+#
+# The longest capability names (C variables) are
+# "enter_near_letter_quality" and "bit_image_carriage_return" (tied at
+# 25n), and the longest terminfo code is "setcolor" (8n).
+#
+# The tables are a tight fit on traditional man(7) implementations that
+# use a line length of 65n, and the "Description" column has little room
+# within which the formatter can make breaking or adjustment decisions.
+# Words like "micro_..._address" and "parm_..._micro" don't break.
+# Reducing the inter-column gaps to 2 ens gives them enough room.  --GBR
+#
 #############################################################################
 #
 # STANDARD CAPABILITIES
 #
-#%The following is a complete table of the capabilities included in a
-#%terminfo description block and available to terminfo-using code.
-#%In each line of the table,
+#%Tables of capabilities
+#%.I \%ncurses
+#%recognizes in a
+#%.I \%term\%info
+#%terminal type description and available to
+#%.IR \%term\%info -using
+#%code follow.
 #%.bP
-#%The \fBvariable\fR is the name by which the programmer (at the terminfo level)
-#%accesses the capability.
+#%The capability name identifies the symbol by which the programmer
+#%using the
+#%.I \%term\%info
+#%API accesses the capability.
 #%.bP
-#%The \fBcapname\fR (\fICap-name\fP)
-#%is the short name used in the text of the database,
-#%and is used by a person updating the database.
+#%The TI
+#%.RI ( \%term\%info )
+#%code is the short name used by a person composing or updating a
+#%terminal type entry.
 #%.IP
-#%Whenever possible, capnames are chosen to be the same as or similar to
-#%the ANSI X3.64-1979 standard (now superseded by ECMA-48, which uses
-#%identical or very similar names).
+#%Whenever possible,
+#%these codes are the same as or similar to those of the ANSI X3.64-1979
+#%standard
+#%(now superseded by ECMA-48,
+#%which uses identical or very similar names).
 #%Semantics are also intended to match those of the specification.
 #%.IP
-#%Capability names have no hard length limit, but an informal limit of 5
-#%characters has been adopted to keep them short and to allow the tabs in
-#%the source file
-#%.B Caps
+#%.I \%term\%info
+#%codes have no hard length limit,
+#%but
+#%.I \%ncurses
+#%maintains an informal one of 5 characters to keep them short and to
+#%allow the tabs in the source file
+#%.I Caps
 #%to line up nicely.
+#%(Some standard codes exceed this limit regardless.)
 #%.bP
-#%The \fBtermcap\fP (\fITcap\fP) code is the old capability name
-#%(some capabilities are new, and have names which termcap did not originate).
+#%The TC
+#%.RI ( \%term\%cap )
+#%code is that used by the corresponding API of
+#%.I \%ncurses.
+#%(Some capabilities are new,
+#%and have names that BSD
+#%.I \%term\%cap
+#%did not originate.)
 #%.bP
-#%Finally, the \fBdescription\fP field attempts to convey the semantics of the
-#%capability.
+#%The description field attempts to convey the capability's semantics.
 #%.PP
-#%You may find some codes in the description field:
+#%The description field employs a handful of notations.
 #%.TP
-#%(P)
-#%indicates that padding may be specified
+#%.B (P)
+#%indicates that padding may be specified.
 #%.TP
-#%#[1-9]
-#%in the description field indicates that the string is passed
-#%through \fBtparm\fP(3X) with parameters as given (#\fIi\fP).
+#%.B (P*)
+#%indicates that padding may vary in proportion to the number of output
+#%lines affected.
+#%.TP
+#%.BI # i
+#%indicates the
+#%.IR i th
+#%parameter of a string capability;
+#%the programmer should pass the string to \fB\%tparm\fP(3X) with the
+#%parameters listed.
 #%.IP
-#%If no parameters are listed in the description,
-#%passing the string through \fBtparm\fP(3X) may give unexpected results,
-#%e.g., if it contains percent (%%) signs.
-#%.TP
-#%(P*)
-#%indicates that padding may vary in proportion to the number of
-#%lines affected
-#%.TP
-#%(#\d\fIi\fP\u)
-#%indicates the \fIi\fP\uth\d parameter.
+#%If the description lists no parameters,
+#%passing the string to \fB\%tparm\fP(3X) may produce unexpected
+#%behavior,
+#%for instance if the string contains percent signs.
 #%.
 #%.PP
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%Boolean Capability Name	TI	TC	Description
 #%_
@@ -256,9 +292,9 @@ lpi_changes_res			lpix	bool	YG	-	-	-----	changing line pitch changes resolution
 #%.
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%Numeric Capability Name	TI	TC	Description
 #%_
@@ -289,9 +325,9 @@ no_color_video			ncv	num	NC	-	-	-----	video attributes that cannot be used with 
 #%.PP
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%Numeric Capability Name	TI	TC	Description
 #%_
@@ -317,9 +353,9 @@ bit_image_type			bitype	num	Yp	-	-	-----	type of bit-image device
 #%.
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%String Capability Name	TI	TC	Description
 #%_
@@ -385,6 +421,10 @@ key_ctab			kctab	str	kt	KEY_CTAB	0525	-B-G-*	clear-tab key
 key_dc				kdch1	str	kD	KEY_DC		0512	YB-G-	delete-character key
 key_dl				kdl1	str	kL	KEY_DL		0510	-B-G-*	delete-line key
 key_down			kcud1	str	kd	KEY_DOWN	0402	YBCGE	down-arrow key
+#%.TE
+#%.TS
+#%center;
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 key_eic				krmir	str	kM	KEY_EIC		0514	-B-G-*	sent by rmir or smir in insert mode
 key_eol				kel	str	kE	KEY_EOL		0517	-B-G-*	clear-to-end-of-line key
 key_eos				ked	str	kS	KEY_EOS		0516	-B-G-*	clear-to-end-of-screen key
@@ -447,6 +487,10 @@ prtr_on				mc5	str	po	-		-	-B-G-*	turn on printer
 repeat_char			rep	str	rp	-		-	YB-GE	repeat char #1 #2 times (P*)
 reset_1string			rs1	str	r1	-		-	-B---	reset string
 reset_2string			rs2	str	r2	-		-	-B---	reset string
+#%.TE
+#%.TS
+#%center;
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 reset_3string			rs3	str	r3	-		-	-B---	reset string
 reset_file			rf	str	rf	-		-	-B---	name of reset file
 restore_cursor			rc	str	rc	-		-	YBCG-	restore cursor to position of last save_cursor
@@ -595,6 +639,10 @@ key_f39				kf39	str	FT	KEY_F(39)	-	----E	F39 function key
 key_f40				kf40	str	FU	KEY_F(40)	-	----E	F40 function key
 key_f41				kf41	str	FV	KEY_F(41)	-	----E	F41 function key
 key_f42				kf42	str	FW	KEY_F(42)	-	----E	F42 function key
+#%.TE
+#%.TS
+#%center;
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 key_f43				kf43	str	FX	KEY_F(43)	-	----E	F43 function key
 key_f44				kf44	str	FY	KEY_F(44)	-	----E	F44 function key
 key_f45				kf45	str	FZ	KEY_F(45)	-	----E	F45 function key
@@ -668,6 +716,10 @@ key_resume			kres	str	&5	KEY_RESUME	0570	-----	resume key
 key_save			ksav	str	&6	KEY_SAVE	0571	-----	save key
 key_suspend			kspd	str	&7	KEY_SUSPEND	0627	-----	suspend key
 key_undo			kund	str	&8	KEY_UNDO	0630	-----	undo key
+#%.TE
+#%.TS
+#%center;
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 key_sbeg			kBEG	str	&9	KEY_SBEG	0572	-----	shifted begin key
 key_scancel			kCAN	str	&0	KEY_SCANCEL	0573	-----	shifted cancel key
 key_scommand			kCMD	str	*1	KEY_SCOMMAND	0574	-----	shifted command key
@@ -745,6 +797,10 @@ change_res_horz			chr	str	ZC	-		-	-----	Change horizontal resolution to #1
 change_res_vert			cvr	str	ZD	-		-	-----	Change vertical resolution to #1
 define_char			defc	str	ZE	-		-	-----	Define a character #1, #2 dots wide, descender #3
 enter_doublewide_mode		swidm	str	ZF	-		-	-----	Enter double-wide mode
+#%.TE
+#%.TS
+#%center;
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 enter_draft_quality		sdrfq	str	ZG	-		-	-----	Enter draft-quality mode
 enter_italics_mode		sitm	str	ZH	-		-	-----	Enter italic mode
 enter_leftward_mode		slm	str	ZI	-		-	-----	Start leftward carriage motion
@@ -798,9 +854,9 @@ zero_motion			zerom	str	Zx	-		-	-----	No motion for subsequent character
 #%.PP
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%String Capability Name	TI	TC	Description
 #%_
@@ -854,9 +910,9 @@ alt_scancode_esc		scesa	str	S8	-		-	-----	Alternate escape for scancode emulatio
 #%.PP
 #%.TS
 #%center;
-#%Lb Cb S  Lb
-#%Lb Lb Lb Lb
-#%Lb Lb Lb Lx.
+#%Lb        Cb       S   Lb
+#%Lb        Lb       Lb  Lb
+#%Lbw(25n)2 Lbw(8n)2 Lb2 Lx.
 #%\&	Code	\&
 #%String Capability Name	TI	TC	Description
 #%_

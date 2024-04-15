@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
+.\" Copyright 2018-2023,2024 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,8 +28,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.60 2023/12/23 16:36:18 tom Exp $
-.TH curs_inopts 3X 2023-12-23 "ncurses 6.4" "Library calls"
+.\" $Id: curs_inopts.3x,v 1.66 2024/04/13 22:20:29 tom Exp $
+.TH curs_inopts 3X 2024-04-13 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "Library calls"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -228,7 +228,7 @@ this is equivalent,
 under POSIX,
 to setting the CS7 flag on the terminal.
 The window argument,
-.I win,
+.IR win ,
 is always ignored.
 If the terminfo capabilities
 \fBsmm\fP (meta_on) and
@@ -278,7 +278,7 @@ passed through uninterpreted,
 instead of generating a signal.
 The behavior of the BREAK key depends on other bits in the terminal
 driver that are not set by
-.I curses.
+.IR curses .
 .\"
 .SS "qiflush, nqiflush"
 When the \fB\%noqiflush\fP routine is used,
@@ -344,7 +344,7 @@ All routines that return an integer return \fBERR\fP upon failure and
 upon successful completion,
 unless otherwise noted in the preceding routine descriptions.
 .PP
-X/Open does not define any error conditions.
+X/Open Curses does not specify any error conditions.
 In this implementation,
 functions with a window parameter will return an error if it is null.
 Any function will also return an error if the terminal was not
@@ -508,12 +508,43 @@ load key definitions in the order
 defined by the array of string capability names.
 The last key to be loaded determines the keycode which will be returned.
 In
-.I \%ncurses,
+.IR \%ncurses ,
 you may also have extended capabilities interpreted as key definitions.
 These are loaded after the predefined keys,
 and if a capability's value is the same as a previously-loaded
 key definition,
 the later definition is the one used.
+.SH HISTORY
+Formerly,
+.I \%ncurses
+used
+.B \%nl
+and
+.B \%nonl
+to control the conversion of newlines to carriage return/line feed
+on output as well as input.
+X/Open Curses documents the use of these functions only for input.
+This difference arose from converting the
+.I \%pcurses
+source (1986),
+which used
+\fI\%ioctl\fP(2) calls and the
+.I \%sgttyb
+structure,
+to
+.I \%termios
+(the POSIX terminal API).
+In the former,
+both input and output were controlled via a single option
+.BR \%CRMOD ,
+while the latter separates these features.
+Because that conversion interferes with output optimization,
+.I \%ncurses
+6.2 (2020) amended
+.B \%nl
+and
+.B \%nonl
+to eliminate their effect on output.
 .SH SEE ALSO
 \fB\%curses\fP(3X),
 \fB\%curs_getch\fP(3X),

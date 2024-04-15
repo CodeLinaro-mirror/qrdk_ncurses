@@ -28,8 +28,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.96 2024/01/13 22:05:39 tom Exp $
-.TH curs_attr 3X 2024-01-13 "ncurses 6.4" "Library calls"
+.\" $Id: curs_attr.3x,v 1.99 2024/03/16 15:38:33 tom Exp $
+.TH curs_attr 3X 2024-03-16 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "Library calls"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -232,7 +232,7 @@ The routine \fBstandend\fP is the same
 as \fBattrset(A_NORMAL)\fP or \fBattrset(0)\fP, that is, it turns off all
 attributes.
 .PP
-X/Open does not mark these \*(``restricted\*('', because
+X/Open Curses does not mark these \*(``restricted\*('', because
 .bP
 they have well established legacy use, and
 .bP
@@ -296,7 +296,7 @@ The SVr4 manual page claims (falsely) that these routines always return \fB1\fP.
 .SH RETURN VALUE
 All routines return the integer \fBOK\fP on success, or \fBERR\fP on failure.
 .PP
-X/Open does not define any error conditions.
+X/Open Curses does not specify any error conditions.
 .PP
 This implementation
 .bP
@@ -512,7 +512,7 @@ but not necessarily the reverse.
 .PP
 .TS
 Lb  Lb Lb  Cb  S   Lb
-Lb2 Lb Lb2 Lbz Lb2 Lb
+Lb2 Lb Lb2 Lb2 Lb2 Lb
 L   L  L   L   L   Lx.
 \&	\&	\&	Bits	\&
 Year	System	Arch	Color	Char	Notes

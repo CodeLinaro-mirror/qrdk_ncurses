@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
+.\" Copyright 2018-2023,2024 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,8 +28,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: captoinfo.1m,v 1.58 2023/12/23 16:28:31 tom Exp $
-.TH @CAPTOINFO@ 1M 2023-12-23 "ncurses 6.4" "User commands"
+.\" $Id: captoinfo.1m,v 1.63 2024/03/23 20:37:25 tom Exp $
+.TH @CAPTOINFO@ 1M 2024-03-23 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "User commands"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -66,7 +66,7 @@ and extracts only the entry for the terminal named in the environment
 variable \fITERM\fP from it.
 If the environment variable \fI\%TERMCAP\fP is not set,
 \fB\%@CAPTOINFO@\fP reads
-.I \%/etc/termcap.
+.IR \%/etc/termcap .
 .PP
 This utility is implemented as a link to \fB\%@TIC@\fP(1M),
 with the latter's
@@ -90,9 +90,10 @@ It issues a diagnostic to the standard error stream for each,
 inviting the user to check that it has not mistakenly translated an
 unknown or mistyped capability name.
 .PP
+.\" DWB 3.3 tbl requires the two junk "L" specifiers in the first row.
 .TS
 center;
-Cb S
+Cb S  L  L
 Cb Cb Cb Cb
 Cb Cb C  Lb.
 Name
@@ -215,7 +216,7 @@ SVr4 systems provide \fB\%captoinfo\fP as a separate application from
 Its
 .B \-v
 option does not accept a trace level argument
-.I n;
+.IR n ;
 repeat
 .B \-v
 .I n

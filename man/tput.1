@@ -28,8 +28,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.102 2024/01/13 22:47:16 tom Exp $
-.TH @TPUT@ 1 2024-01-13 "ncurses 6.4" "User commands"
+.\" $Id: tput.1,v 1.111 2024/04/13 22:09:53 tom Exp $
+.TH @TPUT@ 1 2024-04-13 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "User commands"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -47,9 +47,7 @@
 ..
 .ds d @TERMINFO@
 .SH NAME
-\fB\%@TPUT@\fP,
-\fB\%init\fP,
-\fB\%reset\fP \-
+\fB\%@TPUT@\fP \-
 initialize a terminal, exercise its capabilities, or query \fI\%term\%info\fP database
 .SH SYNOPSIS
 \fB@TPUT@\fP [\fB\-T\fP \fIterminal-type\fP]
@@ -81,7 +79,7 @@ Terminal capabilities are accessed by
 .PP
 \fB\%terminfo\fP(5) discusses terminal capabilities at length
 and presents a complete list of
-.I cap-codes.
+.IR cap-codes .
 .PP
 When retrieving capability values,
 the result depends upon the capability's type.
@@ -90,7 +88,7 @@ Boolean
 \fB\%@TPUT@\fP sets its exit status to
 .B 0
 if the terminal possesses
-.I cap-code,
+.IR cap-code ,
 and
 .B 1
 if it does not.
@@ -116,7 +114,7 @@ see section \*(``EXIT STATUS\*('' below.
 .SS Operands
 Generally,
 an operand is a
-.I cap-code,
+.IR cap-code ,
 a capability code from the terminal database,
 or a parameter thereto.
 Three others are specially recognized by \fB\%@TPUT@\fP:
@@ -277,16 +275,23 @@ executing a link named
 .B \%reset
 that points to \fB\%@TPUT@\fP has the same effect as
 .RB \%\*(`` "@TPUT@ \%reset" \*(''.
-(The \fB\%@TSET@\fP(1) utility also treats a link named
-.B \%reset
-specially.)
 .PP
-If \fB\%@TPUT@\fP is invoked by a link named
-.BR \%init ,
-this has the same effect as
-.RB \%\*(`` "@TPUT@ init" \*(''.
-Such a link is seldom employed because another program of that name
-is in widespread use.
+This feature was introduced by
+.I \%ncurses
+5.2 in 2000.
+It is rarely used:
+.TP
+.B \%clear
+is a separate program,
+which is both smaller and more frequently executed.
+.TP
+.B init
+has the same name as another program in widespread use.
+.TP
+.B \%reset
+is provided
+by the \fB\%@TSET@\fP(1) utility (also via a link named
+.BR \%reset ")."
 .SS "Terminal Size"
 Besides the pseudo-capabilities
 (such as
@@ -314,7 +319,7 @@ Finally,
 it inspects the environment variables
 .I LINES
 and
-.I \%COLUMNS,
+.IR \%COLUMNS ,
 which may override the terminal size.
 .PP
 If the
@@ -352,7 +357,7 @@ and whether to use \fB\%tparm\fP(3X).
 .TP
 .BI \-T\  type
 indicates the terminal's
-.I type.
+.IR type .
 Normally this option is unnecessary,
 because a default is taken from the
 .I TERM
@@ -410,7 +415,7 @@ _
 4	some operands not interpreted
 .TE
 .SH ENVIRONMENT
-\fB@TPUT@\fP command reads one environment variable.
+\fB@TPUT@\fP reads one environment variable.
 .TP 8n \" "TERM" + 2n + adjustment for PDF
 .I TERM
 denotes the terminal type.
@@ -509,7 +514,7 @@ to port NetBSD's
 .IR termcap -based
 .B tput
 to
-.I \%term\%info,
+.IR \%term\%info ,
 and modified it to interpret multiple
 .I cap-codes
 (and parameters)
@@ -551,7 +556,7 @@ to
 but
 .B \%parm_delete_line
 to
-.I \%term\%info.
+.IR \%term\%info .
 .I termcap
 uses the code
 .B DL
@@ -559,7 +564,7 @@ for
 .BR \%parm_delete_line .
 .I \%term\%info
 uses the code
-.B dch1
+.B dl1
 for
 .BR \%delete_line .
 .bP
@@ -573,7 +578,7 @@ to
 but
 .B \%clr_eos
 to
-.I \%term\%info.
+.IR \%term\%info .
 .I termcap
 uses the code
 .B cd
@@ -618,7 +623,7 @@ A few observations of interest arise from that selection.
 supports
 .B clear
 as it does any other standard
-.I cap-code.
+.IR cap-code .
 The others
 .RB ( init
 and
@@ -637,9 +642,9 @@ operands.
 .bP
 A few platforms such as FreeBSD recognize
 .I termcap
-names rather than
+codes rather than
 .I \%term\%info
-capability names in their respective
+capability codes in their respective
 .B tput
 commands.
 Since 2010,
@@ -647,13 +652,13 @@ NetBSD's
 .B tput
 uses
 .I \%term\%info
-names.
+codes.
 Before that,
 it
 (like FreeBSD)
 recognized
 .I termcap
-names.
+codes.
 .IP
 Beginning in 2021,
 FreeBSD uses
@@ -688,13 +693,13 @@ X/Open Curses and the terminal capability database.
 While it is certainly possible to write a
 .B tput
 program without using
-.I curses,
+.IR curses ,
 no system with a
 .I curses
 implementation provides a
 .B tput
 utility that does not also support standard
-.I cap-codes.
+.IR cap-codes .
 .PP
 X/Open Curses Issue 7 (2009) is the first version to document utilities.
 However that part of X/Open Curses does not follow existing practice
@@ -724,7 +729,7 @@ The various System\ V implementations
 HP-UX,
 Solaris)
 use the same exit statuses as
-.I \%ncurses.
+.IR \%ncurses .
 .PP
 NetBSD
 .I curses
@@ -800,7 +805,7 @@ because he had only
 available,
 it accepted
 .I termcap
-names for other capabilities.
+codes for other capabilities.
 Also,
 Bostic's BSD
 .B tput

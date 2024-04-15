@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2022,2023 Thomas E. Dickey                                *
+.\" Copyright 2019-2023,2024 Thomas E. Dickey                                *
 .\" Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,8 +27,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addchstr.3x,v 1.38 2023/11/25 14:01:49 tom Exp $
-.TH curs_addchstr 3X 2023-11-25 "ncurses 6.4" "Library calls"
+.\" $Id: curs_addchstr.3x,v 1.42 2024/04/13 22:21:16 tom Exp $
+.TH curs_addchstr 3X 2024-04-13 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "Library calls"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -59,13 +59,13 @@ add a \fIcurses\fR character string to a window
 \fB#include <curses.h>
 .PP
 \fBint addchstr(const chtype *\fIchstr\fP);
-\fBint addchnstr(const chtype *\fIchstr\fP, int \fIn\fP);
 \fBint waddchstr(WINDOW *\fIwin\fP, const chtype *\fIchstr\fP);
-\fBint waddchnstr(WINDOW *\fIwin\fP, const chtype *\fIchstr\fP, int \fIn\fP);
-.PP
 \fBint mvaddchstr(int \fIy\fP, int \fIx\fP, const chtype *\fIchstr\fP);
-\fBint mvaddchnstr(int \fIy\fP, int \fIx\fP, const chtype *\fIchstr\fP, int \fIn\fP);
 \fBint mvwaddchstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const chtype *\fIchstr\fP);
+.PP
+\fBint addchnstr(const chtype *\fIchstr\fP, int \fIn\fP);
+\fBint waddchnstr(WINDOW *\fIwin\fP, const chtype *\fIchstr\fP, int \fIn\fP);
+\fBint mvaddchnstr(int \fIy\fP, int \fIx\fP, const chtype *\fIchstr\fP, int \fIn\fP);
 \fBint mvwaddchnstr(WINDOW *\fIwin\fP, int \fIy\fP, int \fIx\fP, const chtype *\fIchstr\fP, int \fIn\fP);
 .fi
 .SH DESCRIPTION
@@ -96,7 +96,7 @@ rather than wrapping it around to the new line.
 .SH RETURN VALUE
 All functions return the integer \fBERR\fP upon failure and \fBOK\fP on success.
 .PP
-X/Open does not define any error conditions.
+X/Open Curses does not specify any error conditions.
 This implementation returns an error
 .bP
 if the \fIwin\fP parameter is null or
@@ -111,8 +111,11 @@ All functions except \fBwaddchnstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
+\fB\%curs_add_wchstr\fP(3X) describes comparable functions of the
+.I \%ncurses
+library in its wide-character configuration
+.RI ( \%ncursesw ).
+.PP
 \fB\%curses\fP(3X),
 \fB\%curs_addch\fP(3X),
-\fB\%curs_addstr\fP(3X),
-\fB\%curs_addwstr\fP(3X),
-\fB\%curs_add_wchstr\fP(3X)
+\fB\%curs_addstr\fP(3X)
