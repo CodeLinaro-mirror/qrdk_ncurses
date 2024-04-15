@@ -3,6 +3,7 @@ ncurses (6.4+20240414-1) UNRELEASED; urgency=medium
   * New upstream patchlevel.
     - Fix inconsistent description of wmouse_trafo() (Closes: #1059778).
     - Modify wenclose() to handle pads (Closes: #1059783).
+    - Improve manpage discussion of mouseinterval() (Closes: #1058560).
   * Add a new "terminfocheck" target to debian/rules to compare the built
     terminfo files against the system database, and use it in binary-indep
     builds in a new pkg.ncurses.terminfocheck build profile.
