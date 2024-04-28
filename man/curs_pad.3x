@@ -27,8 +27,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_pad.3x,v 1.57 2024/04/13 22:13:17 tom Exp $
-.TH curs_pad 3X 2024-04-13 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "Library calls"
+.\" $Id: curs_pad.3x,v 1.61 2024/04/27 17:55:43 tom Exp $
+.TH curs_pad 3X 2024-04-27 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "Library calls"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -125,7 +125,7 @@ of the pad and screen are involved.
 .I pminrow
 and
 .I pmincol
-specify the upper left-hand corner of a rectanglar view of the pad.
+specify the upper left-hand corner of a rectangular view of the pad.
 .bP
 .IR sminrow ,
 .IR smincol ,
@@ -218,7 +218,7 @@ and select text from the pad.
 .PP
 The two uses may be related.
 .PP
-The XSI Curses standard, Issue 4 describes these functions,
+X/Open Curses, Issue 4 describes these functions,
 without significant change from the SVr3 documentation.
 It describes no error conditions.
 The behavior of \fB\%subpad\fP if the parent window is not
