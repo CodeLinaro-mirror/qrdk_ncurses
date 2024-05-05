@@ -1,4 +1,4 @@
-ncurses (6.5-1) UNRELEASED; urgency=medium
+ncurses (6.5-1) experimental; urgency=medium
 
   * New upstream release.
   * Update symbols files and bump shlibs.
@@ -7,7 +7,7 @@ ncurses (6.5-1) UNRELEASED; urgency=medium
   * Update patch 01-debian-no-ada-doc.diff for the changed location of the
     Ada documentaton.
 
- -- Sven Joachim <svenjoac@gmx.de>  Sun, 28 Apr 2024 11:23:50 +0200
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 05 May 2024 18:31:39 +0200
 
 ncurses (6.4+20240414-1) unstable; urgency=medium
 
