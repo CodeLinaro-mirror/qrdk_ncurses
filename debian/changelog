@@ -4,6 +4,8 @@ ncurses (6.5-1) UNRELEASED; urgency=medium
   * Update symbols files and bump shlibs.
     - Update the minimal version for symbols added after the 6.4 release
       to 6.5.
+  * Update patch 01-debian-no-ada-doc.diff for the changed location of the
+    Ada documentaton.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 28 Apr 2024 11:23:50 +0200
 
