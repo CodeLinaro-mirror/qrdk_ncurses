@@ -1,3 +1,9 @@
+ncurses (6.5+20250125-1) UNRELEASED; urgency=low
+
+  * New upstream patchlevel.
+
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 27 Jan 2025 17:34:04 +0100
+
 ncurses (6.5-2) unstable; urgency=medium
 
   * Upload to unstable.
