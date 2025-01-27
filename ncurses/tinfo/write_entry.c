@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: write_entry.c,v 1.132 2024/04/20 17:58:51 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.139 2024/12/21 16:42:33 tom Exp $")
 
 #if 1
 #define TRACE_OUT(p) DEBUG(2, p)
@@ -82,21 +82,25 @@ write_file(char *filename, TERMTYPE2 *tp)
     } else {
 	FILE *fp = ((_nc_access(filename, W_OK) == 0)
 		    ? safe_fopen(filename, BIN_W)
-		    : 0);
+		    : NULL);
 	size_t actual;
 
-	if (fp == 0) {
-	    perror(filename);
-	    _nc_syserr_abort("cannot open %s/%s", _nc_tic_dir(0), filename);
+	if (fp == NULL) {
+	    _nc_syserr_abort("cannot open %s/%s: (errno %d) %s",
+			     _nc_tic_dir(NULL),
+			     filename,
+			     errno,
+			     strerror(errno));
 	}
 
 	actual = fwrite(buffer, sizeof(char), (size_t) offset, fp);
 	if (actual != offset) {
 	    int myerr = ferror(fp) ? errno : 0;
 	    if (myerr) {
-		_nc_syserr_abort("error writing %s/%s: %s",
+		_nc_syserr_abort("error writing %s/%s: (errno %d) %s",
 				 _nc_tic_dir(NULL),
 				 filename,
+				 myerr,
 				 strerror(myerr));
 	    } else {
 		_nc_syserr_abort("error writing %s/%s: %u bytes vs actual %lu",
@@ -125,15 +129,19 @@ check_writeable(int code)
     static const char dirnames[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     static bool verified[sizeof(dirnames)];
 
-    char dir[sizeof(LEAF_FMT)];
-    char *s = 0;
+    const char *s = NULL;
 
-    if (code == 0 || (s = (strchr) (dirnames, code)) == 0) {
-	_nc_err_abort("Illegal terminfo subdirectory \"" LEAF_FMT "\"", code);
+    if (code == 0 || (s = (strchr) (dirnames, code)) == NULL) {
+	_nc_err_abort("Illegal terminfo subdirectory \"" LEAF_FMT "\"", UChar(code));
     } else if (!verified[s - dirnames]) {
-	_nc_SPRINTF(dir, _nc_SLIMIT(sizeof(dir)) LEAF_FMT, code);
+	char dir[sizeof(LEAF_FMT)];
+	_nc_SPRINTF(dir, _nc_SLIMIT(sizeof(dir)) LEAF_FMT, UChar(code));
 	if (make_db_root(dir) < 0) {
-	    _nc_err_abort("%s/%s: permission denied", _nc_tic_dir(NULL), dir);
+	    _nc_err_abort("%s/%s: (errno %d) %s",
+			  _nc_tic_dir(NULL),
+			  dir,
+			  errno,
+			  strerror(errno));
 	} else {
 	    verified[s - dirnames] = TRUE;
 	}
@@ -153,8 +161,12 @@ make_db_path(char *dst, const char *src, size_t limit)
 	    rc = 0;
 	}
     } else {
-	if ((strlen(top) + strlen(src) + 6) <= limit) {
-	    _nc_SPRINTF(dst, _nc_SLIMIT(limit) "%s/%s", top, src);
+	size_t len_top = strlen(top);
+	size_t len_src = strlen(src);
+	if ((len_top + len_src + 6) <= limit) {
+	    _nc_SPRINTF(dst, _nc_SLIMIT(limit) "%.*s/%.*s",
+			(int) len_top, top,
+			(int) len_src, src);
 	    rc = 0;
 	}
     }
@@ -200,13 +212,14 @@ make_db_root(const char *path)
 
 	if ((rc = stat(path, &statbuf)) == -1) {
 	    rc = mkdir(path
-#ifndef _NC_WINDOWS
+#ifndef _NC_WINDOWS_NATIVE
 		       ,0777
 #endif
 		);
 	} else if (_nc_access(path, R_OK | W_OK | X_OK) < 0) {
 	    rc = -1;		/* permission denied */
 	} else if (!(S_ISDIR(statbuf.st_mode))) {
+	    errno = ENOTDIR;
 	    rc = -1;		/* not a directory */
 	}
 #endif
@@ -244,8 +257,10 @@ _nc_set_writedir(const char *dir)
 	    }
 	}
 	if (!success) {
-	    _nc_err_abort("%s: permission denied (errno %d)",
-			  destination, errno);
+	    _nc_err_abort("%s: (errno %d) %s",
+			  destination,
+			  errno,
+			  strerror(errno));
 	}
     }
 
@@ -480,7 +495,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
 
 	check_writeable(ptr[0]);
 	_nc_SPRINTF(linkname, _nc_SLIMIT(sizeof(linkname))
-		    LEAF_FMT "/%.*s", ptr[0],
+		    LEAF_FMT "/%.*s", UChar(ptr[0]),
 		    (int) sizeof(linkname) - (2 + LEAF_LEN), ptr);
 
 	if (strcmp(filename, linkname) == 0) {
@@ -552,7 +567,7 @@ static size_t
 fake_write(char *dst,
 	   unsigned *offset,
 	   size_t limit,
-	   char *src,
+	   const char *src,
 	   size_t want,
 	   size_t size)
 {
@@ -658,7 +673,7 @@ convert_32bit(unsigned char *buf, NCURSES_INT2 *Numbers, size_t count)
 
 #if NCURSES_XNAMES
 static unsigned
-extended_Booleans(TERMTYPE2 *tp)
+extended_Booleans(const TERMTYPE2 *tp)
 {
     unsigned result = 0;
     unsigned i;
@@ -671,7 +686,7 @@ extended_Booleans(TERMTYPE2 *tp)
 }
 
 static unsigned
-extended_Numbers(TERMTYPE2 *tp)
+extended_Numbers(const TERMTYPE2 *tp)
 {
     unsigned result = 0;
     unsigned i;
@@ -684,7 +699,7 @@ extended_Numbers(TERMTYPE2 *tp)
 }
 
 static unsigned
-extended_Strings(TERMTYPE2 *tp)
+extended_Strings(const TERMTYPE2 *tp)
 {
     unsigned short result = 0;
     unsigned short i;
@@ -701,7 +716,7 @@ extended_Strings(TERMTYPE2 *tp)
  * clause - discard the unneeded data.
  */
 static bool
-extended_object(TERMTYPE2 *tp)
+extended_object(const TERMTYPE2 *tp)
 {
     bool result = FALSE;
 

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2023,2024 Thomas E. Dickey                                 --
+-- Copyright 2018-2024,2025 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.4114 2024/04/27 18:00:35 tom Exp $
+-- $Id: NEWS,v 1.4236 2025/01/25 21:30:09 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,258 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20250125
+	+ improve error-handling in c++ binding (report by Mingjie Shen).
+	+ strict compiler-warning fixes for upcoming gcc15
+
+20250118
+	+ improve pattern used for configure --with-xterm-kbs option (report by
+	  Mingyu Wang)
+	+ update configure macros, from work on cdk and dialog.
+	+ change a parameter name in curs_sp_funcs.3x, for consistency (patch
+	  by "WHR").
+	> patches by Branden Robinson:
+	+ improve formatting/style of manpages
+	+ change winwstr() to a generated function, using the macro definition,
+	  moving its handling of negative length parameter into winnwstr().
+	+ correct actual-function name in a few trace calls.
+
+20250111
+	+ add check for infinite loop in tic's use-resolution.
+	+ increase limit on use-clauses from 32 to 40, warn but allow entries
+	  which exceed the old limit.
+	+ add some null-pointer checks after mallocs in test-programs.
+
+20250104
+	+ modify tput to warn about capabilities which expect parameters where
+	  none are given; also repair the feature where multiple capabilities
+	  can be handled on a single line.
+	+ cleanup use-clauses -TD
+	+ add linux+lockeys, xterm+r5+lockeys, xterm+r5+fkeys -TD
+	+ add vt220+ufkeys, vt220+sfkeys
+	+ revert man/manlinks.sed change, which loses aliases (cf: 20241228).
+	+ modify MKlib_gen.c to allow for Solaris's definition of NULL as 0L
+
+20241228
+	+ correct conditional-compile for a case when the C compiler does not
+	  have a bool type.
+	+ add ghostty -TD
+	> patches by Branden Robinson:
+	+ add comments to generated term.h to hint the configure options used
+	+ use same subdir-convention for term.h, in configure script
+	+ improve formatting/style of manpages
+
+20241221
+	+ modify ncurses/tinfo/MKfallback.sh to work with MacOS sed, which
+	  lacks BSD-style \< and \>
+	+ trim padding from sgr expresion used in trim_sgr0, to avoid copying
+	  the padding into the resulting sgr0 (report by Rajeev Pillai).
+	+ strict compiler-warning fixes for upcoming gcc15
+
+20241214
+	+ avoid redefining bool in curses.h if the platform already supports
+	  that type (cf: 20241123).
+	+ move include <curses.h> from etip.h.in to cursesw.h, to work around
+	  breakage in Apple's port of ncurses.
+	+ strict compiler-warning fixes for upcoming gcc15
+
+20241207
+	+ strict compiler-warning fixes for upcoming gcc15
+
+20241130
+	+ improve configure check for lint program.
+	+ adjust options in test-programs to allow for consistent use of -c/-l
+	  for command/logging.
+	+ modify win_driver.c for MinGW to handle shift-tab and control-tab as
+	  back-tab (report by Axel Reinhold)
+
+20241123
+	+ remove dependency on stdbool.h from configure script check for type
+	  of bool when C++ binding is omitted (report by Sam James).
+	+ compiler-warning fixes
+
+20241109
+	+ work around musl header ifdef's (report by Urs Jansen, cf: Gentoo
+	  #920266).
+	+ improve error-reporting in write_entry.c (report by Changqing Li).
+	+ remove unused #include from DJGPP configuration (report by Stas
+	  Sergeev).
+	+ workaround/fix issues from clang-analyze
+
+20241102
+	+ remove djgpp-specific initialization to binary mode (report/patch by
+	  Stas Sergeev).
+	+ add extended-keys for djgpp 2.05 -TD
+
+20241026
+	+ update ms-terminal -TD
+	+ add ms-terminal-direct -TD
+	+ correct dimensions in test/popup_msg.c, fixing an overrun (patch by
+	  Stas Sergeev, cf: 20211219).
+
+20241019
+	+ fixes for compiler warnings/cppcheck.
+	+ build-fixes for DJGPP configuration (patches by Stas Sergeev)
+
+20241006
+	+ fixes for compiler warnings/cppcheck.
+	+ use xterm+alt+title in wezterm -TD
+
+20240928
+	+ improve error-message from infocmp when a terminal entry cannot be
+	  opened (patch by Branden Robinson).
+	+ improve filtering of -L options in misc/gen-pkgconfig.in and in
+	  misc/ncurses-config.in
+	+ add check in wresize() for out-of-range dimensions (report by Peter
+	  Bierma). 
+
+20240922
+	+ add a few null-pointer checks in ncurses
+	+ improve test-driver in ncurses/link_test.c
+	+ restore background character in manpages as described in X/Open
+	  Curses section 3.3.6, and add option "-c" to test programs to
+	  illustrate a non-blank character in the window background property.
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ modify ncurses*-config to add -I option in --cflag where needed for
+	  --disable-overwrite to match ".pc" files.
+	+ disallow directories and block/character devices in safe-open.
+	+ amend scr_restore() and scr_init() to remove the target window only
+	  after validating the source window which will replace the target
+	  (report by Zixi Liu).
+
+20240914
+	+ modify _nc_flush() to also flush stderr to help the flash capability
+	  to work in bash (patch by Harm te Hennepe, cf: 20201128)
+	+ omit -g and -fXXX flags from CFLAGS in misc/ncurses-config.in
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ improve examples in NCURSES-Programming-HOWTO.html
+	+ update comments in terminfo.src -TD
+
+20240831
+	+ build-fix for a case in msys2 where gettimeofday() was available but
+	  the fallback was partly configured.
+	> patch by Rafael Kitover:
+	+ separate the _NC_WINDOWS platform macro into _NC_WINDOWS_NATIVE,
+	  for MinGW and other native Win32 support, and _NC_WINDOWS, to make
+	  some Win32 features available under the Cygwin runtime, in this case
+	  the term-driver.
+	+ make some minor adjustments to allow
+	      ./configure --enable-term-driver
+	  to also work on Cygwin platforms such as Cygwin and MSYS2.
+
+20240824
+	+ modify infocmp and tabs to use actual name in usage and header.
+	+ modify test/demo_keyok.c to accept ^Q for quit, for consistency.
+
+20240817
+	+ review/update foot for 1.18.1 -TD
+	+ add a note about DomTerm 3.2.0 -TD
+	+ add new glob-expressions variables to list in config.status script
+	  (patch by Werner Fink).
+	+ add --enable-install-prefix to modify behavior of $DESTDIR to merge
+	  or replace the value set by --prefix (adapted from suggestion by
+	  Eli Zaretskii).
+
+20240810
+	+ modify misc/Makefile.in and misc/run_tic.in so that $DESTDIR is set
+	  and used only in the makefile.
+	+ modify CF_WITH_PKG_CONFIG_LIBDIR to allow for pkg-config using
+	  DOS/Windows pathname syntax (report by Eli Zaretskii).
+	+ improve glob-expressions in configure script
+	+ remove unused Get_Menu_Screen() macro from menu.priv.h
+	+ update config.guess, config.sub
+
+20240727
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ fixes for compiler warnings/cppcheck.
+	+ modify wattron/wattroff calls in form/m_post.c to call wattr_on and
+	  wattr_off to omit cast used in the former for X/Open compatibility
+	  (patch by Bill Gray).
+	+ modify wezterm, omitting its broken left/right margin feature (report
+	  by Thayne McCombs) -TD
+
+20240720
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ modify configure script and misc/Makefile to accept glob expressions
+	  that include Windows/DOS drive-letters (report by Eli Zaretskii).
+	+ fix misspelled ifdef and correct return-value of _nc_mingw_tcflush in
+	  win_driver.c (report/patch by Eli Zaretskii).
+
+20240713
+	+ modify misc/ncurses-config.in, improved match with pkg-config output.
+
+20240706
+	+ update configure script to use macro changes from dialog.
+	+ modify CF_NCURSES_PTHREADS to avoid equating package and library
+	  names.
+
+20240629
+	+ build-fix for ncurses-examples with newer PDCurses, which no longer
+	  has stubs for unimplemented features.
+	+ add help-popup for test_instr.c, test_inwstr.c
+	+ modify checks in delwin to avoid checking if the window is a pad
+	  until first checking if it is still on the active window-list
+	  (cf: 20211115).
+	+ improve -t option of test/gdc.c, allowing hours only, or hours and
+	  minutes only.
+
+20240622
+	+ improve test/gdc.c (patch by Branden Robinson).
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ adjust naming of mingw *-config scripts to match the pkg-config names
+	+ widen pattern in pc/*-config scripts to disallow more linker options
+	+ add --cflags-only-I and --cflags-only-other options to
+	  misc/ncurses-config.in
+	+ revert change to CF_BUILD_CC macro (report by Vassili Courzakis,
+	  cf: 20240518).
+
+20240615
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ review/update modules files.
+	+ improve install-rules in Ada95 makefiles (report by Branden Robinson).
+	+ improve formatting/style of manpages in test-directory.
+
+20240608
+	+ change winwstr to return wide character count instead of OK (patch
+	  by Branden Robinson).
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ rename testing dpkg's for ncurses6 to resolve a naming conflict with
+	  Debian's ncurses packages.
+
+20240601
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ change Ada95/configure to use --with-screen option rather than
+	  --enable-widec, to provide more choices of underlying curses library
+
+20240525
+	+ build-fix for configure option --disable-ext-funcs
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ review/update iTerm2 for 3.5.0 -TD
+
+20240519
+	+ update Ada95/configure to match change for -DTRACE
+	+ revert change to include/ncurses_defs, which caused build failure if
+	  tracing was not enabled (report by Branden Robinson).
+
+20240518
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ move makefile's -DTRACE into include/ncurses_cfg.h, to simplify use
+	  of CFLAGS/CPPFLAGS.
+	+ improve check for clock_gettime(), from xterm.
+	+ modify configure script to work around broken gnatgcc script found in
+	  gcc-13 builds.
+
+20240511
+	+ improve formatting/style of manpages (patches by Branden Robinson).
+	+ limit value from ESCDELAY environment variable to 30 seconds, like
+	  other delay limits.
+	+ limit values from LINES and COLUMNS environment variables to 512
+	  (report by Miroslav Lichvar).
+
+20240504
+	+ update ncurses/wcwidth.c, for MinGW ports, from xterm.
+	+ trim obsolete comment about tack from INSTALL.
 
 20240427 6.5 release for upload to ftp.gnu.org
 	+ update announcement
@@ -319,7 +571,7 @@ it is not possible to add this information.
 	+ minor grammatical fix for manpages (Branden Robinson).
 
 20230729
-	+ improve manpages for wgetnstr() and wget_wnstr().
+	+ improve manpages for wgetnstr() and wget_nwstr().
 	+ modify MinGW configuration to provide for running in MSYS/MSYS2
 	  shells, assuming ConPTY support (patch by Pavel Fedin).
 	+ add assignment in CF_MAN_PAGES to fill in value for TERMINFO_DIRS in
@@ -4262,7 +4514,7 @@ it is not possible to add this information.
 20140621
 	+ change shared-library suffix for AIX 5 and 6 to ".so", avoiding
 	  conflict with the static library (report by Ben Lentz).
-	+ document RPATH_LIST in INSTALLATION file, as part of workarounds for
+	+ document RPATH_LIST in INSTALL file, as part of workarounds for
 	  upgrading an ncurses library using the "--with-shared" option.
 	+ modify test/ncurses.c c/C tests to cycle through subsets of the
 	  total number of colors, to better illustrate 8/16/88/256-colors by
@@ -10630,7 +10882,7 @@ it is not possible to add this information.
 	  wide-character structures (report by <George.R.Goffe@seagate.com>).
 	+ ensure that _XOPEN_SOURCE_EXTENDED is defined in curses.priv.h if
 	  compiling for wide-character configuration.
-	+ make addwnstr() handle non-spacing characters (patch by Sven
+	+ make addnwstr() handle non-spacing characters (patch by Sven
 	  Verdoolaege).
 
 20010630

@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.58 2023/05/28 14:23:34 tom Exp $
+ * $Id: testcurs.c,v 1.60 2024/12/07 22:53:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -245,7 +245,7 @@ inputTest(WINDOW *win)
 	wclrtobot(win);
 	if (c >= KEY_MIN)
 	    wprintw(win, "Key Pressed: %s", keyname(c));
-	else if (isprint(c))
+	else if (isprint(UChar(c)))
 	    wprintw(win, "Key Pressed: %c", c);
 	else
 	    wprintw(win, "Key Pressed: %s", unctrl(UChar(c)));
@@ -488,14 +488,14 @@ outputTest(WINDOW *win)
     *Buffer = 0;
     scanw("%s", Buffer);
 
-    if (TIGETSTR("cvvis", "vs") != 0) {
+    if (TIGETSTR("cvvis", "vs") != NULL) {
 	wclear(win);
 	curs_set(2);
 	MvWAddStr(win, 1, 1, "The cursor should appear as a block (visible)");
 	Continue(win);
     }
 
-    if (TIGETSTR("civis", "vi") != 0) {
+    if (TIGETSTR("civis", "vi") != NULL) {
 	wclear(win);
 	curs_set(0);
 	MvWAddStr(win, 1, 1,
@@ -503,7 +503,7 @@ outputTest(WINDOW *win)
 	Continue(win);
     }
 
-    if (TIGETSTR("cnorm", "ve") != 0) {
+    if (TIGETSTR("cnorm", "ve") != NULL) {
 	wclear(win);
 	curs_set(1);
 	MvWAddStr(win, 1, 1, "The cursor should be an underline (normal)");
@@ -592,7 +592,7 @@ padTest(WINDOW *dummy GCC_UNUSED)
 {
     WINDOW *pad;
 
-    if ((pad = newpad(50, 100)) != 0) {
+    if ((pad = newpad(50, 100)) != NULL) {
 	WINDOW *spad;
 
 	wattron(pad, A_REVERSE);
@@ -609,7 +609,7 @@ padTest(WINDOW *dummy GCC_UNUSED)
 	raw();
 	wgetch(pad);
 
-	if ((spad = subpad(pad, 12, 25, 6, 52)) != 0) {
+	if ((spad = subpad(pad, 12, 25, 6, 52)) != NULL) {
 	    MvWAddStr(spad, 2, 2, "This is a new subpad");
 	    box(spad, 0, 0);
 	    delwin(spad);
@@ -748,8 +748,8 @@ main(int argc, char *argv[])
 	keypad(stdscr, TRUE);
 	raw();
 	key = getch();
-	if (key < KEY_MIN && key > 0 && isalpha(key)) {
-	    if (islower(key))
+	if (key < KEY_MIN && key > 0 && isalpha(UChar(key))) {
+	    if (islower(UChar(key)))
 		key = toupper(key);
 	    for (n = 0; n < MAX_OPTIONS; ++n) {
 		if (key == command[n].text[0]) {

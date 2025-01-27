@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2023,2024 Thomas E. Dickey                                *
+.\" Copyright 2018-2024,2025 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.148 2024/04/20 21:24:19 tom Exp $
+.\" $Id: terminfo.tail,v 1.156 2025/01/19 00:51:10 tom Exp $
 .ps +1
 .SS "User-Defined Capabilities"
 .
@@ -186,7 +186,8 @@ respectively.
 X/Open Curses does not say what \*(``appropriate \fIx\fP\*('' might be.
 In practice, that is a printable ASCII graphic character.
 The special case \*(``\*^?\*('' is interpreted as DEL (127).
-In all other cases, the character value is AND'd with 0x1f,
+In all other cases,
+the character value is logically \*(``and\*(''-ed with 0x1f,
 mapping to ASCII control codes in the range 0 through 31.
 .PP
 Other escapes include
@@ -277,14 +278,14 @@ as a list of colon-separated pathnames of terminal databases to be searched.
 .IP
 An empty pathname (i.e., if the variable begins or ends
 with a colon, or contains adjacent colons)
-is interpreted as the system location \fI\*d\fP.
+is interpreted as the system location \fI@TERMINFO@\fP.
 .bP
 Finally, \fI\%ncurses\fP searches these compiled-in locations:
 .RS
 .bP
 a list of directories (@TERMINFO_DIRS@), and
 .bP
-the system terminfo directory, \fI\*d\fP
+the system terminfo directory, \fI@TERMINFO@\fP
 .RE
 .PP
 The \fBTERMINFO\fP variable can contain a terminal description instead
@@ -348,7 +349,7 @@ and
 applies to storage scope terminals, such as \s-1TEKTRONIX\s+1 4010
 series, as well as hard copy and APL terminals.)
 If there is a code to move the cursor to the left edge of the current
-row, give this as
+line, give this as
 .BR cr .
 (Normally this will be carriage return, control/M.)
 If there is a code to produce an audible signal (bell, beep, etc)
@@ -412,7 +413,7 @@ The only local motion which is defined from the left edge is if
 .B bw
 is given, then a
 .B cub1
-from the left edge will move to the right edge of the previous row.
+from the left edge will move to the right edge of the previous line.
 If
 .B bw
 is not given, the effect is undefined.
@@ -462,8 +463,8 @@ with \fIprintf\fP-like escapes such as \fI%x\fP in it.
 For example, to address the cursor, the
 .B cup
 capability is given, using two parameters:
-the row and column to address to.
-(Rows and columns are numbered from zero and refer to the
+the line and column to address to.
+(Lines and columns are numbered from zero and refer to the
 physical screen visible to the user, not to any unseen memory.)
 If the terminal has memory relative cursor addressing,
 that can be indicated by
@@ -569,13 +570,15 @@ push strlen(pop)
 arithmetic (%m is \fImod\fP): \fIpush(pop() op pop())\fP
 .TP
 \fB%&\fP, \fB%|\fP, \fB%\*^\fP
-bit operations (AND, OR and exclusive-OR): \fIpush(pop() op pop())\fP
+bit operations
+(\*(``and\*('', \*(``or\*('' and exclusive \*(``or\*(''):
+\fIpush(pop() op pop())\fP
 .TP
 \fB%=\fP, \fB%>\fP, \fB%<\fP
 logical operations: \fIpush(pop() op pop())\fP
 .TP
 \fB%A\fP, \fB%O\fP
-logical AND and OR operations (for conditionals)
+logical \*(``and\*('' and \*(``or\*('' operations (for conditionals)
 .TP
 \fB%!\fP, \fB%\*~\fP
 unary operations (logical and bit complement): \fIpush(op pop())\fP
@@ -608,17 +611,17 @@ That is, to get x\-5 one would use \*(``%gx%{5}%\-\*(''.
 \fB%P\fP and \fB%g\fP variables are
 persistent across escape-string evaluations.
 .PP
-Consider the HP2645, which, to get to row 3 and column 12, needs
+Consider the HP2645, which, to get to line 3 and column 12, needs
 to be sent \eE&a12c03Y padded for 6 milliseconds.
-The order of the rows and columns is inverted here,
-and the row and column are printed as two digits.
+The order of the lines and columns is inverted here,
+and the lines and column are printed as two digits.
 The corresponding terminal description is expressed thus:
 .RS
 cup=\eE&a%p2%dc%p1%dY$<6>,
 .RE
 .PP
-The Microterm \s-1ACT-IV\s0 needs the current row and column sent
-preceded by a \fB\*^T\fP, with the row and column simply encoded in binary,
+The Microterm \s-1ACT-IV\s0 needs the current line and column sent
+preceded by a \fB\*^T\fP, with the line and column simply encoded in binary,
 .RS
 cup=\*^T%p1%c%p2%c
 .RE
@@ -632,10 +635,13 @@ This is necessary because it is not always safe to transmit \fB\en\fP
 tabs are never expanded, so \et is safe to send.
 This turns out to be essential for the Ann Arbor 4080.)
 .PP
-A final example is the \s-1LSI ADM\s0-3a, which uses row and column
-offset by a blank character, thus
+A final example is the LSI ADM-3A,
+which uses line and column offset by a space,
+thus
 .RS
+.EX
 cup=\eE=%p1%\*' \*'%+%c%p2%\*' \*'%+%c
+.EE
 .RE
 .PP
 After sending \*(``\eE=\*('', this pushes the first parameter, pushes the
@@ -656,7 +662,7 @@ to the top left corner of the screen, not of memory.
 (Thus, the \eEH sequence on HP terminals cannot be used for
 .BR home .)
 .PP
-If the terminal has row or column absolute cursor addressing,
+If the terminal has line or column absolute cursor addressing,
 these can be given as single parameter capabilities
 .B hpa
 (horizontal position absolute)
@@ -713,7 +719,7 @@ the ability to set a top and/or bottom margin using the current
 line position, and
 .bP
 parameterized capabilities for setting the top, bottom, left, right margins
-given the number of rows or columns.
+given the number of lines or columns.
 .RE
 .PP
 In practice, the categorization into \*(``terminal\*('' and \*(``printer\*(''
@@ -1446,7 +1452,7 @@ If there are commands to set and clear tab stops, they can be given as
 (clear all tab stops)
 and
 .B hts
-(set a tab stop in the current column of every row).
+(set a tab stop in the current column of every line).
 If a more complex sequence is needed to set the tabs than can be
 described by this, the sequence can be placed in
 .B is2
@@ -1629,8 +1635,8 @@ Tektronix-like
 terminals have a predefined set of \fIN\fP colors
 (where \fIN\fP is usually 8),
 and can set
-character-cell foreground and background characters independently, mixing them
-into \fIN\fP\ *\ \fIN\fP color pairs.
+character-cell foreground and background colors independently,
+mixing them into \fIN\fP\ *\ \fIN\fP color pairs.
 .bP
 On HP-like terminals, the user must set each color
 pair up separately (foreground and background are not independently settable).
@@ -2019,7 +2025,7 @@ The \-c (check) option also checks resolved (after tc
 expansion) lengths.
 .SH FILES
 .TP
-.I \*d
+.I @TERMINFO@
 compiled terminal description database directory
 .SH EXTENSIONS
 Searching for terminal descriptions in
@@ -2059,7 +2065,7 @@ Portable applications must assume that numeric capabilities are
 signed 16-bit values.
 This includes the \fIno_color_video\fP (\fBncv\fP) capability.
 The 32768 mask value used for italics with \fBncv\fP can be confused with
-an absent or cancelled \fBncv\fP.
+an absent or canceled \fBncv\fP.
 If italics should work with colors,
 then the \fBncv\fP value must be specified, even if it is zero.
 .PP
@@ -2076,7 +2082,7 @@ Solaris,
 and \fI\%ncurses\fP support all SVr4 capabilities.
 .bP
 IRIX supports the SVr4 set and adds one undocumented extended string
-capability (\fB\%set_pglen\fP).
+capability \%(\fBset_pglen\fP).
 .bP
 SVr1 and Ultrix support a restricted subset of \fI\%terminfo\fP
 capabilities.

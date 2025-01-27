@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2021,2023 Thomas E. Dickey                                *
+ * Copyright 2019-2023,2024 Thomas E. Dickey                                *
  * Copyright 1998-2011,2012 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -52,7 +52,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.37 2023/06/24 21:55:09 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.41 2024/12/07 18:05:04 tom Exp $")
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
@@ -70,7 +70,7 @@ _nc_rootname(char *path)
     static char *temp;
     char *s;
 
-    if ((temp = strdup(result)) != 0)
+    if ((temp = strdup(result)) != NULL)
 	result = temp;
 #if !MIXEDCASE_FILENAMES
     for (s = result; *s != '\0'; ++s) {
@@ -97,7 +97,7 @@ _nc_is_abs_path(const char *path)
 #define is_pathname(s) ((((s) != 0) && ((s)[0] == '/')) \
 		  || (((s)[0] != 0) && ((s)[1] == ':')))
 #else
-#define is_pathname(s) ((s) != 0 && (s)[0] == '/')
+#define is_pathname(s) ((s) != NULL && (s)[0] == '/')
 #endif
     return is_pathname(path);
 }
@@ -113,7 +113,7 @@ _nc_pathlast(const char *path)
     if (test == 0)
 	test = strrchr(path, '\\');
 #endif
-    if (test == 0)
+    if (test == NULL)
 	test = path;
     else
 	test++;
@@ -131,7 +131,8 @@ _nc_access(const char *path, int mode)
 {
     int result;
 
-    if (path == 0) {
+    if (path == NULL) {
+	errno = ENOENT;
 	result = -1;
     } else if (ACCESS(path, mode) < 0) {
 	if ((mode & W_OK) != 0
@@ -142,7 +143,7 @@ _nc_access(const char *path, int mode)
 
 	    _nc_STRCPY(head, path, sizeof(head));
 	    leaf = _nc_basename(head);
-	    if (leaf == 0)
+	    if (leaf == NULL)
 		leaf = head;
 	    *leaf = '\0';
 	    if (head == leaf)
@@ -150,6 +151,7 @@ _nc_access(const char *path, int mode)
 
 	    result = ACCESS(head, R_OK | W_OK | X_OK);
 	} else {
+	    errno = EPERM;
 	    result = -1;
 	}
     } else {
@@ -247,6 +249,29 @@ _nc_env_access(void)
 }
 
 #ifndef USE_ROOT_ACCESS
+static int
+is_a_file(int fd)
+{
+    int result = FALSE;
+    if (fd >= 0) {
+	struct stat sb;
+	if (fstat(fd, &sb) == 0) {
+	    switch (sb.st_mode & S_IFMT) {
+	    case S_IFBLK:
+	    case S_IFCHR:
+	    case S_IFDIR:
+		/* disallow devices and directories */
+		break;
+	    default:
+		/* allow regular files, fifos and sockets */
+		result = TRUE;
+		break;
+	    }
+	}
+    }
+    return result;
+}
+
 /*
  * Limit privileges if possible; otherwise disallow access for updating files.
  */
@@ -263,6 +288,12 @@ _nc_safe_fopen(const char *path, const char *mode)
 	result = fopen(path, mode);
     }
 #endif
+    if (result != NULL) {
+	if (!is_a_file(fileno(result))) {
+	    fclose(result);
+	    result = NULL;
+	}
+    }
     return result;
 }
 
@@ -279,6 +310,12 @@ _nc_safe_open3(const char *path, int flags, mode_t mode)
 	result = open(path, flags, mode);
     }
 #endif
+    if (result >= 0) {
+	if (!is_a_file(result)) {
+	    close(result);
+	    result = -1;
+	}
+    }
     return result;
 }
 #endif /* USE_ROOT_ACCESS */

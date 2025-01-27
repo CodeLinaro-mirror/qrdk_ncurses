@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2023,2024 Thomas E. Dickey                                *
+.\" Copyright 2018-2024,2025 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,8 +27,8 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.110 2024/04/27 17:57:06 tom Exp $
-.TH @TIC@ 1M 2024-04-27 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "User commands"
+.\" $Id: tic.1m,v 1.117 2025/01/19 00:51:54 tom Exp $
+.TH @TIC@ 1M 2025-01-18 "ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@" "User commands"
 .ie \n(.g \{\
 .ds `` \(lq
 .ds '' \(rq
@@ -45,7 +45,6 @@
 .el    .IP \(bu 2
 ..
 .
-.ds d @TERMINFO@
 .SH NAME
 \fB\%@TIC@\fP \-
 compile terminal descriptions for \fIterminfo\fR or \fItermcap\fR
@@ -109,7 +108,8 @@ In either case (directory or hashed database),
 For a directory, this would be the \*(``terminfo\*('' leaf,
 versus a "terminfo.db" file.
 .PP
-The results are normally placed in the system terminfo database \fB\*d\fP.
+The results are normally placed
+in the system terminfo database \fB@TERMINFO@\fP.
 The compiled terminal description can be placed
 in a different terminfo database.
 There are two ways to achieve this:
@@ -119,7 +119,7 @@ using the \fB\-o\fP option,
 or by setting the variable \fI\%TERMINFO\fP
 in your shell environment to a valid database location.
 .bP
-Secondly, if \fB@TIC@\fP cannot write in \fI\*d\fP
+Secondly, if \fB@TIC@\fP cannot write in \fI@TERMINFO@\fP
 or the location specified using your \fI\%TERMINFO\fP variable,
 it looks for the directory \fI$HOME/.terminfo\fP
 (or hashed database \fI$HOME/.terminfo.db)\fP;
@@ -135,7 +135,7 @@ directories listed in the \fI\%TERMINFO_DIRS\fP environment variable,
 .bP
 a compiled-in list of directories (@TERMINFO_DIRS@), and
 .bP
-the system terminfo database (\fI\*d\fP).
+the system terminfo database (\fI@TERMINFO@\fP).
 .PP
 The \fIFetching Compiled Descriptions\fP section in the \fBterminfo\fR(5)
 manual goes into further detail.
@@ -419,7 +419,7 @@ The exception is the \fBuse\fP capability.
 .PP
 When a \fBuse\fP=\fIentry\fP\-\fIname\fP field is discovered in a
 terminal entry currently being compiled, \fB@TIC@\fP reads in the binary
-from \fB\*d\fP to complete the entry.
+from \fB@TERMINFO@\fP to complete the entry.
 (Entries created from
 \fIfile\fP will be used first.
 \fB@TIC@\fP duplicates the capabilities in
@@ -443,7 +443,7 @@ will be truncated to the maximum alias length
 and a warning message will be printed.
 .SH FILES
 .TP
-.I \*d
+.I @TERMINFO@
 compiled terminal description database
 .SH NOTES
 There is some evidence that historic \fB@TIC@\fP implementations treated
@@ -520,13 +520,13 @@ System V does not compile entries to or read entries from your
 \fI$HOME/.terminfo\fP database unless \fI\%TERMINFO\fP is explicitly set
 to it.
 .SH PORTABILITY
-X/Open Curses, Issue 7 (2009) provides a brief description of \fBtic\fP.
+X/Open Curses Issue\ 7 (2009) provides a brief description of \fBtic\fP.
 It lists one option: \fB\-c\fP.
 The omission of \fB\-v\fP is unexpected.
 The change history states that the description is derived from Tru64.
 According to its manual pages, that system also supported the \fB\-v\fP option.
 .PP
-Shortly after Issue 7 was released, Tru64 was discontinued.
+Shortly after Issue\ 7 was released, Tru64 was discontinued.
 As of 2019, the surviving implementations of \fBtic\fP
 are SVr4 (AIX, HP-UX and Solaris),
 \fI\%ncurses\fP
@@ -547,7 +547,7 @@ System V Release 2 provided a \fBtic\fP utility.
 It accepted a single option: \fB\-v\fP (optionally followed by a number).
 According to Ross Ridge's comment in \fImytinfo\fP,
 this version of \fBtic\fP was
-unable to represent cancelled capabilities.
+unable to represent canceled capabilities.
 .PP
 System V Release 3 provided a different \fBtic\fP utility,
 written by Pavel Curtis,

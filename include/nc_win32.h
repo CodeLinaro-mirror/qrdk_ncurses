@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2023 Thomas E. Dickey                                *
+ * Copyright 2018-2023,2024 Thomas E. Dickey                                *
  * Copyright 2008-2010,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -31,15 +31,17 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_win32.h,v 1.10 2023/02/25 20:09:23 tom Exp $ */
+/* $Id: nc_win32.h,v 1.14 2024/10/19 21:06:23 tom Exp $ */
 
 #ifndef NC_WIN32_H
 #define NC_WIN32_H 1
 
+#include <ncurses_cfg.h>
+
 #if defined(_WIN32) || defined(_WIN64)
 
-#ifndef _NC_WINDOWS
-#define _NC_WINDOWS
+#ifndef _NC_WINDOWS_NATIVE
+#define _NC_WINDOWS_NATIVE
 #endif
 
 #ifdef TERMIOS
@@ -73,6 +75,8 @@
 #include <winsock2.h>		/* for struct timeval */
 #endif
 
+#include <stdint.h>		/* for uint32_t */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -87,7 +91,7 @@ extern NCURSES_EXPORT(int) _nc_gettimeofday(struct timeval *, void *);
 
 #undef wcwidth
 #define wcwidth(ucs)  _nc_wcwidth((wchar_t)(ucs))
-extern NCURSES_EXPORT(int)    _nc_wcwidth(wchar_t);
+extern NCURSES_EXPORT(int)    _nc_wcwidth(uint32_t);
 
 #ifdef EVENTLIST_2nd /* test.priv.h just needs the preceding */
 
@@ -101,7 +105,7 @@ extern NCURSES_EXPORT(WORD)   _nc_console_MapColor(bool fore, int color);
 extern NCURSES_EXPORT(void)   _nc_console_selectActiveHandle(void);
 extern NCURSES_EXPORT(bool)   _nc_console_get_SBI(void);
 extern NCURSES_EXPORT(void)   _nc_console_set_scrollback(bool normal, CONSOLE_SCREEN_BUFFER_INFO * info);
-extern NCURSES_EXPORT(int)    _nc_console_testmouse(SCREEN *,HANDLE,int EVENTLIST_2nd(_nc_eventlist*));
+extern NCURSES_EXPORT(int)    _nc_console_testmouse(const SCREEN *,HANDLE,int EVENTLIST_2nd(_nc_eventlist*));
 extern NCURSES_EXPORT(int)    _nc_console_keyok(int keycode,int flag);
 extern NCURSES_EXPORT(bool)   _nc_console_keyExist(int keycode);
 extern NCURSES_EXPORT(bool)   _nc_console_checkinit(bool initFlag, bool assumeTermInfo);

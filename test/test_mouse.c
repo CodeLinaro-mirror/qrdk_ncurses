@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2022-2023,2024 Thomas E. Dickey                                *
+ * Copyright 2022-2024,2025 Thomas E. Dickey                                *
  * Copyright 2022 Leonid S. Usov <leonid.s.usov at gmail.com>               *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.31 2024/03/30 20:45:31 tom Exp $
+ * $Id: test_mouse.c,v 1.36 2025/01/18 15:03:25 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -31,20 +31,20 @@
 
 #include <test.priv.h>
 
-#if defined(NCURSES_MOUSE_VERSION) && !defined(_NC_WINDOWS)
+#if defined(NCURSES_MOUSE_VERSION) && !defined(_NC_WINDOWS_NATIVE)
 
 static int logoffset = 0;
 
 static void
 raw_loop(void)
 {
-    char *xtermcap;
+    const char *xtermcap;
 
     printf("Entering raw mode. Ctrl-c to quit.\n");
 
     newterm(NULL, stdout, stdin);
     raw();
-    xtermcap = tigetstr("XM");
+    xtermcap = tigetstr(UserCap(XM));
     if (!VALID_STRING(xtermcap)) {
 	fprintf(stderr, "couldn't get XM terminfo");
 	return;
@@ -214,8 +214,8 @@ usage(int ok)
 	,USAGE_COMMON
 	,"Options:"
 	," -r       show raw input stream, injecting a new line before every ESC"
-	," -i n     set mouse interval to n; default is 0 (no double-clicks)"
-	," -T term  use terminal description other than $TERM"
+	," -i NUM   set mouse interval to NUM; default is 0 (no double-clicks)"
+	," -T TERM  override $TERM"
     };
     unsigned n;
     for (n = 0; n < sizeof(msg) / sizeof(char *); ++n) {

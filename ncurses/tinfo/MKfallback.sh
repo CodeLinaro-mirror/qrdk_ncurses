@@ -27,7 +27,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKfallback.sh,v 1.26 2023/04/22 15:12:57 tom Exp $
+# $Id: MKfallback.sh,v 1.28 2024/12/21 18:45:15 tom Exp $
 #
 # MKfallback.sh -- create fallback table for entry reads
 #
@@ -95,7 +95,7 @@ EOF
 	for x in "$@"
 	do
 		echo "/* $x */"
-		"$infocmp_path" -E "$x" | sed -e 's/\<short\>/NCURSES_INT2/g'
+		"$infocmp_path" -E "$x" | sed -e 's/[ 	]short[ 	]/ NCURSES_INT2 /g'
 	done
 
 	cat <<EOF
@@ -150,8 +150,8 @@ NCURSES_EXPORT(const TERMTYPE *)
 _nc_fallback (const char *name)
 {
     const TERMTYPE2 *tp = _nc_fallback2(name);
-    const TERMTYPE *result = 0;
-    if (tp != 0) {
+    const TERMTYPE *result = NULL;
+    if (tp != NULL) {
 	static TERMTYPE temp;
 	_nc_export_termtype2(&temp, tp);
 	result = &temp;

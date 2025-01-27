@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2023,2024 Thomas E. Dickey                                *
+ * Copyright 2018-2024,2025 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.218 2024/02/10 14:40:03 tom Exp $ */
+/* $Id: test.priv.h,v 1.221 2025/01/18 15:07:25 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -765,8 +765,8 @@ extern int optind;
 
 #define VERSION_COMMON() \
 static char *version_common(char **argv) { \
-	char *base = argv[0]; \
-	char *part = strrchr(base, '/'); \
+	const char *base = argv[0]; \
+	const char *part = strrchr(base, '/'); \
 	size_t need = strlen(base) + 80; \
 	char *result = malloc(need); \
 	if (result != NULL) { \
@@ -853,6 +853,12 @@ extern "C" {
 #endif
 
 /*
+ * To make them easier to find, user-defined capabilities used within ncurses
+ * should be tagged with this macro:
+ */
+#define UserCap(name) #name
+
+/*
  * X/Open Curses does not define the arrays of terminfo/termcap names as SVr4
  * curses did, and some implementations provide them anyway, but undeclared.
  */
@@ -916,8 +922,8 @@ extern int TABSIZE;
  * Workaround in case getcchar() returns a positive value when the source
  * string produces only a L'\0'.
  */
-#define TEST_CCHAR(s, count, then_stmt, else_stmt) \
-	if ((count = getcchar(s, NULL, NULL, NULL, NULL)) > 0) { \
+#define TEST_CCHAR(s, then_stmt, else_stmt) \
+	if (getcchar(s, NULL, NULL, NULL, NULL) > 0) { \
 	    wchar_t test_wch[CCHARW_MAX + 2]; \
 	    attr_t test_attrs; \
 	    NCURSES_PAIRS_T test_pair; \
@@ -1047,12 +1053,12 @@ extern int TABSIZE;
 #define EXIT_FAILURE 1
 #endif
 
-#undef _NC_WINDOWS
+#undef _NC_WINDOWS_NATIVE
 #if (defined(_WIN32) || defined(_WIN64))
-#define _NC_WINDOWS 1
+#define _NC_WINDOWS_NATIVE 1
 #endif
 
-#if defined(_NC_WINDOWS) || defined(USE_WIN32CON_DRIVER)
+#if defined(_NC_WINDOWS_NATIVE) || defined(USE_WIN32CON_DRIVER)
 
 #if defined(PDCURSES)
 #ifdef WINVER
@@ -1184,7 +1190,7 @@ extern char *_nc_strstr(const char *, const char *);
 #define InitAndCatch(init,handler) do { init; CATCHALL(handler); } while (0)
 #endif
 
-#if defined(_NC_WINDOWS) || defined(USE_WIN32CON_DRIVER)
+#if defined(_NC_WINDOWS_NATIVE) || defined(USE_WIN32CON_DRIVER)
 #define SetupAlarm(opt)	(void)opt
 #else
 #define SetupAlarm(opt)	if (opt) alarm((unsigned)opt)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2022,2023 Thomas E. Dickey                                *
+ * Copyright 2018-2023,2024 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,13 +30,13 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.29 2023/01/07 17:21:48 tom Exp $
+ * $Id: dots_xcurses.c,v 1.32 2024/12/07 22:32:11 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
 #include <test.priv.h>
 
-#if !defined(_NC_WINDOWS)
+#if !defined(_NC_WINDOWS_NATIVE)
 #include <sys/time.h>
 #endif
 
@@ -120,7 +120,7 @@ usage(int ok)
 	,"Options:"
 	," -T TERM  override $TERM"
 #if HAVE_USE_DEFAULT_COLORS
-	," -d       invoke use_default_colors()"
+	," -d       invoke use_default_colors"
 #endif
 #if HAVE_USE_ENV
 	," -e       allow environment $LINES / $COLUMNS"
@@ -202,7 +202,7 @@ main(int argc, char *argv[])
     }
 
     setlocale(LC_ALL, "");
-    srand((unsigned) time(0));
+    srand((unsigned) time(NULL));
 
     SetupAlarm(r_option);
     InitAndCatch(initscr(), onsig);

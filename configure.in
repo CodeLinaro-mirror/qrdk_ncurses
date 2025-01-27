@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2023,2024 Thomas E. Dickey                                *
+dnl Copyright 2018-2024,2025 Thomas E. Dickey                                *
 dnl Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.779 2024/04/10 08:04:00 tom Exp $
+dnl $Id: configure.in,v 1.790 2025/01/18 11:20:02 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.779 $)
+AC_REVISION($Revision: 1.790 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -65,19 +65,7 @@ CF_ABI_DEFAULTS
 CF_WITH_ABI_ALTERED
 
 ###	Checks for programs.
-AC_ARG_WITH(ada,
-	[  --without-ada           suppress check for Ada compiler, don't build demo],
-	[cf_with_ada=$withval],
-	[cf_with_ada=yes])
-
-if test "x$cf_with_ada" = xyes
-then
-	cf_prog_cc="gnatgcc gcc cc"
-else
-	cf_prog_cc="gcc cc"
-fi
-CF_PROG_CC($cf_prog_cc)
-
+CF_WITH_ADA
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
 CF_PROG_CC_C_O(CC,[$CFLAGS $CPPFLAGS])
@@ -277,20 +265,7 @@ AC_CHECK_TOOL(AR, ar, ar)
 AC_CHECK_TOOL(NM, nm, nm)
 CF_AR_FLAGS
 
-dnl Special option for use by system-builders: the install-prefix is used to
-dnl adjust the location into which the actual install is done, so that an
-dnl archive can be built without modifying the host system's configuration.
-AC_MSG_CHECKING(for an installation directory prefix)
-AC_ARG_WITH(install-prefix,
-	[  --with-install-prefix=DESTDIR use DESTDIR as installation directory prefix],
-	[case "x$withval" in
-	(xyes|xno)
-		;;
-	(*)	DESTDIR="$withval"
-		;;
-	esac])
-AC_MSG_RESULT([${DESTDIR:-(none)}])
-AC_SUBST(DESTDIR)
+CF_INSTALL_PREFIX
 
 ###############################################################################
 CF_HELP_MESSAGE(Build-Tools Needed to Compile Temporary Applications for Cross-compiling:)
@@ -684,7 +659,7 @@ WHICH_XTERM=$with_xterm_new
 AC_SUBST(WHICH_XTERM)
 
 case $host_os in
-(*linux-gnu|*cygwin|*mingw32|*msys)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc|linux*musl)
 	want_xterm_kbs=DEL
 	;;
 (*)
@@ -1163,8 +1138,9 @@ if test "x$with_ext_funcs" = xyes ; then
 	AC_DEFINE(HAVE_USE_WINDOW,1,[Define to 1 to enable use_window() function in test-programs])
 	AC_DEFINE(HAVE_WRESIZE,1,[Define to 1 to enable wresize() function in test-programs])
 	GENERATED_EXT_FUNCS=generated
-	test "x$with_ext_funcs" = xyes || cf_dft_ext_spfuncs=no
 else
+	cf_dft_ext_spfuncs=no
+	cf_dft_ext_colors=no
 	NCURSES_EXT_FUNCS=0
 	GENERATED_EXT_FUNCS=
 fi
@@ -1721,7 +1697,7 @@ AC_MSG_RESULT($cf_with_trace)
 if test "x$cf_with_trace" = xyes ; then
 	LIB_TRACING=all
 	ADA_TRACE=TRUE
-	CF_ADD_CFLAGS(-DTRACE)
+	AC_DEFINE(TRACE,1,[Define to 1 if we have support trace functions])
 	AC_DEFINE(HAVE__TRACEF,1,[Define to 1 if we have _tracef function])
 else
 	LIB_TRACING=DEBUG
@@ -1895,6 +1871,10 @@ CF_MB_LEN_MAX
 CF_VA_COPY
 AC_FUNC_VFORK
 CF_FOPEN_BIN_R
+CF_CHECK_TYPE2(cc_t,termios.h)
+CF_CHECK_TYPE2(speed_t,termios.h)
+CF_CHECK_TYPE2(tcflag_t,termios.h)
+CF_CHECK_TYPE2(sigset_t,signal.h)
 
 # special check for test/ditto.c
 CF_FUNC_OPENPTY
@@ -1921,6 +1901,7 @@ fi
 
 # Just in case, check if the C compiler has a bool type.
 CF_BOOL_DECL(cf_cv_cc_bool_type)
+AC_SUBST(cf_cv_cc_bool_type)
 
 # Check for C++ compiler characteristics (and ensure that it's there!)
 if test -n "$CXX" ; then
@@ -1966,16 +1947,7 @@ else
 		cf_cv_type_of_bool=$NCURSES_BOOL
 		cf_cv_header_stdbool_h=0
 	else
-		if test "$cf_cv_header_stdbool_h" = 1 ; then
-			CF_BOOL_SIZE
-		else
-			AC_MSG_CHECKING(for fallback type of bool)
-			case "$host_cpu" in
-			(i?86)	cf_cv_type_of_bool=char	;;
-			(*)	cf_cv_type_of_bool=int	;;
-			esac
-			AC_MSG_RESULT($cf_cv_type_of_bool)
-		fi
+		CF_BOOL_SIZE
 	fi
 fi
 AC_SUBST(CXXLIBS)
@@ -2019,7 +1991,6 @@ dnl libtool -TD 20070714
 dnl Check for availability of GNU Ada Translator (GNAT).
 dnl At the moment we support no other Ada compiler.
 	if test "$cf_with_ada" != "no" ; then
-		CF_PROG_GNAT
 		if test	"x$cf_cv_prog_gnat_correct" = xyes; then
 			CF_ADD_ADAFLAGS(-gnatpn)
 			CF_FIXUP_ADAFLAGS
@@ -2100,7 +2071,7 @@ LIB_SUBSETS="${LIB_SUBSETS}base"
 if test "$with_term_driver" != no ; then
 	LIB_SUBSETS="${LIB_SUBSETS}+port_drivers"
 	case "$cf_cv_system_name" in
-	(*mingw32*|*mingw64*)
+	(*mingw32*|*mingw64*|*msys*|*cygwin*)
 		if test "x$with_exp_win32" = xyes ; then
 			LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo+port_win32"
 		else
@@ -2443,6 +2414,7 @@ do
 done
 AC_MSG_RESULT($PKG_CFLAGS)
 AC_SUBST(PKG_CFLAGS)
+CF_GLOB_FULLPATH
 
 # AC_CHECK_SIZEOF demands a literal parameter, no variables.  So we do this.
 case "x$NCURSES_OSPEED" in
@@ -2564,6 +2536,8 @@ DFT_LWR_MODEL="$DFT_LWR_MODEL"
 ECHO_LD="$ECHO_LD"
 EXTRA_SUFFIX="$EXTRA_SUFFIX"
 FORM_NAME="$FORM_NAME"
+GLOB_FULLPATH_OTHER="$GLOB_FULLPATH_OTHER"
+GLOB_FULLPATH_POSIX="$GLOB_FULLPATH_POSIX"
 LDCONFIG="$LDCONFIG"
 LIBTOOL_VERSION="$LIBTOOL_VERSION"
 LIB_NAME="$LIB_NAME"

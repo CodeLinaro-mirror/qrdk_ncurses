@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2023 Thomas E. Dickey                                          *
+ * Copyright 2023,2024 Thomas E. Dickey                                     *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_endwin.c,v 1.2 2023/11/10 15:17:19 tom Exp $
+ * $Id: test_endwin.c,v 1.4 2024/11/30 17:34:56 tom Exp $
  */
 #include <test.priv.h>
 
@@ -38,11 +38,11 @@ usage(int ok)
 	"Usage: test_endwin [options]"
 	,""
 	,"Options:"
-	," -e   call endwin() an extra time"
-	," -i   call initscr() before endwin()"
-	," -n   call newterm() before endwin()"
-	," -r   call refresh() before endwin()"
-	," -s   call getch() after endwin(), to refresh screen"
+	," -e       call endwin() an extra time"
+	," -i       call initscr() before endwin()"
+	," -n       call newterm() before endwin()"
+	," -r       call refresh() before endwin()"
+	," -s       call getch() after endwin(), to refresh screen"
 	,""
 	,USAGE_COMMON
     };
@@ -67,7 +67,7 @@ main(int argc, char *argv[])
     int rc_e1 = OK;
     int rc_e2 = OK;
     int rc_e3 = OK;
-    SCREEN *sp = NULL;
+    const SCREEN *sp = NULL;
     bool opt_e = FALSE;
     bool opt_i = FALSE;
     bool opt_n = FALSE;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2023 Thomas E. Dickey                                *
+ * Copyright 2019-2023,2024 Thomas E. Dickey                                *
  * Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.29 2023/11/21 21:53:28 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.31 2024/12/07 18:03:14 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -63,7 +63,7 @@ _nc_insert_wch(WINDOW *win, const cchar_t *wch)
 	    struct ldat *line = &(win->_line[win->_cury]);
 	    NCURSES_CH_T *end = &(line->text[win->_curx]);
 	    NCURSES_CH_T *temp1 = &(line->text[win->_maxx]);
-	    NCURSES_CH_T *temp2 = temp1 - cells;
+	    const NCURSES_CH_T *temp2 = temp1 - cells;
 
 	    CHANGED_TO_EOL(line, win->_curx, win->_maxx);
 	    while (temp1 > end)
@@ -87,7 +87,7 @@ wins_wch(WINDOW *win, const cchar_t *wch)
 
     T((T_CALLED("wins_wch(%p, %s)"), (void *) win, _tracecchar_t(wch)));
 
-    if (win != 0) {
+    if (win != NULL) {
 	NCURSES_SIZE_T oy = win->_cury;
 	NCURSES_SIZE_T ox = win->_curx;
 
@@ -108,8 +108,8 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
     T((T_CALLED("wins_nwstr(%p,%s,%d)"),
        (void *) win, _nc_viswbufn(wstr, n), n));
 
-    if (win != 0
-	&& wstr != 0
+    if (win != NULL
+	&& wstr != NULL
 	&& n != 0) {
 
 	if (n < 0) {

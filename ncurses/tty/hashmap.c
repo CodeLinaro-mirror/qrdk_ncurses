@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2023 Thomas E. Dickey                                *
+ * Copyright 2019-2024,2025 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -74,7 +74,7 @@ AUTHOR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: hashmap.c,v 1.71 2023/09/16 16:28:53 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.74 2025/01/12 10:51:43 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -120,15 +120,14 @@ static NCURSES_CH_T newtext[MAXLINES][TEXTWIDTH(sp)];
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
 static NCURSES_INLINE unsigned long
-hash(SCREEN *sp, NCURSES_CH_T *text)
+hash(SCREEN *sp, const NCURSES_CH_T *text)
 {
     int i;
-    NCURSES_CH_T ch;
     unsigned long result = 0;
     (void) sp;
 
     for (i = TEXTWIDTH(sp); i > 0; i--) {
-	ch = *text++;
+	NCURSES_CH_T ch = *text++;
 	result += (result << 5) + (unsigned long) HASH_VAL(ch);
     }
     return result;
@@ -312,10 +311,10 @@ NCURSES_SP_NAME(_nc_hash_map) (NCURSES_SP_DCL0)
 	}
     } else {
 	/* re-hash all */
-	if (oldhash(SP_PARM) == 0)
+	if (oldhash(SP_PARM) == NULL)
 	    oldhash(SP_PARM) = typeCalloc(unsigned long,
 					    (size_t) screen_lines(SP_PARM));
-	if (newhash(SP_PARM) == 0)
+	if (newhash(SP_PARM) == NULL)
 	    newhash(SP_PARM) = typeCalloc(unsigned long,
 					    (size_t) screen_lines(SP_PARM));
 	if (!oldhash(SP_PARM) || !newhash(SP_PARM)) {
@@ -533,7 +532,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    do {
 		oldnums[n++] = atoi(st);
 	    } while
-		((st = strtok((char *) NULL, " ")) != 0);
+		((st = strtok((char *) NULL, " ")) != NULL);
 	    break;
 
 	case 'n':		/* use following letters as text of new lines */
