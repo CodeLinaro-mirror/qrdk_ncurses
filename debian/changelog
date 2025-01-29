@@ -1,10 +1,10 @@
-ncurses (6.5+20250125-1) UNRELEASED; urgency=low
+ncurses (6.5+20250125-1) experimental; urgency=low
 
   * New upstream patchlevel.
   * Refresh Debian patches.
   * Update years in debian/copyright.
 
- -- Sven Joachim <svenjoac@gmx.de>  Mon, 27 Jan 2025 17:34:04 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Wed, 29 Jan 2025 17:00:06 +0100
 
 ncurses (6.5-2) unstable; urgency=medium
 
