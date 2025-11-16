@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.700 2025/01/18 14:41:58 tom Exp $
+ * $Id: curses.priv.h,v 1.731 2025/11/16 01:03:43 tom Exp $
  *
  *	curses.priv.h
  *
@@ -403,6 +403,25 @@ typedef TRIES {
 
 #if !(defined(NCURSES_WGETCH_EVENTS) && defined(NEED_KEY_EVENT))
 #undef KEY_EVENT		/* reduce compiler-warnings with Visual C++ */
+#endif
+
+/*
+ * Macros to make additional parameter to implement wgetch_events()
+ */
+#ifdef NCURSES_WGETCH_EVENTS
+#define EVENTLIST_0th(param) param
+#define EVENTLIST_1st(param) param
+#define EVENTLIST_2nd(param) , param
+#define TWAIT_MASK (TW_ANY | TW_EVENT)
+#else
+#define EVENTLIST_0th(param) void
+#define EVENTLIST_1st(param) /* nothing */
+#define EVENTLIST_2nd(param) /* nothing */
+#define TWAIT_MASK TW_ANY
+#endif
+
+#if defined(_NC_WINDOWS)
+#include <nc_win32.h>
 #endif
 
 typedef struct
@@ -1133,7 +1152,8 @@ typedef struct screen {
 	MouseFormat	_mouse_format;	/* type of xterm mouse protocol */
 	NCURSES_CONST char *_mouse_xtermcap; /* string to enable/disable mouse */
 	MEVENT		_mouse_events[EV_MAX];	/* hold the last mouse event seen */
-	MEVENT		*_mouse_eventp;	/* next free slot in event queue */
+	MEVENT		*_mouse_readp;	/* read pointer into event queue */
+	MEVENT		*_mouse_writep;	/* write pointer into event queue */
 
 	/*
 	 * These are data that support the proper handling of the panel stack on an
@@ -1408,6 +1428,12 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define NulColor	/* nothing */
 #endif
 
+#if NCURSES_RGB_COLORS
+#define NulDirect	, 0
+#else
+#define NulDirect	/* nothing */
+#endif
+
 #if CCHARW_MAX > 6
 #define NulChar		0,0,0,0,0
 #elif CCHARW_MAX > 5
@@ -1429,7 +1455,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define RemAttr(c,a)	AttrOf(c) &= ~((a) & A_ATTRIBUTES)
 #define SetAttr(c,a)	AttrOf(c) =   ((a) & A_ATTRIBUTES) | WidecExt(c)
 
-#define NewChar2(c,a)	{ a, { c, NulChar } NulColor }
+#define NewChar2(c,a)	{ a, { c, NulChar } NulColor NulDirect }
 #define NewChar(ch)	NewChar2(ChCharOf(ch), ChAttrOf(ch))
 
 #if CCHARW_MAX > 1
@@ -1459,7 +1485,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define PUTC(ch)	do { if(!isWidecExt(ch)) {				    \
 			if (Charable(ch)) {					    \
 			    TR_PUTC(CharOf(ch));				    \
-			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch));	    \
+			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx (int) CharOf(ch));	    \
 			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
 			    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {	    \
@@ -1472,15 +1498,19 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 				if (PUTC_n <= 0) {				    \
 				    if (PUTC_ch && is8bits(PUTC_ch) && PUTC_i == 0) { \
 					TR_PUTC(CharOf(ch));			    \
-					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
+					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx (int) CharOf(ch)); \
 				    }						    \
 				    break;					    \
-				} else {					    \
+				} else if (PUTC_n > 1 || !is8bits(PUTC_ch)) {	    \
 				    int PUTC_j;					    \
 				    for (PUTC_j = 0; PUTC_j < PUTC_n; ++PUTC_j) {   \
 					TR_PUTC(PUTC_buf[PUTC_j]);		    \
 					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx PUTC_buf[PUTC_j]); \
 				    }						    \
+				} else {					    \
+				    PUTC_buf[0] = PUTC_ch;			    \
+				    TR_PUTC(PUTC_buf[0]);			    \
+				    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx PUTC_buf[0]); \
 				}						    \
 			    }							    \
 			    COUNT_OUTCHARS(PUTC_i);				    \
@@ -1868,7 +1898,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 		? sp->_dch_cost \
 		: ((delete_character != NULL) \
 			? (sp->_dch1_cost * count) \
-			: INFINITY))
+			: NC_INFINITY))
 
 #define InsCharCost(sp,count) \
 		((parm_ich != NULL) \
@@ -1877,7 +1907,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 		  ? sp->_smir_cost + sp->_rmir_cost + (sp->_ip_cost * count) \
 		  : ((insert_character != NULL) \
 		    ? ((sp->_ich1_cost + sp->_ip_cost) * count) \
-		    : INFINITY)))
+		    : NC_INFINITY)))
 
 #if USE_XMC_SUPPORT
 #define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
@@ -1896,21 +1926,6 @@ extern	NCURSES_EXPORT(void) name (void); \
 #define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
 				    VIDPUTS(sp, AttrOf(c), GetPair(c)); \
 			}
-#endif
-
-/*
- * Macros to make additional parameter to implement wgetch_events()
- */
-#ifdef NCURSES_WGETCH_EVENTS
-#define EVENTLIST_0th(param) param
-#define EVENTLIST_1st(param) param
-#define EVENTLIST_2nd(param) , param
-#define TWAIT_MASK (TW_ANY | TW_EVENT)
-#else
-#define EVENTLIST_0th(param) void
-#define EVENTLIST_1st(param) /* nothing */
-#define EVENTLIST_2nd(param) /* nothing */
-#define TWAIT_MASK TW_ANY
 #endif
 
 #if NCURSES_EXPANDED && NCURSES_EXT_FUNCS
@@ -1970,7 +1985,7 @@ extern NCURSES_EXPORT(void) _nc_expanded (void);
 	}
 
 #if !NCURSES_WCWIDTH_GRAPHICS
-extern NCURSES_EXPORT(int) _nc_wacs_width(unsigned);
+extern NCURSES_EXPORT(int) _nc_wacs_width(wchar_t);
 #else
 #define _nc_wacs_width(ch) wcwidth(ch)
 #endif
@@ -2049,8 +2064,12 @@ extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, int *, int EVENTLIST_2nd(_nc_eve
 /* lib_insch.c */
 extern NCURSES_EXPORT(int) _nc_insert_ch(SCREEN *, WINDOW *, chtype);
 
+/* lib_mouse.c */
+extern NCURSES_EXPORT(bool) _nc_has_mouse (const SCREEN *);
+
 /* lib_mvcur.c */
-#define INFINITY	1000000	/* cost: too high to use */
+#define NC_INFINITY	1000000	/* cost: too high to use */
+#define BAUDBYTE	9	/* 9 = 7 bits + 1 parity + 1 stop */
 
 extern NCURSES_EXPORT(int) _nc_mvcur(int yold, int xold, int ynew, int xnew);
 
@@ -2063,13 +2082,6 @@ extern NCURSES_EXPORT(int) _nc_scrolln (int, int, int, int);
 extern NCURSES_EXPORT(void) _nc_screen_init (void);
 extern NCURSES_EXPORT(void) _nc_screen_resume (void);
 extern NCURSES_EXPORT(void) _nc_screen_wrap (void);
-
-/* lib_mouse.c */
-extern NCURSES_EXPORT(bool) _nc_has_mouse (const SCREEN *);
-
-/* lib_mvcur.c */
-#define INFINITY	1000000	/* cost: too high to use */
-#define BAUDBYTE	9	/* 9 = 7 bits + 1 parity + 1 stop */
 
 /* lib_setup.c */
 extern NCURSES_EXPORT(char *) _nc_get_locale(void);
@@ -2281,12 +2293,6 @@ extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
 #define mblen(s,n) _nc_mblen(s, n)
 
 #endif /* _NC_WINDOWS_NATIVE && !_NC_MSC */
-
-#if defined(_NC_WINDOWS_NATIVE) || defined(_NC_MINGW)
-/* see wcwidth.c */
-extern NCURSES_EXPORT(int) mk_wcwidth(uint32_t);
-#define wcwidth(ucs) _nc_wcwidth(ucs)
-#endif
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))
@@ -2508,8 +2514,17 @@ extern NCURSES_EXPORT(int)      TINFO_MVCUR(SCREEN*, int, int, int, int);
 #define TINFO_MVCUR             NCURSES_SP_NAME(_nc_mvcur)
 #endif
 
-#if defined(EXP_WIN32_DRIVER)
-#include <nc_win32.h>
+#ifdef _NC_WINDOWS
+#if USE_WIDEC_SUPPORT
+#include <wchar.h>
+#endif
+#include <tchar.h>
+#include <io.h>
+#elif defined(_NC_WINDOWS_NATIVE)
+#include <tchar.h>
+#include <io.h>
+#elif defined(__EMX__)
+#include <io.h>
 #endif
 
 /*
@@ -2536,31 +2551,53 @@ extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, int *, int *);
 
 #ifdef EXP_WIN32_DRIVER
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
+extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 #else
 #ifdef USE_TERM_DRIVER
 #if defined(USE_WIN32CON_DRIVER)
-#include <nc_mingw.h>
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
-extern NCURSES_EXPORT(int)  _nc_mingw_isatty(int fd);
-extern NCURSES_EXPORT(int)  _nc_mingw_isconsole(int fd);
-extern NCURSES_EXPORT(int) _nc_mingw_console_read(
-    SCREEN *sp,
-    HANDLE  fd,
-    int *buf);
-extern NCURSES_EXPORT(int) _nc_mingw_testmouse(
-    SCREEN * sp,
-    HANDLE fd,
-    int delay EVENTLIST_2nd(_nc_eventlist*));
-#else
+extern NCURSES_EXPORT(bool) _nc_mingw_init(void);
+#ifdef TERMIOS
+extern NCURSES_EXPORT(int) _nc_mingw_tcflush(int fd, int queue);
+extern NCURSES_EXPORT(int) _nc_mingw_tcgetattr(int fd, struct termios *arg);
+extern NCURSES_EXPORT(int)  _nc_mingw_tcsetattr(int fd, int optional_actions, const struct termios* arg);
+#endif
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #endif /* USE_TERM_DRIVER */
 #endif /* EXP_WIN32_DRIVER */
 
-#if defined(USE_TERM_DRIVER) && defined(EXP_WIN32_DRIVER)
+#ifdef _NC_WINDOWS
+
+extern NCURSES_EXPORT(bool)  _nc_console_checkinit(bool initFlag, bool assumeTermInfo);
+extern NCURSES_EXPORT(void*) _nc_console_fd2handle(int fd);
+extern NCURSES_EXPORT(int)  _nc_console_setmode(void* handle, const struct winconmode* arg);
+extern NCURSES_EXPORT(int)  _nc_console_getmode(void* handle, struct winconmode* arg);
+extern NCURSES_EXPORT(WORD) _nc_console_MapColor(bool fore, int color);
+extern NCURSES_EXPORT(int)  _nc_console_flush(void* handle);
+extern NCURSES_EXPORT(bool) _nc_console_get_SBI(void);
+extern NCURSES_EXPORT(HANDLE) _nc_console_handle(int fd);
+extern NCURSES_EXPORT(int)  _nc_console_isatty(int fd);
+extern NCURSES_EXPORT(bool) _nc_console_keyExist(int keycode);
+extern NCURSES_EXPORT(int)  _nc_console_keyok(int keycode, int flag);
+extern NCURSES_EXPORT(int)  _nc_console_read(SCREEN *sp, HANDLE fd, int *buf);
+extern NCURSES_EXPORT(bool) _nc_console_restore(void);
+extern NCURSES_EXPORT(void) _nc_console_selectActiveHandle(void);
+extern NCURSES_EXPORT(void) _nc_console_set_scrollback(bool normal, CONSOLE_SCREEN_BUFFER_INFO * info);
+extern NCURSES_EXPORT(void) _nc_console_size(int *Lines, int *Cols);
+extern NCURSES_EXPORT(int)  _nc_console_test(int fd);
+extern NCURSES_EXPORT(int)  _nc_console_testmouse(const SCREEN *sp, HANDLE fd, int delay EVENTLIST_2nd(_nc_eventlist*));
+extern NCURSES_EXPORT(int)  _nc_console_twait(const SCREEN *sp, HANDLE hdl,int mode,int msec,int *left EVENTLIST_2nd(_nc_eventlist * evl));
+extern NCURSES_EXPORT(int)  _nc_console_vt_supported(void);
+
+#ifdef _NC_CHECK_MINTTY
+extern NCURSES_EXPORT(int)    _nc_console_checkmintty(int fd, LPHANDLE pMinTTY);
+#endif
+
+#endif /* _NC_WINDOWS */
+
+#if defined(USE_TERM_DRIVER) && (defined(EXP_WIN32_DRIVER) || defined(USE_WIN32CON_DRIVER))
 #define NC_ISATTY(fd) (0 != _nc_console_isatty(fd))
-#elif defined(USE_TERM_DRIVER) && defined(USE_WIN32CON_DRIVER)
-#define NC_ISATTY(fd) _nc_mingw_isatty(fd)
 #else
 #define NC_ISATTY(fd) isatty(fd)
 #endif
@@ -2579,7 +2616,7 @@ extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #  if defined(EXP_WIN32_DRIVER)
 #    define IsTermInfoOnConsole(sp) (IsTermInfo(sp) && _nc_console_test(TerminalOf(sp)->Filedes))
 #  elif defined(USE_WIN32CON_DRIVER)
-#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp) && _nc_mingw_isconsole(TerminalOf(sp)->Filedes))
+#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp) && _nc_console_test(TerminalOf(sp)->Filedes))
 #  else
 #    define IsTermInfoOnConsole(sp) FALSE
 #  endif
@@ -2687,6 +2724,22 @@ extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 extern NCURSES_EXPORT(int) _nc_conv_to_utf8(unsigned char *, unsigned, unsigned);
 extern NCURSES_EXPORT(int) _nc_conv_to_utf32(unsigned *, const char *, unsigned);
 #endif
+
+#ifdef _NC_WINDOWS
+#if USE_WIDEC_SUPPORT
+#define write_screen WriteConsoleOutputW
+#define read_screen  ReadConsoleOutputW
+#define read_keycode ReadConsoleInputW
+#define KeyEventChar KeyEvent.uChar.UnicodeChar
+#define CharInfoChar Char.UnicodeChar
+#else
+#define write_screen WriteConsoleOutput
+#define read_screen  ReadConsoleOutput
+#define read_keycode ReadConsoleInput
+#define KeyEventChar KeyEvent.uChar.AsciiChar
+#define CharInfoChar Char.AsciiChar
+#endif
+#endif /* _NC_WINDOWS */
 
 #ifdef __cplusplus
 }

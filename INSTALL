@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2023,2024 Thomas E. Dickey                                 --
+-- Copyright 2018-2024,2025 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.258 2024/12/28 21:37:40 Branden.Robinson Exp $
+-- $Id: INSTALL,v 1.261 2025/11/12 00:52:57 Branden.Robinson Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1112,7 +1112,7 @@ CONFIGURE OPTIONS:
 	the alias pages are created as stubs containing ".so" *roff requests.
 
     --with-manpage-format=XXX
-	Tell the configure script how you would like to install man-pages.  The
+	Tell the configure script how you would like to install man pages.  The
 	option value must be one of these: "gzip", "compress", "BSDI", "normal",
 	"formatted".  If you do not specify this option, the configure script
 	attempts to determine which is the case.
@@ -1125,7 +1125,7 @@ CONFIGURE OPTIONS:
 
     --with-manpage-symlinks
 	Tell the configure script that you wish to make symbolic links in the
-	man-directory for aliases to the man-pages.  This is the default, but
+	man-directory for aliases to the man pages.  This is the default, but
 	can be disabled for systems that provide this service automatically.
 	Doing this on systems that do not support symbolic links creates a copy
 	of the target man page for each alias.
@@ -1189,11 +1189,11 @@ CONFIGURE OPTIONS:
     --with-pkg-config-libdir[=DIR]
 	If pkg-config was found, override the automatic check for its library
 	path.  The optional DIR value can be
-	
+
 	"auto", automatically use pkg-config's library directory, or
-	
+
 	"libdir", use a ${libdir}/pkgconfig (based on the configuration), or
-	
+
 	a directory path, i.e., beginning with "/".
 
 	The configure script allows only a single directory, because

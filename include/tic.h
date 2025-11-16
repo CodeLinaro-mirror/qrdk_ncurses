@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2022,2023 Thomas E. Dickey                                *
+ * Copyright 2018-2023,2025 Thomas E. Dickey                                *
  * Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.87 2023/04/22 13:37:21 tom Exp $
+ * $Id: tic.h,v 1.89 2025/11/01 20:09:35 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -236,12 +236,12 @@ struct user_table_entry
  */
 
 /* out-of-band values for representing absent capabilities */
-#define ABSENT_BOOLEAN		((signed char)-1)	/* 255 */
+#define ABSENT_BOOLEAN		((NCURSES_SBOOL)-1)	/* 255 */
 #define ABSENT_NUMERIC		(-1)
 #define ABSENT_STRING		(char *)0
 
 /* out-of-band values for representing cancels */
-#define CANCELLED_BOOLEAN	((signed char)-2)	/* 254 */
+#define CANCELLED_BOOLEAN	((NCURSES_SBOOL)-2)	/* 254 */
 #define CANCELLED_NUMERIC	(-2)
 #define CANCELLED_STRING	(char *)(-1)
 
@@ -313,8 +313,8 @@ extern NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings;
 extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
 
 /* comp_userdefs.c */
-NCURSES_EXPORT(const struct user_table_entry *) _nc_get_userdefs_table (void);
-NCURSES_EXPORT(const HashData *) _nc_get_hash_user (void);
+extern NCURSES_EXPORT(const struct user_table_entry *) _nc_get_userdefs_table (void);
+extern NCURSES_EXPORT(const HashData *) _nc_get_hash_user (void);
 
 /* captoinfo.c: capability conversion */
 extern NCURSES_EXPORT(char *) _nc_captoinfo (const char *, const char *, int const);

@@ -1,6 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2023,2024 Thomas E. Dickey                                *
- * Copyright 2008-2010,2017 Free Software Foundation, Inc.                  *
+ * Copyright 2025 Thomas E. Dickey                                          *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,65 +27,78 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Author: Thomas Dickey, 2008-on                                           *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
-/* $Id: nc_mingw.h,v 1.13 2024/08/31 15:50:24 tom Exp $ */
+#include <curses.priv.h>
 
-#ifndef NC_MINGW_H
-#define NC_MINGW_H 1
+MODULE_ID("$Id: report_ctype.c,v 1.1 2025/10/25 19:21:11 tom Exp $")
 
-#include <ncurses_cfg.h>
+#include <ctype.h>
+#include <wctype.h>
+#include <locale.h>
 
-#if defined(_WIN32) || defined(__MSYS__) || defined(__CYGWIN__)
-
-#ifdef WINVER
-#  if WINVER < 0x0501
-#    error WINVER must at least be 0x0501
-#  endif
-#else
-#  define WINVER 0x0501
-#endif
-#include <windows.h>
-
-#undef sleep
-#define sleep(n) Sleep((n) * 1000)
-
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>		/* for struct timeval */
+#if HAVE_LANGINFO_CODESET
+#include <langinfo.h>
 #endif
 
-#ifdef _MSC_VER
-#include <winsock2.h>		/* for struct timeval */
+#define PER_LINE  32
+
+static void
+report(char *locale)
+{
+    int ch;
+    wint_t wch;
+    char *dot;
+    printf("Locale \"%s\"", locale);
+    if (setlocale(LC_CTYPE, locale) != NULL) {
+#if HAVE_LANGINFO_CODESET
+	char *codeset = nl_langinfo(CODESET);
+	if (codeset != NULL) {
+	    printf("\nCodeset \"%s\"", codeset);
+	}
 #endif
-
-#include <stdint.h>		/* for uint32_t */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <ncurses_dll.h>
-
-#if !HAVE_CLOCK_GETTIME && !HAVE_GETTIMEOFDAY
-NCURSES_EXPORT(int) _nc_gettimeofday(struct timeval *, void *);
-#undef HAVE_GETTIMEOFDAY
-#define HAVE_GETTIMEOFDAY 2
-#define gettimeofday(tv,tz) _nc_gettimeofday(tv,tz)
-#endif
-
-#define SIGHUP  1
-#define SIGKILL 9
-#define getlogin() "username"
-
-#undef wcwidth
-#define wcwidth(ucs) _nc_wcwidth((wchar_t)(ucs))
-NCURSES_EXPORT(int) _nc_wcwidth(uint32_t);
-
-#ifdef __cplusplus
+	for (ch = 0; ch < 256; ++ch) {
+	    int code = '?';
+	    wch = ch;
+	    if (isprint(ch) && iswprint(wch))
+		code = '=';
+	    if (!isprint(ch) && iswprint(wch))
+		code = '+';
+	    if (isprint(ch) && !iswprint(wch))
+		code = '-';
+	    if ((ch & (PER_LINE - 1)) == 0)
+		printf("\n%02X: ", ch);
+	    putchar(code);
+	}
+	putchar('\n');
+    } else {
+	fprintf(stderr, "Cannot set locale\n");
+    }
+    if ((dot = strchr(locale, '.')) != NULL) {
+	*dot = '\0';
+	report(locale);
+    }
 }
-#endif
 
-#endif /* _WIN32|__MSYS__|__CYGWIN__ */
-
-#endif /* NC_MINGW_H */
+int
+main(int argc, char *argv[])
+{
+    if (argc > 1) {
+	int n;
+	for (n = 1; n < argc; ++n) {
+	    report(argv[n]);
+	}
+    } else {
+	static char empty[1];
+	char *locale = getenv("LC_CTYPE");
+	if (locale == NULL)
+	    locale = getenv("LC_ALL");
+	if (locale == NULL)
+	    locale = getenv("LANG");
+	if (locale == NULL)
+	    locale = empty;
+	report(locale);
+    }
+    return EXIT_SUCCESS;
+}

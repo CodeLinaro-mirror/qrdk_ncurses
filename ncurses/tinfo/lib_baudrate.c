@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2024 Thomas E. Dickey                                     *
+ * Copyright 2020-2024,2025 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -84,7 +84,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.46 2024/12/07 20:05:08 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.48 2025/10/18 17:56:35 tom Exp $")
 
 /*
  *	int
@@ -99,7 +99,7 @@ struct speed {
     int actual_speed;		/* the actual speed */
 };
 
-#if !defined(EXP_WIN32_DRIVER)
+#if !defined(_NC_WINDOWS)
 #define DATA(number) { B##number, number }
 
 static struct speed const speeds[] =
@@ -194,7 +194,7 @@ static struct speed const speeds[] =
 NCURSES_EXPORT(int)
 _nc_baudrate(int OSpeed)
 {
-#if defined(EXP_WIN32_DRIVER)
+#if defined(_NC_WINDOWS)
     /* On Windows this is a noop */
     (void) OSpeed;
     return (OK);
@@ -244,7 +244,7 @@ NCURSES_EXPORT(int)
 _nc_ospeed(int BaudRate)
 {
     int result = 1;
-#if defined(EXP_WIN32_DRIVER)
+#if defined(_NC_WINDOWS)
     (void) BaudRate;
 #else
     if (BaudRate >= 0) {
@@ -268,7 +268,8 @@ NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
 
     T((T_CALLED("baudrate(%p)"), (void *) SP_PARM));
 
-#if defined(EXP_WIN32_DRIVER)
+#if defined(_NC_WINDOWS)
+    (void) SP_PARM;
     result = OK;
 #else
     /*

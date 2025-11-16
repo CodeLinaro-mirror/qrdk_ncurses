@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2023,2024 Thomas E. Dickey                                *
+ * Copyright 2018-2024,2025 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -44,7 +44,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.148 2024/12/07 17:40:33 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.152 2025/09/27 19:46:02 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -134,17 +134,6 @@ _nc_use_meta(WINDOW *win)
     return (sp ? sp->_use_meta : 0);
 }
 
-#ifdef USE_TERM_DRIVER
-# if defined(_NC_WINDOWS_NATIVE) && !defined(EXP_WIN32_DRIVER)
-static HANDLE
-_nc_get_handle(int fd)
-{
-    intptr_t value = _get_osfhandle(fd);
-    return (HANDLE) value;
-}
-# endif
-#endif
-
 /*
  * Check for mouse activity, returning nonzero if we find any.
  */
@@ -156,18 +145,12 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
 #ifdef USE_TERM_DRIVER
     TERMINAL_CONTROL_BLOCK *TCB = TCBOf(sp);
     rc = TCBOf(sp)->drv->td_testmouse(TCBOf(sp), delay EVENTLIST_2nd(evl));
-# if defined(EXP_WIN32_DRIVER)
+# if defined(EXP_WIN32_DRIVER) || defined(_NC_WINDOWS_NATIVE)
     /* if we emulate terminfo on console, we have to use the console routine */
     if (IsTermInfoOnConsole(sp)) {
 	rc = _nc_console_testmouse(sp,
 				   _nc_console_handle(sp->_ifd),
 				   delay EVENTLIST_2nd(evl));
-    } else
-# elif defined(_NC_WINDOWS_NATIVE)
-    /* if we emulate terminfo on console, we have to use the console routine */
-    if (IsTermInfoOnConsole(sp)) {
-	HANDLE fd = _nc_get_handle(sp->_ifd);
-	rc = _nc_mingw_testmouse(sp, fd, delay EVENTLIST_2nd(evl));
     } else
 # endif
 	rc = TCB->drv->td_testmouse(TCB, delay EVENTLIST_2nd(evl));
@@ -307,7 +290,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     {				/* Can block... */
 #if defined(USE_TERM_DRIVER)
 	int buf;
-# if defined(EXP_WIN32_DRIVER)
+# if defined(EXP_WIN32_DRIVER) || defined(_NC_WINDOWS_NATIVE)
 	if (NC_ISATTY(sp->_ifd) && IsTermInfoOnConsole(sp) && IsCbreak(sp)) {
 	    _nc_set_read_thread(TRUE);
 	    n = _nc_console_read(sp,
@@ -315,12 +298,6 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 				 &buf);
 	    _nc_set_read_thread(FALSE);
 	} else
-# elif defined(_NC_WINDOWS_NATIVE)
-	if (NC_ISATTY(sp->_ifd) && IsTermInfoOnConsole(sp) && IsCbreak(sp))
-	    n = _nc_mingw_console_read(sp,
-				       _nc_get_handle(sp->_ifd),
-				       &buf);
-	else
 # endif	/* EXP_WIN32_DRIVER */
 	    n = CallDriver_1(sp, td_read, &buf);
 	ch = buf;
@@ -513,7 +490,7 @@ _nc_wgetch(WINDOW *win,
 
     recur_wrefresh(win);
 
-    if (win->_notimeout || (win->_delay >= 0) || (IsCbreak(sp) > 1)) {
+    if ((win->_delay >= 0) || (IsCbreak(sp) > 1)) {
 	if (head == -1) {	/* fifo is empty */
 	    int delay;
 

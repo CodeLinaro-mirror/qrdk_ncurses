@@ -36,68 +36,59 @@
  * TODO - GetMousePos(POINT * result) from ntconio.c
  */
 
+#define TTY int			/* FIXME: TTY originalMode */
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32con.c,v 1.17 2025/02/15 15:43:26 tom Exp $")
+MODULE_ID("$Id: lib_win32con.c,v 1.43 2025/10/18 19:18:29 tom Exp $")
 
 #if defined(_NC_WINDOWS)
 
-#ifdef _NC_MINGW
-#include <wchar.h>
-#else
-#include <tchar.h>
-#endif
-
-#include <io.h>
-
-#if USE_WIDEC_SUPPORT
-#define write_screen WriteConsoleOutputW
-#define read_screen  ReadConsoleOutputW
-#else
-#define write_screen WriteConsoleOutput
-#define read_screen  ReadConsoleOutput
-#endif
+#define CONTROL_PRESSED (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)
 
 static bool read_screen_data(void);
 
 #define GenMap(vKey,key) MAKELONG(key, vKey)
+/* *INDENT-OFF* */
 static const LONG keylist[] =
 {
-    GenMap(VK_PRIOR, KEY_PPAGE),
-    GenMap(VK_NEXT, KEY_NPAGE),
-    GenMap(VK_END, KEY_END),
-    GenMap(VK_HOME, KEY_HOME),
-    GenMap(VK_LEFT, KEY_LEFT),
-    GenMap(VK_UP, KEY_UP),
-    GenMap(VK_RIGHT, KEY_RIGHT),
-    GenMap(VK_DOWN, KEY_DOWN),
+    GenMap(VK_PRIOR,  KEY_PPAGE),
+    GenMap(VK_NEXT,   KEY_NPAGE),
+    GenMap(VK_END,    KEY_END),
+    GenMap(VK_HOME,   KEY_HOME),
+    GenMap(VK_LEFT,   KEY_LEFT),
+    GenMap(VK_UP,     KEY_UP),
+    GenMap(VK_RIGHT,  KEY_RIGHT),
+    GenMap(VK_DOWN,   KEY_DOWN),
     GenMap(VK_DELETE, KEY_DC),
     GenMap(VK_INSERT, KEY_IC)
 };
 static const LONG ansi_keys[] =
 {
-    GenMap(VK_PRIOR, 'I'),
-    GenMap(VK_NEXT, 'Q'),
-    GenMap(VK_END, 'O'),
-    GenMap(VK_HOME, 'H'),
-    GenMap(VK_LEFT, 'K'),
-    GenMap(VK_UP, 'H'),
-    GenMap(VK_RIGHT, 'M'),
-    GenMap(VK_DOWN, 'P'),
+    GenMap(VK_PRIOR,  'I'),
+    GenMap(VK_NEXT,   'Q'),
+    GenMap(VK_END,    'O'),
+    GenMap(VK_HOME,   'H'),
+    GenMap(VK_LEFT,   'K'),
+    GenMap(VK_UP,     'H'),
+    GenMap(VK_RIGHT,  'M'),
+    GenMap(VK_DOWN,   'P'),
     GenMap(VK_DELETE, 'S'),
     GenMap(VK_INSERT, 'R')
 };
+/* *INDENT-ON* */
 #define array_length(a) (sizeof(a)/sizeof(a[0]))
 #define N_INI ((int)array_length(keylist))
 #define FKEYS 24
 #define MAPSIZE (FKEYS + N_INI)
 
+static bool console_initialized = FALSE;
+
+#if defined(_NC_WINDOWS)
 /*   A process can only have a single console, so it is safe
      to maintain all the information about it in a single
      static structure.
  */
 NCURSES_EXPORT_VAR(ConsoleInfo) _nc_CONSOLE;
-static bool console_initialized = FALSE;
 
 #define EnsureInit() (void)(console_initialized ? TRUE : _nc_console_checkinit(TRUE, TRUE))
 
@@ -134,6 +125,9 @@ _nc_console_vt_supported(void)
     }
     returnCode(res);
 }
+#else
+#define EnsureInit()		/* nothing */
+#endif
 
 NCURSES_EXPORT(void)
 _nc_console_size(int *Lines, int *Cols)
@@ -222,6 +216,11 @@ _nc_console_fd2handle(int fd)
 	T(("lib_win32con:validateHandle %d -> WINCONSOLE.hdl", fd));
     } else if (hdl == WINCONSOLE.out) {
 	T(("lib_win32con:validateHandle %d -> WINCONSOLE.out", fd));
+    } else if (hdl == GetStdHandle(STD_INPUT_HANDLE)) {
+	T(("lib_win32con:validateHandle %d -> STD_INPUT_HANDLE", fd));
+	if (!WINCONSOLE.isTermInfoConsole && WINCONSOLE.progMode) {
+	    hdl = WINCONSOLE.inp;
+	}
     } else {
 	T(("lib_win32con:validateHandle %d maps to unknown HANDLE", fd));
 	hdl = INVALID_HANDLE_VALUE;
@@ -240,6 +239,7 @@ _nc_console_fd2handle(int fd)
     return hdl;
 }
 
+#if defined(_NC_WINDOWS)
 NCURSES_EXPORT(int)
 _nc_console_setmode(HANDLE hdl, const TTY * arg)
 {
@@ -259,36 +259,20 @@ _nc_console_setmode(HANDLE hdl, const TTY * arg)
 	T(("lib_win32con:_nc_console_setmode %s", _nc_trace_ttymode(arg)));
 	if (hdl == WINCONSOLE.inp) {
 	    dwFlag = arg->dwFlagIn | ENABLE_MOUSE_INPUT | VT_FLAG_IN;
-	    if (WINCONSOLE.isTermInfoConsole)
-		dwFlag |= (VT_FLAG_IN);
-	    else
-		dwFlag &= (DWORD) ~ (VT_FLAG_IN);
 	    TRCTTYIN(dwFlag);
 	    SetConsoleMode(hdl, dwFlag);
 
 	    alt = OutHandle();
 	    dwFlag = arg->dwFlagOut;
-	    if (WINCONSOLE.isTermInfoConsole)
-		dwFlag |= (VT_FLAG_OUT);
-	    else
-		dwFlag |= (VT_FLAG_OUT);
 	    TRCTTYOUT(dwFlag);
 	    SetConsoleMode(alt, dwFlag);
 	} else {
 	    dwFlag = arg->dwFlagOut;
-	    if (WINCONSOLE.isTermInfoConsole)
-		dwFlag |= (VT_FLAG_OUT);
-	    else
-		dwFlag |= (VT_FLAG_OUT);
 	    TRCTTYOUT(dwFlag);
 	    SetConsoleMode(hdl, dwFlag);
 
 	    alt = WINCONSOLE.inp;
 	    dwFlag = arg->dwFlagIn | ENABLE_MOUSE_INPUT;
-	    if (WINCONSOLE.isTermInfoConsole)
-		dwFlag |= (VT_FLAG_IN);
-	    else
-		dwFlag &= (DWORD) ~ (VT_FLAG_IN);
 	    TRCTTYIN(dwFlag);
 	    SetConsoleMode(alt, dwFlag);
 	    T(("effective mode set %s", _nc_trace_ttymode(&TRCTTY)));
@@ -330,6 +314,7 @@ _nc_console_getmode(HANDLE hdl, TTY * arg)
     T(("lib_win32con:_nc_console_getmode %s", _nc_trace_ttymode(arg)));
     return (code);
 }
+#endif
 
 NCURSES_EXPORT(int)
 _nc_console_flush(HANDLE hdl)
@@ -404,7 +389,7 @@ save_original_screen(void)
     return result;
 }
 
-#if 0
+#if defined(_NC_WINDOWS)
 static bool
 restore_original_screen(void)
 {
@@ -426,7 +411,7 @@ restore_original_screen(void)
 		     bufferCoord,
 		     &save_region)) {
 	result = TRUE;
-	mvcur(-1, -1, LINES - 2, 0);
+	SetConsoleCursorPosition(WINCONSOLE.hdl, WINCONSOLE.save_SBI.dwCursorPosition);
 	T(("... restore original screen contents ok %dx%d (%d,%d - %d,%d)",
 	   WINCONSOLE.save_size.Y,
 	   WINCONSOLE.save_size.X,
@@ -455,11 +440,13 @@ read_screen_data(void)
 
     want = (size_t) (WINCONSOLE.save_size.X * WINCONSOLE.save_size.Y);
 
-    if ((WINCONSOLE.save_screen = malloc(want * sizeof(CHAR_INFO))) != 0) {
-	bufferCoord.X = (SHORT) (WINCONSOLE.window_only ?
-				 WINCONSOLE.SBI.srWindow.Left : 0);
-	bufferCoord.Y = (SHORT) (WINCONSOLE.window_only ?
-				 WINCONSOLE.SBI.srWindow.Top : 0);
+    if ((WINCONSOLE.save_screen = malloc(want * sizeof(CHAR_INFO))) != NULL) {
+	bufferCoord.X = (SHORT) (WINCONSOLE.window_only
+				 ? WINCONSOLE.SBI.srWindow.Left
+				 : 0);
+	bufferCoord.Y = (SHORT) (WINCONSOLE.window_only
+				 ? WINCONSOLE.SBI.srWindow.Top
+				 : 0);
 
 	T(("... reading console %s %dx%d into %d,%d - %d,%d at %d,%d",
 	   WINCONSOLE.window_only ? "window" : "buffer",
@@ -617,7 +604,7 @@ tdiff(FILETIME fstart, FILETIME fend)
 static int
 Adjust(int milliseconds, int diff)
 {
-    if (milliseconds != INFINITY) {
+    if (milliseconds != NC_INFINITY) {
 	milliseconds -= diff;
 	if (milliseconds < 0)
 	    milliseconds = 0;
@@ -632,7 +619,7 @@ Adjust(int milliseconds, int diff)
                      RIGHTMOST_BUTTON_PRESSED)
 
 static mmask_t
-decode_mouse(SCREEN *sp, int mask)
+decode_mouse(const SCREEN *sp, int mask)
 {
     mmask_t result = 0;
 
@@ -668,7 +655,9 @@ decode_mouse(SCREEN *sp, int mask)
     return result;
 }
 
-#define AdjustY() (WINCONSOLE.buffered ? 0 : (int) WINCONSOLE.SBI.srWindow.Top)
+#define AdjustY() (WINCONSOLE.buffered \
+                   ? 0 \
+                   : (int) WINCONSOLE.SBI.srWindow.Top)
 
 static bool
 handle_mouse(SCREEN *sp, MOUSE_EVENT_RECORD mer)
@@ -828,7 +817,7 @@ _nc_console_keyExist(int keycode)
 
 NCURSES_EXPORT(int)
 _nc_console_twait(
-		     SCREEN *sp,
+		     const SCREEN *sp,
 		     HANDLE hdl,
 		     int mode,
 		     int milliseconds,
@@ -837,7 +826,7 @@ _nc_console_twait(
 {
     INPUT_RECORD inp_rec;
     BOOL b;
-    DWORD nRead = 0, rc = (DWORD) (-1);
+    DWORD nRead = 0, rc = WAIT_FAILED;
     int code = 0;
     FILETIME fstart;
     FILETIME fend;
@@ -848,9 +837,10 @@ _nc_console_twait(
     (void) evl;			/* TODO: implement wgetch-events */
 #endif
 
-#define IGNORE_CTRL_KEYS (SHIFT_PRESSED|LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED| \
-                          LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED)
-#define CONSUME() ReadConsoleInput(hdl, &inp_rec, 1, &nRead)
+#define IGNORE_CTRL_KEYS (SHIFT_PRESSED | \
+                          LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | \
+                          LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)
+#define CONSUME() read_keycode(hdl, &inp_rec, 1, &nRead)
 
     assert(sp);
 
@@ -858,7 +848,7 @@ _nc_console_twait(
 		      hdl, milliseconds, mode));
 
     if (milliseconds < 0)
-	milliseconds = INFINITY;
+	milliseconds = NC_INFINITY;
 
     memset(&inp_rec, 0, sizeof(inp_rec));
 
@@ -887,8 +877,7 @@ _nc_console_twait(
 			goto end;
 		    } else {
 			DWORD n = 0;
-			INPUT_RECORD *pInpRec =
-			TypeAlloca(INPUT_RECORD, nRead);
+			MakeArray(pInpRec, INPUT_RECORD, nRead);
 			if (pInpRec != NULL) {
 			    DWORD i;
 			    BOOL f;
@@ -927,13 +916,13 @@ _nc_console_twait(
 			switch (inp_rec.EventType) {
 			case KEY_EVENT:
 			    if (mode & TW_INPUT) {
-				WORD vk =
-				inp_rec.Event.KeyEvent.wVirtualKeyCode;
-				char ch =
-				inp_rec.Event.KeyEvent.uChar.AsciiChar;
+				WORD vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
+				WORD ch = inp_rec.Event.KeyEventChar;
+
 				T(("twait:event KEY_EVENT"));
 				T(("twait vk=%d, ch=%d, keydown=%d",
 				   vk, ch, inp_rec.Event.KeyEvent.bKeyDown));
+
 				if (inp_rec.Event.KeyEvent.bKeyDown) {
 				    T(("twait:event KeyDown"));
 				    if (!WINCONSOLE.isTermInfoConsole &&
@@ -1037,7 +1026,7 @@ _nc_console_read(
 
     T((T_CALLED("lib_win32con::_nc_console_read(%p)"), sp));
 
-    while ((b = ReadConsoleInput(hdl, &inp_rec, 1, &nRead))) {
+    while ((b = read_keycode(hdl, &inp_rec, 1, &nRead))) {
 	if (b && nRead > 0) {
 	    if (rc < 0)
 		rc = 0;
@@ -1045,7 +1034,7 @@ _nc_console_read(
 	    if (inp_rec.EventType == KEY_EVENT) {
 		if (!inp_rec.Event.KeyEvent.bKeyDown)
 		    continue;
-		*buf = (int) inp_rec.Event.KeyEvent.uChar.AsciiChar;
+		*buf = (int) inp_rec.Event.KeyEventChar;
 		vk = inp_rec.Event.KeyEvent.wVirtualKeyCode;
 		/*
 		 * There are 24 virtual function-keys, and typically
@@ -1067,6 +1056,16 @@ _nc_console_read(
 		    } else {
 			ungetch('\0');
 			*buf = AnsiKey(vk);
+		    }
+		} else if (vk == VK_BACK) {
+		    if (!(inp_rec.Event.KeyEvent.dwControlKeyState
+			  & (SHIFT_PRESSED | CONTROL_PRESSED))) {
+			*buf = KEY_BACKSPACE;
+		    }
+		} else if (vk == VK_TAB) {
+		    if ((inp_rec.Event.KeyEvent.dwControlKeyState
+			 & (SHIFT_PRESSED | CONTROL_PRESSED))) {
+			*buf = KEY_BTAB;
 		    }
 		}
 		break;
@@ -1248,5 +1247,126 @@ _nc_console_checkinit(bool initFlag, bool assumeTermInfo)
     }
     returnBool(res);
 }
+
+NCURSES_EXPORT(bool)
+_nc_console_restore(void)
+{
+    bool res = FALSE;
+
+    T((T_CALLED("lib_win32con::_nc_console_restore")));
+    if (WINCONSOLE.hdl != INVALID_HANDLE_VALUE) {
+	res = TRUE;
+	if (!WINCONSOLE.buffered) {
+	    _nc_console_set_scrollback(TRUE, &WINCONSOLE.save_SBI);
+	    if (!restore_original_screen())
+		res = FALSE;
+	}
+	SetConsoleCursorInfo(WINCONSOLE.hdl, &WINCONSOLE.save_CI);
+    }
+    returnBool(res);
+}
+
+#if !defined(EXP_WIN32_DRIVER)
+NCURSES_EXPORT(bool)
+_nc_mingw_init(void)
+{
+    {
+	/* initialize once, or not at all */
+	if (!console_initialized) {
+	    int i;
+	    DWORD num_buttons;
+	    WORD a;
+	    BOOL buffered = TRUE;
+	    BOOL b;
+
+	    START_TRACE();
+
+	    WINCONSOLE.map = (LPDWORD) malloc(sizeof(DWORD) * MAPSIZE);
+	    WINCONSOLE.rmap = (LPDWORD) malloc(sizeof(DWORD) * MAPSIZE);
+	    WINCONSOLE.ansi_map = (LPDWORD) malloc(sizeof(DWORD) * MAPSIZE);
+
+	    for (i = 0; i < (N_INI + FKEYS); i++) {
+		if (i < N_INI) {
+		    WINCONSOLE.rmap[i] = WINCONSOLE.map[i] =
+			(DWORD) keylist[i];
+		    WINCONSOLE.ansi_map[i] = (DWORD) ansi_keys[i];
+		} else {
+		    WINCONSOLE.rmap[i] = WINCONSOLE.map[i] =
+			(DWORD) GenMap((VK_F1 + (i - N_INI)),
+				       (KEY_F(1) + (i - N_INI)));
+		    WINCONSOLE.ansi_map[i] =
+			(DWORD) GenMap((VK_F1 + (i - N_INI)),
+				       (';' + (i - N_INI)));
+		}
+	    }
+	    qsort(WINCONSOLE.ansi_map,
+		  (size_t) (MAPSIZE),
+		  sizeof(keylist[0]),
+		  keycompare);
+	    qsort(WINCONSOLE.map,
+		  (size_t) (MAPSIZE),
+		  sizeof(keylist[0]),
+		  keycompare);
+	    qsort(WINCONSOLE.rmap,
+		  (size_t) (MAPSIZE),
+		  sizeof(keylist[0]),
+		  rkeycompare);
+
+	    if (GetNumberOfConsoleMouseButtons(&num_buttons)) {
+		WINCONSOLE.numButtons = (int) num_buttons;
+	    } else {
+		WINCONSOLE.numButtons = 1;
+	    }
+
+	    a = _nc_console_MapColor(true, COLOR_WHITE) |
+		_nc_console_MapColor(false, COLOR_BLACK);
+	    for (i = 0; i < CON_NUMPAIRS; i++)
+		WINCONSOLE.pairs[i] = a;
+
+	    {
+		b = AllocConsole();
+
+		if (!b)
+		    b = AttachConsole(ATTACH_PARENT_PROCESS);
+
+		WINCONSOLE.inp = GetDirectHandle("CONIN$", FILE_SHARE_READ);
+		WINCONSOLE.out = GetDirectHandle("CONOUT$", FILE_SHARE_WRITE);
+
+		if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
+		    T(("... will not buffer console"));
+		    buffered = FALSE;
+		    WINCONSOLE.hdl = WINCONSOLE.out;
+		} else {
+		    T(("... creating console buffer"));
+		    WINCONSOLE.hdl = CreateConsoleScreenBuffer(GENERIC_READ
+							       | GENERIC_WRITE,
+							       FILE_SHARE_READ
+							       | FILE_SHARE_WRITE,
+							       NULL,
+							       CONSOLE_TEXTMODE_BUFFER,
+							       NULL);
+		}
+
+		if (WINCONSOLE.hdl != INVALID_HANDLE_VALUE) {
+		    WINCONSOLE.buffered = buffered;
+		    _nc_console_get_SBI();
+		    WINCONSOLE.save_SBI = WINCONSOLE.SBI;
+		    if (!buffered) {
+			save_original_screen();
+			_nc_console_set_scrollback(FALSE, &WINCONSOLE.SBI);
+		    }
+		    GetConsoleCursorInfo(WINCONSOLE.hdl, &WINCONSOLE.save_CI);
+		    T(("... initial cursor is %svisible, %d%%",
+		       (WINCONSOLE.save_CI.bVisible ? "" : "not-"),
+		       (int) WINCONSOLE.save_CI.dwSize));
+		}
+	    }
+
+	    console_initialized = TRUE;
+	}
+    }
+    return (WINCONSOLE.hdl != INVALID_HANDLE_VALUE);
+}
+#endif // EXP_WIN32_DRIVER
 
 #endif // _NC_WINDOWS
