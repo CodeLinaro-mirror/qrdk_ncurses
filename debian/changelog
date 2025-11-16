@@ -4,6 +4,7 @@ ncurses (6.5+20251115-1) UNRELEASED; urgency=low
     - Add a buffer-limit check in postprocess_termcap (report/testcase
       by Yifan Zhang (CVE-2025-6141, Closes: #1107937)).
   * Refresh patch 02-debian-backspace.diff.
+  * Drop the redundant Rules-Requires-Root field from debian/control.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 16 Nov 2025 17:06:23 +0100
 
