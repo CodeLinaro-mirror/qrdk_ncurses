@@ -1,6 +1,7 @@
 ncurses (6.5+20251115-1) UNRELEASED; urgency=low
 
   * New upstream patchlevel.
+  * Refresh patch 02-debian-backspace.diff.
 
  -- Sven Joachim <svenjoac@gmx.de>  Sun, 16 Nov 2025 17:06:23 +0100
 
