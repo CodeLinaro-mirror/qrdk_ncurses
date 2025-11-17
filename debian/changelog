@@ -3,6 +3,7 @@ ncurses (6.5+20251115-1) UNRELEASED; urgency=low
   * New upstream patchlevel.
     - Add a buffer-limit check in postprocess_termcap (report/testcase
       by Yifan Zhang (CVE-2025-6141, Closes: #1107937)).
+    - Formatting improvements for terminfo.5 (Closes: #1096164).
   * Refresh patch 02-debian-backspace.diff.
   * Drop the redundant Rules-Requires-Root field from debian/control.
 
