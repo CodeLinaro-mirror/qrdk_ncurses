@@ -1,3 +1,11 @@
+ncurses (6.5+20251122-1) UNRELEASED; urgency=medium
+
+  * New upstream patchlevel.
+    - Correct expression for TINFO_LIB variable in misc/ncurses-config.in
+      (Closes: #1121208).
+
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 23 Nov 2025 11:15:42 +0100
+
 ncurses (6.5+20251115-2) unstable; urgency=medium
 
   * Upload to unstable.
