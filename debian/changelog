@@ -1,4 +1,4 @@
-ncurses (6.5+20251122-1) UNRELEASED; urgency=medium
+ncurses (6.5+20251122-1) unstable; urgency=medium
 
   * New upstream patchlevel.
     - Correct expression for TINFO_LIB variable in misc/ncurses-config.in
@@ -6,7 +6,7 @@ ncurses (6.5+20251122-1) UNRELEASED; urgency=medium
   * Add a smoke autopkgtest which builds a simple program, catching the
     above problem.
 
- -- Sven Joachim <svenjoac@gmx.de>  Sun, 23 Nov 2025 11:15:42 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Sun, 23 Nov 2025 14:55:47 +0100
 
 ncurses (6.5+20251115-2) unstable; urgency=medium
 
