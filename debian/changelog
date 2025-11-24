@@ -1,10 +1,10 @@
-ncurses (6.5+20251123-1) UNRELEASED; urgency=medium
+ncurses (6.5+20251123-1) unstable; urgency=medium
 
   * New upstream patchlevel.
     - Revert change using NCURSES_SBOOL in tic.h which interfered with
       sign-extension in tigetflag (Closes: #1121191).
 
- -- Sven Joachim <svenjoac@gmx.de>  Mon, 24 Nov 2025 17:11:36 +0100
+ -- Sven Joachim <svenjoac@gmx.de>  Mon, 24 Nov 2025 20:50:02 +0100
 
 ncurses (6.5+20251122-1) unstable; urgency=medium
 
