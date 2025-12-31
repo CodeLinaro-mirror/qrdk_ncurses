@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2023,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2024,2025 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -39,30 +39,28 @@
 
 #include <curses.priv.h>
 
-#ifdef _NC_WINDOWS
-
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win32_driver.c,v 1.14 2025/09/27 20:58:55 tom Exp $")
+MODULE_ID("$Id: win32_driver.c,v 1.20 2025/12/30 19:34:50 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 #define EXP_OPTIMIZE 0
 
-static bool console_initialized = FALSE;
-
 #define AssertTCB() assert(TCB != NULL && (TCB->magic == WINMAGIC))
-#define validateConsoleHandle() (AssertTCB() , console_initialized ||\
-                                 (console_initialized=\
-                                  _nc_console_checkinit(TRUE,FALSE)))
+#define validateConsoleHandle() (AssertTCB(), console_initialized || \
+                                 (console_initialized = \
+                                  _nc_console_checkinit(USE_NAMED_PIPES)))
 #define SetSP() assert(TCB->csp != NULL); sp = TCB->csp; (void) sp
 
 #define AdjustY() (WINCONSOLE.buffered \
                    ? 0 \
                    : (int) WINCONSOLE.SBI.srWindow.Top)
 
-#define RevAttr(attr) (WORD) (((attr) & 0xff00) |   \
-                              ((((attr) & 0x07) << 4) | \
-                               (((attr) & 0x70) >> 4)))
+#define RevAttr(attr) (WORD) (((attr) & 0xff00) | \
+		      ((((attr) & 0x07) << 4) | \
+		       (((attr) & 0x70) >> 4)))
+
+static bool console_initialized = FALSE;
 
 static WORD
 MapAttr(WORD res, attr_t ch)
@@ -518,9 +516,10 @@ wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
 {
     bool code = FALSE;
 
-    T((T_CALLED("win32con::wcon_CanHandle(%p)"), TCB));
+    T((T_CALLED("win32con::wcon_CanHandle(%p,%s,%p)"),
+       (void *) TCB, NonNull(tname), (void *) errret));
 
-    assert((TCB != NULL) && (tname != NULL));
+    assert(TCB != NULL);
 
     TCB->magic = WINMAGIC;
 
@@ -544,6 +543,11 @@ wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
     } else if (tname != NULL && stricmp(tname, "unknown") == 0) {
 	code = TRUE;
     }
+#if !USE_NAMED_PIPES
+    else if (_isatty(TCB->term.Filedes)) {
+	code = TRUE;
+    }
+#endif
 
     /*
      * This is intentional, to avoid unnecessary breakage of applications
@@ -834,7 +838,7 @@ wcon_init(TERMINAL_CONTROL_BLOCK * TCB)
 
     AssertTCB();
 
-    if (!(console_initialized = _nc_console_checkinit(TRUE, FALSE))) {
+    if (!(console_initialized = _nc_console_checkinit(USE_NAMED_PIPES))) {
 	returnVoid;
     }
 
@@ -1208,5 +1212,3 @@ NCURSES_EXPORT_VAR (TERM_DRIVER) _nc_WIN_DRIVER = {
 	wcon_kyExist,		/* kyExist       */
 	wcon_cursorSet		/* cursorSet     */
 };
-
-#endif /* _NC_WINDOWS */

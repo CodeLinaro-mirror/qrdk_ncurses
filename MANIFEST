@@ -570,7 +570,6 @@
 ./include/termcap.h.in
 ./include/tic.h
 ./include/unctrl.h.in
-./include/win32_curses.h
 ./install-sh
 ./man/MKada_config.in
 ./man/MKncu_config.in
@@ -1008,7 +1007,6 @@
 ./ncurses/win32con/gettimeofday.c
 ./ncurses/win32con/wcwidth.c
 ./ncurses/win32con/win32_driver.c
-./ncurses/win32con/win_driver.c
 ./package/debian-mingw/changelog
 ./package/debian-mingw/compat
 ./package/debian-mingw/control
