@@ -1,6 +1,7 @@
 ncurses (6.6-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Update symbols files and bump shlibs.
 
  -- Sven Joachim <svenjoac@gmx.de>  Wed, 31 Dec 2025 11:22:13 +0100
 
