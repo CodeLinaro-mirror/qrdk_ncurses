@@ -1,6 +1,6 @@
-ncurses (6.6-1) UNRELEASED; urgency=medium
+ncurses (6.6+20251231-1) UNRELEASED; urgency=medium
 
-  * New upstream release.
+  * New upstream patchlevel.
   * Update symbols files and bump shlibs.
   * Upgrade Standards-Version to 4.7.3, no changes needed.
 
