@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.199 2025/02/08 21:53:40 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.202 2026/06/06 09:59:40 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -95,7 +95,7 @@ static int indent = 8;
 #define OBSOLETE(n) (n[0] == 'O' && n[1] == 'T')
 #endif
 
-#define isObsolete(f,n) ((f == F_TERMINFO || f == F_VARIABLE) && (sortmode != S_VARIABLE) && OBSOLETE(n))
+#define isObsolete(f,n) (isTerminfo(f) && (sortmode != S_VARIABLE) && OBSOLETE(n))
 
 #if NCURSES_XNAMES
 #define BoolIndirect(j) ((j >= BOOLCOUNT) ? (j) : ((sortmode == S_NOSORT) ? j : bool_indirect[j]))
@@ -1112,10 +1112,10 @@ fmt_entry(TERMTYPE2 *tterm,
 			    "%s@", name);
 		WRAP_CONCAT;
 	    } else if (TcOutput()) {
-		char *srccap = _nc_tic_expand(capability, TRUE, numbers);
+		const char *srccap = _nc_tic_expand(capability, TRUE, numbers);
 		int params = ((i < (int) SIZEOF(parametrized))
 			      ? parametrized[i]
-			      : ((*srccap == 'k')
+			      : (is_fkey(srccap)
 				 ? 0
 				 : has_params(srccap, FALSE)));
 		const char *cv = _nc_infotocap(name, srccap, params);
@@ -1167,14 +1167,12 @@ fmt_entry(TERMTYPE2 *tterm,
 		len += (int) strlen(capability) + 1;
 	    } else {
 		char *src = _nc_tic_expand(capability,
-					   outform == F_TERMINFO, numbers);
+					   isTerminfo(outform), numbers);
 
 		strcpy_DYN(&tmpbuf, NULL);
 		strcpy_DYN(&tmpbuf, name);
 		strcpy_DYN(&tmpbuf, "=");
-		if (pretty
-		    && (outform == F_TERMINFO
-			|| outform == F_VARIABLE)) {
+		if (pretty && isTerminfo(outform)) {
 		    fmt_complex(tterm, name, src, 1);
 		} else {
 		    strcpy_DYN(&tmpbuf, src);
@@ -1228,7 +1226,7 @@ fmt_entry(TERMTYPE2 *tterm,
 
 	    if (box_ok) {
 		char *tmp = _nc_tic_expand(boxchars,
-					   (outform == F_TERMINFO),
+					   isTerminfo(outform),
 					   numbers);
 		_nc_STRCPY(buffer, "box1=", sizeof(buffer));
 		while (*tmp != '\0') {

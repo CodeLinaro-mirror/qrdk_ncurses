@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2024,2025 Thomas E. Dickey                                 --
+-- Copyright 2018-2025,2026 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.4394 2025/12/31 14:34:19 tom Exp $
+-- $Id: NEWS,v 1.4474 2026/06/08 23:46:21 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,175 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20260608
+	+ amend *.map to put recent cookie-related functions in a new tinfo
+	  ".current" section (report by Sven Joachim).
+	+ add npc to kmscon, fixing flash -TD
+
+20260607
+	+ actually add kmscon (report by Branden Robinson)
+
+20260606
+	+ add kmscon (report by Jocelyn Falempe) -TD
+	+ fix a minor regression in infocmp -g option.
+	+ fixes for compiler warnings/cppcheck.
+
+20260530
+	+ minor renaming, formatting to align with Juergen Pfeifer's fork.
+	+ add configure script check for --enable-ext-mouse2, to support ABI 7.
+	+ improve special case in tic for %{code} to allow any non-zero byte
+	  as the result %'char'
+
+20260523
+	+ modify _nc_wacs[] to make it per-screen (from Juergen Pfeifer's fork)
+	+ eliminate a special case in tic when translating %{code} to %'char',
+	  since %{92} mapping to %'\' works with tparm and infocmp.
+
+20260516
+	+ defer initialization of magic-cookies, which disables some
+	  capabilities, until the first screen update using a video attribute
+	  which might introduce a magic cookie (report by Frank Palazzolo).
+	+ correct buffer limit in recur_wgetnstr() (report by Daniel Anderson).
+	+ correct logic in safe_name() function of infocmp, used in -E/-e
+	  options (report/patch by Daniel Anderson).
+
+20260509
+	+ modify adjust_cancels() to allow for cancelled boolean extended
+	  capabilities.
+	+ cancel XF, XT in warp -TD
+	+ review kitty -TD
+	+ review contour -TD
+	+ eliminate vt100-style line drawing from xterm-utf8 -TD
+
+20260502
+	+ add warp -TD
+	+ correct loop limit in lib_twait.c (OpenSUSE #1262780, cf: 20260411)
+
+20260425
+	+ review screen4 vs screen5 -TD
+	+ review some XR/xr pairs -TD
+	+ fix a few gcc analyzer warnings.
+
+20260418
+	+ note in manpage that wgetch/wget_wch consistently set errno to EBADF
+	  for poll/select configurations when the input is closed.
+	+ improve check in test/ncurses for errors by limiting it to the
+	  latest wgetch/wget_wch (cf: 20260404).
+	> fixes for problems found by Anthropic (report by David Korczynski):
+	+ correct a limit-check in _nc_write_object
+	+ correct a source-pointer in _nc_trim_sgr0
+	+ add limit-check in read_SGR
+
+20260411
+	+ if POLLNVAL is set in revents, set errno to EBADF to improve handling
+	  of closed input for poll() configuration.
+	+ cancel bce and rep in some screen.X's -TD
+
+20260404
+	+ use xterm+direct in konsole-direct, add several features to
+	  konsole (report by Xu Che)
+	+ use dec+sl in mintty (prompted by Thomas Wolff) -TD
+	+ add linux-alt1049 (report by Sebastien Hinderer) -TD
+	+ add a limit-check in _nc_mouse_parse in case there are no valid
+	  events (report by Giorgos Xou, cf: 20260301).
+	+ amend recent change to test/ncurses to check errno before deciding
+	  to exit.
+
+20260328
+	+ modify test/ncurses to close stdin when ^D is entered in the getch
+	  tests, to demonstrate error return.
+	+ adapt some ifdefs, etc., to reduce difference vs Juergen Pfeifer's
+	  fork.
+
+20260321
+	+ build-fix for --enable-fvisibility option vs C++ shared library
+	  (adapted from patch by Nicholas Vinson).
+	+ improve a few configure-checks vs overly-strict compiler warnings.
+
+20260314
+	+ fixes for pangoterm and wezterm, from tic warnings -TD
+	+ improve man page description of getmaxyx (report by Lucas Veltkamp).
+	+ add configure option --enable-conpty, and modify configure script to
+	  allow the low-level term-driver and conpty driver as part of termlib.
+
+20260307
+	+ add tic checks for pairs of user-caps strings which are listed in
+	  Caps-ncurses.
+	+ fix a few gcc warnings.
+	+ fix inconsistent checks for expanding special characters with infocmp
+	  -L option (report by Stephane Chazelas).
+
+20260301
+	+ modify mouse parsing to handle events with no delay between button
+	  press and release (report by Vincent Lefevre).
+
+20260221
+	+ correct strikeout for iterm2 -TD
+	+ add some xterm-style modified special-keys to iterm2 -TD
+	+ modify configure script regex check to provide for Windows libraries
+	  having regcomp (report by Juergen Pfeifer).
+	+ modify configure script --with-pcre2 option to allow specifying the
+	  pkgconfig name for pcre2 (prompted by discussion with George Goffe).
+
+20260214
+	+ add ech to screen terminfo (Debian #707308).
+	+ review/update screen5, adding screen5.xterm-new and
+	  screen4.xterm-new -TD
+
+20260207
+	+ improve infocmp "-i" option, to make it easier to see unrecognized
+	  escape sequences in initialization strings, as well as extending the
+	  tables.
+	+ correct DECKPNM in vt220 is2 (Aaro Koskinen)
+	+ correct DECSTR in some Wyse terminfo entries -TD
+
+20260131
+	+ add putty+3keys -TD
+	+ add dim to putty -TD
+	+ add xterm+3keys -TD
+	+ add note explaining origin of ecma+overline -TD
+
+20260124
+	+ add xterm+indirect16, vt100+keypad+emul, putty-direct,
+	  putty-direct16, wezterm-direct, wezterm-direct16
+	  (patch by Jakub Horky)
+	+ add Smol/Rmol to ms-terminal, konsole, iTerm2 (report by Jared
+	  Finder)
+	+ add ecma+overline -TD
+	+ update configure macros
+
+20260117
+	+ add "alt_" to special key-prefix check for "djgpp" terminfo
+	+ provide a generated list of user-defined special keys (adapted from
+	  patch by Jakub Horky) -TD
+	+ rename vt100+keypad, etc., to vt100+keypad+sco, etc., to keep
+	  historical blocks while providing for renaming of vt220+keypad as
+	  vt100+keypad (prompted by patch by Jakub Horky) -TD
+	+ use vt100+keypad instead of vt220+keypad (patch by Jakub Horky)
+	+ use vt100+keypad in putty+keypad, replacing kpXX extension -TD
+	+ remove vt100+fnkeys-sco from putty -TD 
+	+ fix link_test.c for configuration without extended colors by
+	  adjusting ifdefs and improving MKlib_gen.sh by checking for #if
+	  statements with only a 0 or 1 parameter.
+	+ fixes for "make check" (report by Brian Inglis):
+	  + adjust definition of USE_TRACEF
+	  + modify ncurses/wcwidth.h
+	  + modify makefile to add dependencies needed in shared library
+	  + modify makefile to work with libtool
+	  + separate ncurses/tty/lib_mvcur.c test-driver from routine checks
+	+ add a paragraph to user_caps.5 to mention extended capabilities which
+	  are not documented as part of ncurses.
+	+ use symbol DEFAULT_TERM_VAR for several cases where getenv("TERM")
+	  returns null pointer.
+	+ modify test/demo_new_pair.c to fix build with SmartOS (report by
+	  Thomas Klausner).
+
+20260103
+	+ cancel ncv in putty (patch by Jakub Horky)
+	+ add NQ to list of user-definable capabilities in user_caps(5) (patch
+	  by Jakub Horky)
+	+ update ncurses/wcwidth.c, for MinGW ports, from xterm.
 
 20251231
 	+ amend fix for Windows-style pathnames to eliminate "./" in comment
@@ -2094,7 +2263,7 @@ it is not possible to add this information.
 	> additional changes for building with Visual Studio C++ and msys2
 	  (patches by "Maarten Anonymous"):
 	+ adjust headers/declarations to provide for "dllimport" vs "dllexport"
-	  declarations when constructing DLLs, to worko with Visual Studio C++.
+	  declarations when constructing DLLs, to work with Visual Studio C++.
 
 20200627
 	+ build-fixes for gnat 10.1.1, whose gnatmake drops integration with

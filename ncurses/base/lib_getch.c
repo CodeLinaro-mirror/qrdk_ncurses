@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -44,7 +44,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.154 2025/12/27 12:28:45 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.160 2026/06/06 09:59:40 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -68,7 +68,7 @@ NCURSES_EXPORT_VAR(int) ESCDELAY = 1000;
 
 #if NCURSES_EXT_FUNCS
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_DCLx int value)
+NCURSES_SP_NAME(set_escdelay)(NCURSES_SP_DCLx int value)
 {
     int code = OK;
     if (value < 0) {
@@ -97,7 +97,7 @@ set_escdelay(int value)
 	code = ERR;
     } else {
 #if USE_REENTRANT
-	code = NCURSES_SP_NAME(set_escdelay) (CURRENT_SCREEN, value);
+	code = NCURSES_SP_NAME(set_escdelay)(CURRENT_SCREEN, value);
 #else
 	ESCDELAY = value;
 	code = OK;
@@ -110,7 +110,7 @@ set_escdelay(int value)
 
 #if NCURSES_EXT_FUNCS
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(get_escdelay) (NCURSES_SP_DCL0)
+NCURSES_SP_NAME(get_escdelay)(NCURSES_SP_DCL0)
 {
 #if !USE_REENTRANT
     (void) SP_PARM;
@@ -122,7 +122,7 @@ NCURSES_SP_NAME(get_escdelay) (NCURSES_SP_DCL0)
 NCURSES_EXPORT(int)
 get_escdelay(void)
 {
-    return NCURSES_SP_NAME(get_escdelay) (CURRENT_SCREEN);
+    return NCURSES_SP_NAME(get_escdelay)(CURRENT_SCREEN);
 }
 #endif
 #endif /* NCURSES_EXT_FUNCS */
@@ -162,7 +162,7 @@ check_mouse_activity(SCREEN *sp, int delay EVENTLIST_2nd(_nc_eventlist * evl))
     } else
 # endif
     {
-# if USE_NAMED_PIPES
+# if USE_TERM_DRIVER && USE_NAMED_PIPES
 	rc = _nc_console_testmouse(sp,
 				   _nc_console_handle(sp->_ifd),
 				   delay
@@ -274,7 +274,7 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 #endif
 #if USE_TERM_DRIVER
 	if ((sp->_mouse_type == M_TERM_DRIVER)
-	    && (sp->_drv_mouse_head < sp->_drv_mouse_tail)) {
+	    && (sp->_console_mouse_head < sp->_console_mouse_tail)) {
 	sp->_mouse_event(sp);
 	ch = KEY_MOUSE;
 	n = 1;
@@ -302,19 +302,19 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	    n = CallDriver_1(sp, td_read, &buf);
 	ch = buf;
 #else /* !USE_TERM_DRIVER */
-#if USE_NAMED_PIPES
+#if USE_TERM_DRIVER && USE_NAMED_PIPES
 	int buf;
 #endif
 	unsigned char c2 = 0;
 
 	_nc_set_read_thread(TRUE);
-#if USE_NAMED_PIPES
+#if USE_TERM_DRIVER && USE_NAMED_PIPES
 	n = _nc_console_read(sp,
 			     _nc_console_handle(sp->_ifd),
 			     &buf);
 	c2 = buf;
 #else
-	n = (int) read(sp->_ifd, &c2, (size_t) 1);
+	n = (int) NC_READ(sp->_ifd, &c2, (size_t) 1);
 #endif
 	_nc_set_read_thread(FALSE);
 	ch = c2;
@@ -407,7 +407,7 @@ recur_wgetnstr(WINDOW *win, char *buf)
 #endif
 	{
 	    sp->_called_wgetch = TRUE;
-	    rc = wgetnstr(win, buf, MAXCOLUMNS);
+	    rc = wgetnstr(win, buf, MAXCOLUMNS - 1);
 	    sp->_called_wgetch = FALSE;
 	}
     } else {
@@ -441,6 +441,7 @@ _nc_wgetch(WINDOW *win,
     if (cooked_key_in_fifo()) {
 	recur_wrefresh(win);
 	*result = fifo_pull(sp);
+
 	returnCode(*result >= KEY_MIN ? KEY_CODE_YES : OK);
     }
 #ifdef NCURSES_WGETCH_EVENTS
@@ -459,7 +460,8 @@ _nc_wgetch(WINDOW *win,
 	!IsRaw(sp) &&
 	!IsCbreak(sp) &&
 	!sp->_called_wgetch) {
-	char buf[MAXCOLUMNS], *bufp;
+	char buf[MAXCOLUMNS];
+	const char *bufp;
 
 	TR(TRACE_IEVENT, ("filling queue in cooked mode"));
 
@@ -673,6 +675,7 @@ wgetch(WINDOW *win)
 		      EVENTLIST_2nd((_nc_eventlist *) 0));
     if (code != ERR)
 	code = value;
+
     returnCode(code);
 }
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.110 2025/12/27 12:28:45 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.112 2026/05/30 21:17:40 tom Exp $")
 
 #if USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -78,7 +78,7 @@ _nc_initscr(NCURSES_SP_DCL0)
     /* for extended XPG4 conformance requires cbreak() at this point */
     /* (SVr4 curses does this anyway) */
     T((T_CALLED("_nc_initscr(%p) ->term %p"), (void *) SP_PARM, (void *) term));
-    if (NCURSES_SP_NAME(cbreak) (NCURSES_SP_ARG) == OK) {
+    if (NCURSES_SP_NAME(cbreak)(NCURSES_SP_ARG) == OK) {
 	TTY buf;
 
 	buf = term->Nttyb;
@@ -88,7 +88,7 @@ _nc_initscr(NCURSES_SP_DCL0)
 	buf.c_oflag &= (unsigned) ~(ONLCR);
 #elif HAVE_SGTTY_H
 	buf.sg_flags &= ~(ECHO | CRMOD);
-#elif USE_NAMED_PIPES
+#elif USE_TERM_DRIVER && USE_NAMED_PIPES
 	buf.dwFlagIn = CONMODE_IN_DEFAULT;
 	buf.dwFlagOut = CONMODE_OUT_DEFAULT | VT_FLAG_OUT;
 	if (WINCONSOLE.isTermInfoConsole) {
@@ -97,7 +97,7 @@ _nc_initscr(NCURSES_SP_DCL0)
 #else
 	memset(&buf, 0, sizeof(buf));
 #endif
-	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);
+	result = NCURSES_SP_NAME(_nc_set_tty_mode)(NCURSES_SP_ARGx &buf);
 	if (result == OK)
 	    term->Nttyb = buf;
     }
@@ -111,7 +111,7 @@ _nc_initscr(NCURSES_SP_DCL0)
  * initialized.
  */
 NCURSES_EXPORT(void)
-NCURSES_SP_NAME(filter) (NCURSES_SP_DCL0)
+NCURSES_SP_NAME(filter)(NCURSES_SP_DCL0)
 {
     START_TRACE();
     T((T_CALLED("filter(%p)"), (void *) SP_PARM));
@@ -142,7 +142,7 @@ filter(void)
  * requiring it to also be filtered.
  */
 NCURSES_EXPORT(void)
-NCURSES_SP_NAME(nofilter) (NCURSES_SP_DCL0)
+NCURSES_SP_NAME(nofilter)(NCURSES_SP_DCL0)
 {
     START_TRACE();
     T((T_CALLED("nofilter(%p)"), (void *) SP_PARM));
@@ -169,10 +169,10 @@ nofilter(void)
 #endif /* NCURSES_EXT_FUNCS */
 
 NCURSES_EXPORT(SCREEN *)
-NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
-			  const char *name,
-			  FILE *ofp,
-			  FILE *ifp)
+NCURSES_SP_NAME(newterm)(NCURSES_SP_DCLx
+			 const char *name,
+			 FILE *ofp,
+			 FILE *ifp)
 {
     int errret;
     SCREEN *result = NULL;
@@ -201,7 +201,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     current = CURRENT_SCREEN;
     its_term = (current ? current->_term : NULL);
 
-#if USE_NAMED_PIPES
+#if USE_TERM_DRIVER && USE_NAMED_PIPES
     _setmode(fileno(_ifp), _O_BINARY);
     _setmode(fileno(_ofp), _O_BINARY);
 #endif
@@ -231,15 +231,15 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	 * This actually allocates the screen structure, and saves the original
 	 * terminal settings.
 	 */
-	if (NCURSES_SP_NAME(_nc_setupscreen) (
+	if (NCURSES_SP_NAME(_nc_setupscreen)(
 #if NCURSES_SP_FUNCS
-						 &SP_PARM,
+						&SP_PARM,
 #endif
-						 *(ptrLines(SP_PARM)),
-						 *(ptrCols(SP_PARM)),
-						 _ofp,
-						 filter_mode,
-						 slk_format) == ERR) {
+						*(ptrLines(SP_PARM)),
+						*(ptrCols(SP_PARM)),
+						_ofp,
+						filter_mode,
+						slk_format) == ERR) {
 	    _nc_set_screen(current);
 	    result = NULL;
 	} else {
@@ -281,7 +281,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    if ((value = _nc_getenv_num("ESCDELAY")) >= 0) {
 		value = Min(value, MAX_DELAY_MSECS);
 #if NCURSES_EXT_FUNCS
-		NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_ARGx value);
+		NCURSES_SP_NAME(set_escdelay)(NCURSES_SP_ARGx value);
 #else
 		ESCDELAY = value;
 #endif
@@ -292,7 +292,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 		_nc_slk_initialize(StdScreen(SP_PARM), cols);
 
 	    SP_PARM->_ifd = fileno(_ifp);
-	    NCURSES_SP_NAME(typeahead) (NCURSES_SP_ARGx fileno(_ifp));
+	    NCURSES_SP_NAME(typeahead)(NCURSES_SP_ARGx fileno(_ifp));
 #ifdef TERMIOS
 	    SP_PARM->_use_meta = ((new_term->Ottyb.c_cflag & CSIZE) == CS8 &&
 				  !(new_term->Ottyb.c_iflag & ISTRIP)) ||
@@ -316,7 +316,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 				     delete_line)));
 #endif
 
-	    NCURSES_SP_NAME(baudrate) (NCURSES_SP_ARG);		/* sets a field in the screen structure */
+	    NCURSES_SP_NAME(baudrate)(NCURSES_SP_ARG);	/* sets a field in the screen structure */
 
 	    SP_PARM->_keytry = NULL;
 
@@ -367,7 +367,7 @@ newterm(const char *name, FILE *ofp, FILE *ifp)
     _nc_init_pthreads();
     _nc_lock_global(prescreen);
     START_TRACE();
-    rc = NCURSES_SP_NAME(newterm) (CURRENT_SCREEN_PRE, name, ofp, ifp);
+    rc = NCURSES_SP_NAME(newterm)(CURRENT_SCREEN_PRE, name, ofp, ifp);
     _nc_forget_prescr();
     _nc_unlock_global(prescreen);
 

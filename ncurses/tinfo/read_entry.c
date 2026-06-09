@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.175 2025/01/11 23:52:18 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.177 2026/06/06 09:59:40 tom Exp $")
 
 #define MyNumber(n) (short) LOW_MSB(n)
 
@@ -82,13 +82,12 @@ convert_32bits(const char *buf, NCURSES_INT2 *Numbers, int count)
     int i;
     size_t j;
     size_t size = SIZEOF_INT2;
-    unsigned char ch;
 
     assert(sizeof(NCURSES_INT2) == size);
     for (i = 0; i < count; i++) {
 	Numbers[i] = 0;
 	for (j = 0; j < size; ++j) {
-	    ch = UChar(*buf++);
+	    unsigned char ch = UChar(*buf++);
 	    Numbers[i] |= (ch << (8 * j));
 	}
 	/* "unsigned" and NCURSES_INT2 are the same size - no sign-extension */
@@ -143,7 +142,6 @@ convert_strings(char *buf, char **Strings, int count, int size,
 		char *table, bool always)
 {
     int i;
-    char *p;
     bool success = TRUE;
 
     for (i = 0; i < count; i++) {
@@ -169,6 +167,7 @@ convert_strings(char *buf, char **Strings, int count, int size,
 
 	/* make sure all strings are NUL terminated */
 	if (VALID_STRING(Strings[i])) {
+	    const char *p;
 	    for (p = Strings[i]; p < table + size; p++)
 		if (*p == '\0')
 		    break;
@@ -517,13 +516,8 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 				    _nc_visbuf(ptr->Strings[i + STRCOUNT])));
 	    }
 	    TR(TRACE_DATABASE, ("Check table-size: %d/%d", check, ext_str_usage));
-#if 0
-	    /*
-	     * Phasing in a proper check will be done "later".
-	     */
 	    if (check != ext_str_usage)
 		returnDB(TGETENT_NO);
-#endif
 	}
 
 	if (need) {

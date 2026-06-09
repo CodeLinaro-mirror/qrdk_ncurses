@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2024,2025 Thomas E. Dickey                                *
+dnl Copyright 2018-2025,2026 Thomas E. Dickey                                *
 dnl Copyright 2010-2017,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.241 2025/12/25 23:45:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.245 2026/04/25 00:48:02 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -477,7 +477,7 @@ fi
 AC_SUBST(ARFLAGS)
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_BUILD_CC version: 14 updated: 2024/12/14 11:58:01
+dnl CF_BUILD_CC version: 15 updated: 2026/01/18 11:36:44
 dnl -----------
 dnl If we're cross-compiling, allow the user to override the tools and their
 dnl options.  The configure script is oriented toward identifying the host
@@ -552,12 +552,12 @@ if test "$cross_compiling" = yes ; then
 	test "$cf_build_cppflags" = "#" && cf_build_cppflags=
 	ac_link='$BUILD_CC -o "conftest$ac_exeext" $BUILD_CFLAGS $cf_build_cppflags $BUILD_LDFLAGS "conftest.$ac_ext" $BUILD_LIBS >&AS_MESSAGE_LOG_FD'
 
-	AC_TRY_RUN([#include <stdio.h>
-		int main(int argc, char *argv[])
+	AC_RUN_IFELSE([AC_LANG_SOURCE([#include <stdio.h>
+		int main(int argc, char *argv[[]])
 		{
-			${cf_cv_main_return:-return}(argc < 0 || argv == (void*)0 || argv[0] == (void*)0);
+			${cf_cv_main_return:-return}(argc < 0 || argv == (void*)0 || argv[[0]] == (void*)0);
 		}
-	],
+	])],
 		cf_ok_build_cc=yes,
 		cf_ok_build_cc=no,
 		cf_ok_build_cc=unknown)
@@ -1685,7 +1685,7 @@ CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 CF_CLANG_COMPILER(GCC,CLANG_COMPILER,CFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 45 updated: 2025/12/24 09:07:25
+dnl CF_GCC_WARNINGS version: 47 updated: 2026/04/12 14:38:24
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -1711,7 +1711,7 @@ AC_REQUIRE([CF_GCC_VERSION])
 if test "x$have_x" = xyes; then CF_CONST_X_STRING fi
 cat > "conftest.$ac_ext" <<EOF
 #line __oline__ "${as_me:-configure}"
-int main(int argc, char *argv[[]]) { return (argv[[argc-1]] == 0) ; }
+int main(int argc, char *argv[[]]) { return (argv[[argc-1]] == (char*)0) ; }
 EOF
 if test "$INTEL_COMPILER" = yes
 then
@@ -2793,7 +2793,7 @@ AC_DEFUN([CF_LIB_TYPE],
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_DATAONLY version: 17 updated: 2025/12/24 12:27:29
+dnl CF_LINK_DATAONLY version: 18 updated: 2026/01/24 14:15:07
 dnl ----------------
 dnl Some systems have a non-ANSI linker that doesn't pull in modules that have
 dnl only data (i.e., no functions), for example NeXT.  On those systems we'll
@@ -2839,13 +2839,13 @@ EOF
 	( eval $RANLIB conftest.a ) 2>&AS_MESSAGE_LOG_FD >/dev/null
 	cf_saveLIBS="$LIBS"
 	LIBS="conftest.a $LIBS"
-	AC_TRY_RUN([
+	AC_RUN_IFELSE([AC_LANG_SOURCE([
 	extern int testfunc(void);
 	int main(void)
 	{
 		${cf_cv_main_return:-return} (!testfunc());
 	}
-	],
+	])],
 	[cf_cv_link_dataonly=yes],
 	[cf_cv_link_dataonly=no],
 	[cf_cv_link_dataonly=unknown])
@@ -2861,7 +2861,7 @@ AC_SUBST(BROKEN_LINKER)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAKE_PHONY version: 4 updated: 2025/12/24 12:27:29
+dnl CF_MAKE_PHONY version: 5 updated: 2025/12/27 13:03:23
 dnl -------------
 dnl Check if the make-program handles a ".PHONY" target, e.g,. a target which
 dnl acts as a placeholder.
@@ -2887,7 +2887,7 @@ dnl
 dnl + Version 3.8 of the dmake program in January 1992 also implemented this
 dnl   GNU make extension, but is less well known than the BSD make.
 AC_DEFUN([CF_MAKE_PHONY],[
-AC_CACHE_CHECK(for \".PHONY\" make-support, cf_cv_make_PHONY,[
+AC_CACHE_CHECK(for ".PHONY" make-support, cf_cv_make_PHONY,[
 	rm -rf conftest*
 	(
 		mkdir conftest || exit 1
@@ -3208,7 +3208,7 @@ printf("old\\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 30 updated: 2025/12/22 04:16:14
+dnl CF_NCURSES_CONFIG version: 33 updated: 2026/04/20 18:50:04
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses, preferring these in
 dnl order:
@@ -3247,10 +3247,10 @@ if test "x${PKG_CONFIG:=none}" != xnone; then
 			CF_ADD_LIBS($cf_pkg_libs)
 
 			AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <${cf_cv_ncurses_header:-curses.h}>],
-				[initscr(); mousemask(0,0); tigetstr((char *)0);])],
-				[AC_TRY_RUN([#include <${cf_cv_ncurses_header:-curses.h}>
+				[initscr(); mousemask(0,(mmask_t*)0); tigetstr((char *)0);])],
+				[AC_RUN_IFELSE([AC_LANG_SOURCE([#include <${cf_cv_ncurses_header:-curses.h}>
 					int main(void)
-					{ const char *xx = curses_version(); return (xx == 0); }],
+					{ const char *xx = curses_version(); return (xx == (const char*)0); }])],
 					[cf_test_ncuconfig=yes],
 					[cf_test_ncuconfig=no],
 					[cf_test_ncuconfig=maybe])],
@@ -3274,10 +3274,10 @@ if test "x${PKG_CONFIG:=none}" != xnone; then
 		CF_ADD_LIBS($cf_pkg_libs)
 
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <${cf_cv_ncurses_header:-curses.h}>],
-			[initscr(); mousemask(0,0); tigetstr((char *)0);])],
-			[AC_TRY_RUN([#include <${cf_cv_ncurses_header:-curses.h}>
+			[initscr(); mousemask(0,(void*)0); tigetstr((char *)0);])],
+			[AC_RUN_IFELSE([AC_LANG_SOURCE([#include <${cf_cv_ncurses_header:-curses.h}>
 				int main(void)
-				{ const char *xx = curses_version(); return (xx == 0); }],
+				{ const char *xx = curses_version(); return (xx == (const char*)0); }])],
 				[cf_have_ncuconfig=yes],
 				[cf_have_ncuconfig=no],
 				[cf_have_ncuconfig=maybe])],
@@ -3456,7 +3456,7 @@ esac
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_LIBS version: 22 updated: 2025/12/22 04:16:14
+dnl CF_NCURSES_LIBS version: 23 updated: 2026/04/20 18:50:04
 dnl ---------------
 dnl Look for the ncurses library.  This is a little complicated on Linux,
 dnl because it may be linked with the gpm (general purpose mouse) library.
@@ -3514,7 +3514,7 @@ if test -n "$cf_ncurses_LIBS" ; then
 		fi
 	done
 	AC_LINK_IFELSE([AC_LANG_PROGRAM([#include <${cf_cv_ncurses_header:-curses.h}>],
-		[initscr(); mousemask(0,0); tigetstr((char *)0);])],
+		[initscr(); mousemask(0,(void*)0); tigetstr((char *)0);])],
 		[AC_MSG_RESULT(yes)],
 		[AC_MSG_RESULT(no)
 		 LIBS="$cf_ncurses_SAVE"])
@@ -3524,7 +3524,7 @@ CF_UPPER(cf_nculib_ROOT,HAVE_LIB$cf_nculib_root)
 AC_DEFINE_UNQUOTED($cf_nculib_ROOT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_VERSION version: 19 updated: 2025/12/22 04:16:14
+dnl CF_NCURSES_VERSION version: 20 updated: 2026/01/18 10:40:15
 dnl ------------------
 dnl Check for the version of ncurses, to aid in reporting bugs, etc.
 dnl Call CF_CURSES_CPPFLAGS first, or CF_NCURSES_CPPFLAGS.  We don't use
@@ -3536,7 +3536,7 @@ AC_CACHE_CHECK(for ncurses version, cf_cv_ncurses_version,[
 	cf_cv_ncurses_version=no
 	cf_tempfile=out$$
 	rm -f "$cf_tempfile"
-	AC_TRY_RUN([
+	AC_RUN_IFELSE([AC_LANG_SOURCE([
 $ac_includes_default
 
 #include <${cf_cv_ncurses_header:-curses.h}>
@@ -3558,7 +3558,7 @@ int main(void)
 # endif
 #endif
 	${cf_cv_main_return:-return}(0);
-}],[
+}])],[
 	cf_cv_ncurses_version=`cat $cf_tempfile`],,[
 
 	# This will not work if the preprocessor splits the line after the
@@ -4024,7 +4024,7 @@ AC_SUBST(cf_ada_config_Ada)
 AC_SUBST(cf_ada_config_C)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_INSTALL version: 13 updated: 2025/10/21 16:28:49
+dnl CF_PROG_INSTALL version: 14 updated: 2026/01/31 09:07:58
 dnl ---------------
 dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
 dnl misc/tabset install won't work properly.  Usually this happens only when
@@ -4036,7 +4036,7 @@ if test "x$INSTALL" = "x./install-sh -c"; then
 	if test -f /usr/sbin/install ; then
 		case "$host_os" in
 		(linux*gnu*|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin|msys|mingw*|linux*uclibc)
-			INSTALL=/usr/sbin/install 
+			INSTALL=/usr/sbin/install
 			;;
 		esac
 	fi
@@ -4881,7 +4881,7 @@ AC_DEFUN([CF_UPPER],
 $1=`echo "$2" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%`
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_UTF8_LIB version: 12 updated: 2025/12/22 04:16:14
+dnl CF_UTF8_LIB version: 13 updated: 2026/04/19 10:06:00
 dnl -----------
 dnl Check for multibyte support, and if not found, utf8 compatibility library
 AC_DEFUN([CF_UTF8_LIB],
@@ -4894,10 +4894,10 @@ $ac_includes_default
 #ifdef HAVE_WCHAR_H
 #include <wchar.h>
 #endif
-],[putwc(0,0);])],
+],[putwc(0,(FILE*)0);])],
 	[cf_cv_utf8_lib=yes],
 	[CF_FIND_LINKAGE([
-#include <libutf8.h>],[putwc(0,0);],utf8,
+#include <libutf8.h>],[putwc(0,(FILE*)0);],utf8,
 		[cf_cv_utf8_lib=add-on],
 		[cf_cv_utf8_lib=no])
 ])])
@@ -5324,7 +5324,7 @@ fi
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PTHREAD version: 8 updated: 2025/12/24 12:27:29
+dnl CF_WITH_PTHREAD version: 9 updated: 2026/04/08 16:35:56
 dnl ---------------
 dnl Check for POSIX thread library.
 AC_DEFUN([CF_WITH_PTHREAD],
@@ -5348,8 +5348,8 @@ if test "$with_pthread" != no ; then
 	    AC_LINK_IFELSE([AC_LANG_PROGRAM([
 #include <pthread.h>
 ],[
-		int rc = pthread_create(0,0,0,0);
-		int r2 = pthread_mutexattr_settype(0, 0);
+		int rc = pthread_create(NULL,NULL,NULL,NULL);
+		int r2 = pthread_mutexattr_settype(NULL, 0);
 ])],[with_pthread=yes],[with_pthread=no])
 	    LIBS="$cf_save_LIBS"
 	    AC_MSG_RESULT($with_pthread)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.335 2025/12/31 12:03:37 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.343 2026/06/06 09:59:40 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -202,9 +202,6 @@ static void
 write_it(ENTRY * ep)
 {
     unsigned n;
-    int ch;
-    char *s, *d;
-    const char *t;
     char result[MAX_ENTRY_SIZE];
 
     /*
@@ -212,11 +209,14 @@ write_it(ENTRY * ep)
      * which is shorter and runs a little faster.
      */
     for (n = 0; n < STRCOUNT; n++) {
-	s = ep->tterm.Strings[n];
+	size_t limit;
+	char *s = ep->tterm.Strings[n];
 	if (VALID_STRING(s)
+	    && (limit = strlen(s)) < sizeof(result) - 1
 	    && strchr(s, L_BRACE) != NULL) {
-	    d = result;
-	    t = s;
+	    int ch;
+	    char *d = result;
+	    const char *t = s;
 	    while ((ch = *t++) != 0) {
 		*d++ = (char) ch;
 		if (ch == '\\') {
@@ -228,10 +228,8 @@ write_it(ENTRY * ep)
 		    long value = strtol(t + 1, &v, 0);
 		    if (v != NULL
 			&& *v == R_BRACE
-			&& value > 0
-			&& value != '\\'	/* FIXME */
-			&& value < 127
-			&& isprint(UChar(value))) {
+			&& value != 0
+			&& value < 256) {
 			*d++ = S_QUOTE;
 			*d++ = (char) value;
 			*d++ = S_QUOTE;
@@ -240,8 +238,9 @@ write_it(ENTRY * ep)
 		}
 	    }
 	    *d = 0;
-	    if (strlen(result) < strlen(s))
-		_nc_STRCPY(s, result, strlen(s) + 1);
+	    if ((size_t) (d - result) < limit) {
+		_nc_STRCPY(s, result, limit + 1);
+	    }
 	}
     }
 
@@ -366,7 +365,7 @@ put_translate(int c)
 
 /* Returns a string, stripped of leading/trailing whitespace */
 static char *
-stripped(char *src)
+stripped(const char *src)
 {
     char *dst = NULL;
 
@@ -494,8 +493,8 @@ static char **
 make_namelist(char *src)
 {
     char **dst = NULL;
-
-    char *s, *base;
+    char *s;
+    const char *base;
     unsigned pass, n, nn;
     char buffer[BUFSIZ];
 
@@ -1222,7 +1221,8 @@ same_color(NCURSES_CONST char *oldcap, NCURSES_CONST char *newcap, int limit)
 	for (n = same = 0; n < limit; ++n) {
 	    char *oldvalue = safe_strdup(TIPARM_1(oldcap, n));
 	    char *newvalue = safe_strdup(TIPARM_1(newcap, n));
-	    same += !strcmp(oldvalue, newvalue);
+	    if (oldvalue != NULL && newvalue != NULL)
+		same += !strcmp(oldvalue, newvalue);
 	    free(oldvalue);
 	    free(newvalue);
 	}
@@ -1762,7 +1762,7 @@ check_screen(TERMTYPE2 *tp)
 	} else if (have_XT && screen_base) {
 	    _nc_warning("screen's \"screen\" entries should not have XT set");
 	} else if (have_XT) {
-	    char *s;
+	    const char *s;
 
 	    if (!have_kmouse && is_screen) {
 		if (VALID_STRING(key_mouse)) {
@@ -1898,7 +1898,7 @@ static struct user_table_entry const *
 lookup_user_capability(const char *name)
 {
     struct user_table_entry const *result = NULL;
-    if (*name != 'k') {
+    if (!is_fkey(name)) {
 	result = _nc_find_user_entry(name);
     }
     return result;
@@ -2193,7 +2193,7 @@ check_delays(const TERMTYPE2 *tp, const char *name, const char *value)
 		if ((rc != 2) || (mark != NULL && (check_c != *mark)) || mixed) {
 		    _nc_warning("syntax error in %s delay '%.*s'", name,
 				(int) (q - base), base);
-		} else if (*name == 'k') {
+		} else if (is_fkey(name)) {
 		    _nc_warning("function-key %s has delay", name);
 		} else if (proportional && !line_capability(name)) {
 		    _nc_warning("non-line capability using proportional delay: %s", name);
@@ -2349,7 +2349,7 @@ parse_delay_value(const char *src, double *delays, int *always)
 	    break;
 	if (*src++ == '*') {
 	    star = 1;
-	} else {
+	} else if (always != NULL) {
 	    *always = 1;
 	}
     }
@@ -2456,7 +2456,7 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 	bool embedded;
 	int params = ((i < (int) SIZEOF(parametrized))
 		      ? parametrized[i]
-		      : ((*value == 'k')
+		      : (is_fkey(value)
 			 ? 0
 			 : has_params(value, FALSE)));
 
@@ -2720,7 +2720,7 @@ get_fkey_list(TERMTYPE2 *tp)
 #if NCURSES_XNAMES
     for (j = STRCOUNT; j < NUM_STRINGS(tp); ++j) {
 	const char *name = ExtStrname(tp, (int) j, strnames);
-	if (*name == 'k') {
+	if (is_fkey(name)) {
 	    result[used].keycode = -1;
 	    result[used].name = name;
 	    result[used].value = tp->Strings[j];
@@ -2998,7 +2998,7 @@ check_user_capability_type(const char *name, int actual)
 			name_of_type(actual),
 			name_of_type(expected)
 		);
-	} else if (*name != 'k') {
+	} else if (!is_fkey(name)) {
 	    _nc_warning("undocumented %s capability %s",
 			name_of_type(actual),
 			name);
@@ -3191,6 +3191,13 @@ check_user_6789(const TERMTYPE2 *tp)
 #define check_user_6789(tp)	/* nothing */
 #endif
 
+#define PAIRED_USER_STRS(set, reset) \
+	do {  \
+	    const char *set = tigetstr(#set);  \
+	    const char *reset = tigetstr(#reset);  \
+	    PAIRED(set,reset);  \
+	} while (0)
+
 /* other sanity-checks (things that we don't want in the normal
  * logic that reads a terminfo entry)
  */
@@ -3272,7 +3279,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
     ANDMISSING(clear_all_tabs, set_tab);
 
     if (PRESENT(set_attributes)) {
-	char *zero = NULL;
+	const char *zero = NULL;
 
 	_nc_tparm_err = 0;
 	if (PRESENT(exit_attribute_mode)) {
@@ -3352,6 +3359,15 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	      ("cannot write to lower-right"));
     }
 #endif
+    /*
+     * These are defined in Caps-ncurses
+     */
+    PAIRED_USER_STRS(Smol, Rmol);
+    PAIRED_USER_STRS(smxx, rmxx);
+    PAIRED_USER_STRS(BE, BD);
+    PAIRED_USER_STRS(PS, PE);
+    PAIRED_USER_STRS(RV, rv);
+    PAIRED_USER_STRS(XR, xr);
 
     /*
      * Some standard applications (e.g., vi) and some non-curses

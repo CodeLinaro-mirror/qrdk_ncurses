@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2019-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.63 2025/12/27 22:17:25 tom Exp $
+ * $Id: progs.priv.h,v 1.65 2026/03/04 21:16:25 tom Exp $
  *
  *	progs.priv.h
  *
@@ -130,8 +130,12 @@ extern int optind;
 #define use_verbosity(level) do { set_trace_level(level); } while (0)
 #endif
 
+#define is_fkey(name) (name[0] == 'k')
+
 #ifndef CUR
 #define CUR ((TERMTYPE *)(cur_term))->
 #endif
+
+#define isTerminfo(f)   ((f) == F_TERMINFO || (f) == F_VARIABLE)
 
 #endif /* PROGS_PRIV_H */

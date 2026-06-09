@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.742 2025/12/31 14:30:54 tom Exp $
+ * $Id: curses.priv.h,v 1.755 2026/05/30 21:02:18 tom Exp $
  *
  *	curses.priv.h
  *
@@ -225,10 +225,10 @@ extern int errno;
 	CreateFile(TEXT(fileName), \
 		   GENERIC_READ | GENERIC_WRITE, \
 		   shareMode, \
-		   0, \
+		   NULL, \
 		   OPEN_EXISTING, \
 		   0, \
-		   0)
+		   NULL)
 #endif
 
 /*
@@ -1168,8 +1168,8 @@ typedef struct screen {
 	MouseFormat	_mouse_format;	/* type of xterm mouse protocol */
 	NCURSES_CONST char *_mouse_xtermcap; /* string to enable/disable mouse */
 	MEVENT		_mouse_events[EV_MAX];	/* hold the last mouse event seen */
-	MEVENT		*_mouse_readp;	/* read pointer into event queue */
-	MEVENT		*_mouse_writep;	/* write pointer into event queue */
+	int		_mouse_read;	/* read index into event queue */
+	int		_mouse_write;	/* write index into event queue */
 
 	/*
 	 * These are data that support the proper handling of the panel stack on an
@@ -1194,6 +1194,9 @@ typedef struct screen {
 	ripoff_t	*rsp;
 
 	int		_legacy_coding;	/* see use_legacy_coding() */
+
+	bool		cookie_initialized;
+	bool		cookie_active;
 
 #if NCURSES_NO_PADDING
 	bool		_no_padding;	/* flag to set if padding disabled  */
@@ -1256,11 +1259,11 @@ typedef struct screen {
 #endif
 
 #if USE_TERM_DRIVER || USE_NAMED_PIPES
-	MEVENT		_drv_mouse_fifo[FIFO_SIZE];
-	int		_drv_mouse_head;
-	int		_drv_mouse_tail;
-	int		_drv_mouse_old_buttons;
-	int		_drv_mouse_new_buttons;
+	MEVENT		_console_mouse_fifo[FIFO_SIZE];
+	int		_console_mouse_head;
+	int		_console_mouse_tail;
+	int		_console_mouse_old_buttons;
+	int		_console_mouse_new_buttons;
 #endif
 	/*
 	 * This supports automatic resizing
@@ -1296,6 +1299,9 @@ typedef struct screen {
 	 */
 	bool		_screen_acs_fix;
 	bool		_screen_unicode;
+	/* provide for screen-specific WACS_xxx values.
+	 */
+	cchar_t		*_wacs_map;
 #endif
 
 #if NCURSES_EXT_FUNCS && NCURSES_EXT_COLORS
@@ -1557,6 +1563,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 			     _nc_is_charable(CharOf(ch)))
 
 #define L(ch)		L ## ch
+#define SetWacsMap(n)	_nc_wacs = (n)
 #else /* }{ */
 #define CharOf(c)	ChCharOf(c)
 #define AttrOf(c)	ChAttrOf(c)
@@ -1586,6 +1593,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #define Charable(ch)	(CharOf(ch) >= ' ' && CharOf(ch) <= '~')
 #define L(ch)		ch
+#define SetWacsMap(n)	/* nothing */
 #endif /* } */
 
 #define AttrOfD(ch)	AttrOf(CHDEREF(ch))
@@ -1835,6 +1843,8 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #else /* !TRACE */
 
 #define START_TRACE() /* nothing */
+
+#define USE_TRACEF(mask) 0
 
 #define T(a)
 #define TR(n, a)
@@ -2151,7 +2161,7 @@ extern NCURSES_EXPORT(int) _nc_handle_sigwinch(SCREEN *);
 
 /* lib_wacs.c */
 #if USE_WIDEC_SUPPORT
-extern NCURSES_EXPORT(void) _nc_init_wacs(void);
+extern NCURSES_EXPORT(void) _nc_init_wacs(SCREEN*);
 #endif
 
 typedef struct {
@@ -2599,14 +2609,22 @@ extern NCURSES_EXPORT(int)  _nc_console_vt_supported(void);
 extern NCURSES_EXPORT(int)    _nc_console_checkmintty(int fd, LPHANDLE pMinTTY);
 #endif
 
+#elif defined(_NC_WINDOWS_NATIVE)
+
 #else
 #error unsupported driver configuration
 #endif /* USE_WIN32CON_DRIVER */
 
 #if USE_TERM_DRIVER && defined(USE_WIN32CON_DRIVER)
-#define NC_ISATTY(fd) (0 != _nc_console_isatty(fd))
+# define NC_ISATTY(fd) (0 != _nc_console_isatty(fd))
+# define NC_READ(fd, buf, count)	read(fd, buf, (unsigned)(count))
 #else
-#define NC_ISATTY(fd) isatty(fd)
+# if defined(_NC_WINDOWS_NATIVE)
+#  define NC_READ(fd, buf, count)	WINCONPTY.read(fd, buf, (unsigned)(count))
+# else
+#  define NC_READ(fd, buf, count)	read(fd, buf, (size_t)(count))
+# endif
+# define NC_ISATTY(fd)			isatty(fd)
 #endif
 
 /*
@@ -2697,8 +2715,6 @@ extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_oldhash)(SCREEN*, int
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_scroll_optimize)(SCREEN*);
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_set_buffer)(SCREEN*, FILE *, int);
 
-extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
-
 #if defined(TRACE) || defined(SCROLLDEBUG) || defined(HASHDEBUG)
 extern NCURSES_EXPORT(void)     NCURSES_SP_NAME(_nc_linedump)(SCREEN*);
 #endif
@@ -2731,6 +2747,10 @@ extern NCURSES_EXPORT(NCURSES_CONST char *) _nc_unctrl (SCREEN *, chtype);
 extern NCURSES_EXPORT(int) _nc_conv_to_utf8(unsigned char *, unsigned, unsigned);
 extern NCURSES_EXPORT(int) _nc_conv_to_utf32(unsigned *, const char *, unsigned);
 #endif
+
+extern NCURSES_EXPORT(bool)     _nc_cookie_allowed(const SCREEN *sp);
+extern NCURSES_EXPORT(void)     _nc_cookie_init(SCREEN *sp);
+extern NCURSES_EXPORT(void)     _nc_cookie_updates(SCREEN *sp);
 
 #ifdef _NC_WINDOWS
 #if USE_WIDEC_SUPPORT

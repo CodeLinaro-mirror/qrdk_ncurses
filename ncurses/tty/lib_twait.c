@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2024,2025 Thomas E. Dickey                                *
+ * Copyright 2018-2025,2026 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -76,7 +76,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.85 2025/03/01 17:07:19 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.89 2026/04/27 07:35:26 tom Exp $")
 
 /*
  * Returns an elapsed time, in milliseconds (if possible).
@@ -136,12 +136,6 @@ _nc_eventlist_timeout(_nc_eventlist * evl)
     return event_delay;
 }
 #endif /* NCURSES_WGETCH_EVENTS */
-
-#if (USE_FUNC_POLL || HAVE_SELECT)
-#  define MAYBE_UNUSED
-#else
-#  define MAYBE_UNUSED GCC_UNUSED
-#endif
 
 #if (USE_FUNC_POLL || HAVE_SELECT)
 #  define MAYBE_UNUSED
@@ -289,8 +283,10 @@ _nc_timed_wait(const SCREEN *sp MAYBE_UNUSED,
 		&& (ev->data.fev.flags & _NC_EVENT_FILE_READABLE)) {
 		ev->data.fev.result = 0;
 		for (c = 0; c < count; c++)
-		    if (fds[c].fd == ev->data.fev.fd
-			&& fds[c].revents & POLLIN) {
+		    if (fds[c].revents & POLLNVAL) {
+			errno = EBADF;
+		    } else if (fds[c].fd == ev->data.fev.fd
+			       && fds[c].revents & POLLIN) {
 			ev->data.fev.result |= _NC_EVENT_FILE_READABLE;
 			evl->result_flags |= _NC_EVENT_FILE_READABLE;
 		    }
@@ -484,15 +480,22 @@ _nc_timed_wait(const SCREEN *sp MAYBE_UNUSED,
      * code everywhere.
      */
     if (result != 0) {
+	int valid_fds = result;
+	(void) valid_fds;
 	if (result > 0) {
 	    result = 0;
 #if USE_FUNC_POLL
 	    for (count = 0; count < MIN_FDS; count++) {
-		if ((mode & (1 << count))
-		    && (fds[count].revents & POLLIN)) {
+		if (fds[count].revents & POLLNVAL) {
+		    valid_fds--;
+		    errno = EBADF;
+		} else if ((mode & (1 << count))
+			   && (fds[count].revents & POLLIN)) {
 		    result |= (1 << count);
 		}
 	    }
+	    if (!valid_fds && milliseconds)
+		napms(milliseconds);
 #elif defined(__BEOS__)
 	    result = TW_INPUT;	/* redundant, but simple */
 #elif HAVE_SELECT
