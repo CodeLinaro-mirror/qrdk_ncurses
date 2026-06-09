@@ -6,6 +6,7 @@ ncurses (6.6+20260608-1) UNRELEASED; urgency=medium
   * Update upstream signing key.
   * Convert the watch files to version 5.
   * Update years in debian/copyright.
+  * Upgrade Standards-Version to 4.7.4, no changes needed.
 
  -- Sven Joachim <svenjoac@gmx.de>  Tue, 09 Jun 2026 18:18:49 +0200
 
