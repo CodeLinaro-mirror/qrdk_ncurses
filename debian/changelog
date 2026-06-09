@@ -2,6 +2,7 @@ ncurses (6.6+20260608-1) UNRELEASED; urgency=medium
 
   * New upstream patchlevel.
     - Add ech to screen terminfo (Closes: #707308).
+  * Update symbols files.
   * Update upstream signing key.
   * Convert the watch files to version 5.
 
