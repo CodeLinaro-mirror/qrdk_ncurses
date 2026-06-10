@@ -1,4 +1,4 @@
-ncurses (6.6+20260608-1) UNRELEASED; urgency=medium
+ncurses (6.6+20260608-1) experimental; urgency=low
 
   * New upstream patchlevel.
     - Add ech to screen terminfo (Closes: #707308).
@@ -8,7 +8,7 @@ ncurses (6.6+20260608-1) UNRELEASED; urgency=medium
   * Update years in debian/copyright.
   * Upgrade Standards-Version to 4.7.4, no changes needed.
 
- -- Sven Joachim <svenjoac@gmx.de>  Tue, 09 Jun 2026 18:18:49 +0200
+ -- Sven Joachim <svenjoac@gmx.de>  Wed, 10 Jun 2026 17:50:16 +0200
 
 ncurses (6.6+20251231-1) unstable; urgency=medium
 
